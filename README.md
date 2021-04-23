@@ -2,4 +2,5 @@
 da scrivere
 
 ## Link DB Schema
-https://gitmind.com/app/flowchart/e4f2126871
+https://docs.google.com/spreadsheets/d/11KIOxlNzZyOvWzAp3gcyVts9LM_70kXUfcY_hgRxfbg/edit#gid=0
+
