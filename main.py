@@ -2,6 +2,8 @@ from flask import *
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 
+DATABASE_URI = 'postgresql://campa:1234@25.75.195.73:5432/palestra'
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://campa:1234@25.75.195.73:5432/palestra'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # resolve overhead problem

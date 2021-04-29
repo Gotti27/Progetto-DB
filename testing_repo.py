@@ -2,6 +2,6 @@ from sqlalchemy import create_engine
 
 print("Hello World!")
 
-DATABASE_URI = 'postgres+psycopg2://campa:1234@localhost:5432/Progetto-DB'
+DATABASE_URI = 'postgresql://campa:1234@25.75.195.73:5432/palestra'
 
 engine = create_engine(DATABASE_URI)
