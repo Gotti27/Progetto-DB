@@ -1,8 +1,7 @@
-from main import db
+from main import db, DATABASE_URI
 from sqlalchemy import *
 from sqlalchemy.orm import *
 
-DATABASE_URI = 'postgresql://campa:1234@25.75.195.73:5432/palestra'
 engine = create_engine(DATABASE_URI)
 
 Base = declarative_base()  # tabella = classe che eredita da Base
