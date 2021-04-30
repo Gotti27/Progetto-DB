@@ -1,8 +1,6 @@
-from main import db, DATABASE_URI
+from run import db, engine
 from sqlalchemy import *
 from sqlalchemy.orm import *
-
-engine = create_engine(DATABASE_URI)
 
 Base = declarative_base()  # tabella = classe che eredita da Base
 
@@ -19,14 +17,20 @@ class Sala(Base):
     def __repr__(self):
         return "<Sala(ID='%s', MaxP='%s', Tipo='%s')>" % (self.IDSala, self.MaxPersone, self.Tipo)
 
+# TODO: Classi senza FK: Persone, PacchettiCorsi, Palestra
+
+# TODO: Classi con FK: Clienti, Staff, Corsi, Prenotazioni
+
 
 Session = sessionmaker(bind=engine)       # creazione della factory
 session = Session()
+
 
 def addTestElement():
     testAdd = Sala(IDSala=1, MaxPersone=50, Tipo="Test2")
     session.add(testAdd)
     session.commit()
+
 
 def getSale():
     testQuery = db.session.query(Sala).all()   # qui è necessario salvare la pending instance
