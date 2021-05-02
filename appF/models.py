@@ -4,6 +4,7 @@ from sqlalchemy.orm import *
 
 Base = declarative_base()  # tabella = classe che eredita da Base
 
+
 class Sala(Base):
     __tablename__ = 'Sale'  # obbligatorio
 
@@ -17,7 +18,30 @@ class Sala(Base):
     def __repr__(self):
         return "<Sala(ID='%s', MaxP='%s', Tipo='%s')>" % (self.IDSala, self.MaxPersone, self.Tipo)
 
-# TODO: Classi senza FK: Persone, PacchettiCorsi, Palestra
+
+class Persone(Base):
+    __tablename__ = 'Persone'
+
+    CF = Column(VARCHAR, primary_key=True)
+    Nome = Column(VARCHAR, nullable=False)
+    Cognome = Column(VARCHAR, nullable=False)
+    Sesso = Column('Sesso', Enum('M', 'F'), nullable=False)
+    '''
+    per la questione di rappresentare il Sesso
+    #https://docs.sqlalchemy.org/en/14/core/type_basics.html?highlight=enum#sqlalchemy.types.Enum
+    https://stackoverflow.com/questions/20644292/how-to-create-enum-in-sqlalchemy/20646024
+    '''
+    DataNascita = Column(DATE, nullable=False)
+    Email = Column(TEXT, nullable=False)
+    Password = Column(TEXT, nullable=False)
+    Telefono = Column(TEXT)
+    Attivo = Column(BOOLEAN, nullable=False)
+
+    def __repr__(self):
+        return "<Persona: CF='%s', N='%s', C='%s', S='%s', DN='%s', Email='%s', PW='%s', Tel='%s', Act='%s'>" % (self.CF, self.Nome, self.Cognome, self.Sesso, self.DataNascita, self.Email, self.Password, self.Telefono, self.Attivo)
+
+
+# TODO: Classi senza FK: PacchettiCorsi, Palestra
 
 # TODO: Classi con FK: Clienti, Staff, Corsi, Prenotazioni
 
