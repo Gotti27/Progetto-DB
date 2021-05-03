@@ -61,7 +61,54 @@ class Palestra(Base):
         return "<Palestra: A='%s', C='%s'>" % (self.Apertura, self.Chiusura)
 
 
-# TODO: Classi con FK: Clienti, Staff, Corsi, Prenotazioni
+class Clienti(Base):
+    __tablename__ = 'Clienti'
+
+    # TODO: IDCLiente
+    DataIscrizione = Column(DATE, nullable=False)
+    PagamentoMese = Column(BOOLEAN, nullable=False)
+
+    # TODO: pretty printing
+
+
+class Staff(Base):
+    __tablename__ = 'Staff'
+
+    # TODO: IDStaff
+    Ruolo = Column('Ruolo', Enum('Istruttore', 'Gestore'), nullable=False)
+
+    # TODO: pretty printing
+
+
+class Corsi(Base):
+    __tablename__ = 'Corsi'
+
+    IDCorso = Column(INTEGER, pimary_key=True)
+    MaxPersone = Column(SMALLINT, nullable=False)
+    # TODO:IDSala
+    OraInizio = Column(TIME, nullable=False)
+    OraFine = Column(TIME, nullable=False)
+    Data = Column(DATE, nullable=False)
+    # TODO:IDPaccheto
+    Descrizione = Column(TEXT, nullable=True)
+    # TODO:IDIStruttore
+
+    # TODO: pretty printing
+
+
+class Prenotazioni(Base):
+    __tablename__ = 'Prenotazioni'
+
+    IDPrenotazione = Column(INTEGER, primary_key=True)
+    Data = Column(DATE, nullable=False)
+    OraInizio = Column(TIME, nullable=False)
+    OraFine = Column(TIME, nullable=False)
+    # TODO:IDCliente
+    # TODO:IDCorso
+    # TODO:IDSala
+    Approvata = Column(BOOLEAN, nullable=False)
+
+    # TODO: pretty printing
 
 
 Session = sessionmaker(bind=engine)       # creazione della factory
