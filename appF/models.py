@@ -6,17 +6,16 @@ Base = declarative_base()  # tabella = classe che eredita da Base
 
 
 class Sala(Base):
-    __tablename__ = 'Sale'  # obbligatorio
+    __tablename__ = 'Sale'
 
-    IDSala = Column(Integer, primary_key=True)  # almeno un attributo deve fare parte della primary key
-    MaxPersone = Column(SmallInteger)
-    Tipo = Column(Text)
-    IDCodaTesta = Column(Integer)
-    IDCodaCoda = Column(Integer)
+    IDSala = Column(INTEGER, primary_key=True)
+    MaxPersone = Column(SMALLINT, nullable=False)
+    Tipo = Column(TEXT, nullable=False)
+    IDCodaTesta = Column(INTEGER, nullable=True)
+    IDCodaCoda = Column(INTEGER, nullable=True)
 
-    # questo metodo è opzionale, serve solo per pretty printing
     def __repr__(self):
-        return "<Sala(ID='%s', MaxP='%s', Tipo='%s')>" % (self.IDSala, self.MaxPersone, self.Tipo)
+        return "<Sala: ID='%s', MaxP='%s', Tipo='%s'>" % (self.IDSala, self.MaxPersone, self.Tipo)
 
 
 class Persone(Base):
@@ -34,14 +33,33 @@ class Persone(Base):
     DataNascita = Column(DATE, nullable=False)
     Email = Column(TEXT, nullable=False)
     Password = Column(TEXT, nullable=False)
-    Telefono = Column(TEXT)
+    Telefono = Column(TEXT, nullable=True)
     Attivo = Column(BOOLEAN, nullable=False)
 
     def __repr__(self):
         return "<Persona: CF='%s', N='%s', C='%s', S='%s', DN='%s', Email='%s', PW='%s', Tel='%s', Act='%s'>" % (self.CF, self.Nome, self.Cognome, self.Sesso, self.DataNascita, self.Email, self.Password, self.Telefono, self.Attivo)
 
 
-# TODO: Classi senza FK: PacchettiCorsi, Palestra
+class PacchettiCorsi(Base):
+    __tablename__ = 'PacchettiCorsi'
+
+    IDPacchetto = Column(INTEGER, primary_key=True)
+    Nome = Column(TEXT, nullable=False)
+    Descrizione = Column(TEXT, nullable=True)
+
+    def __repr__(self):
+        return "<PacchettiCorsi: ID='%s', N='%s', Des='%s'>" % (self.IDPacchetto, self.Nome, self.Descrizione)
+
+
+class Palestra(Base):
+    __tablename__ = 'Palestra'
+
+    Apertura = Column(DATE, nullable=false)
+    Chiusura = Column(DATE, nullable=false)
+
+    def __repr__(self):
+        return "<Palestra: A='%s', C='%s'>" % (self.Apertura, self.Chiusura)
+
 
 # TODO: Classi con FK: Clienti, Staff, Corsi, Prenotazioni
 
