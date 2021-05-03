@@ -10,7 +10,7 @@ class Sala(Base):
 
     IDSala = Column(INTEGER, primary_key=True)
     MaxPersone = Column(SMALLINT, nullable=False)
-    Tipo = Column(TEXT, nullable=False)
+    Tipo = Column(TEXT, nullable=True)
     IDCodaTesta = Column(INTEGER, nullable=True)
     IDCodaCoda = Column(INTEGER, nullable=True)
 
