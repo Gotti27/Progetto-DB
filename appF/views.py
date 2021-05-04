@@ -1,7 +1,7 @@
 from flask import *
 from run import app
 
-from appF.models import getSale
+from appF.models import *
 
 
 @app.route('/')
@@ -9,9 +9,10 @@ def hello_world():
     return render_template("index.html")
 
 
-@app.route('/users/<username>')
-def show_profile(username):
-    return f'Helo {username}'
+@app.route('/users/')
+def show_profile():
+    addTestPersona()
+    return f'Helo'
 
 
 @app.route('/sale/')
