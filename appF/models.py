@@ -80,8 +80,9 @@ class Clienti(Base):
 
     persone = relationship(Persone, uselist=False)
 
-    # TODO: pretty printing
-
+    def __repr__(self):
+        return "<Clienti: ID:'%s', DatIscr:'%s', PagMese:'%s'>" % (self.IDCliente, self.DataIscrizione, self.PagamentoMese)
+    
 
 class Staff(Base):
     __tablename__ = 'staff'
@@ -91,7 +92,8 @@ class Staff(Base):
 
     persone = relationship(Persone, uselist=False)
 
-    # TODO: pretty printing
+    def __repr__(self):
+        return "<Staff: ID:'%s', Role:'%s'>" % (self.IDStaff, self.Ruolo)
 
 
 class Corsi(Base):
@@ -111,7 +113,8 @@ class Corsi(Base):
     pacchettiCorsi = relationship(PacchettiCorsi, uselist=False)
     staff = relationship(Staff, uselist=False)
 
-    # TODO: pretty printing
+    def __repr__(self):
+        return "<Corsi: ID:'%s', Max:'%s', IDSala:'%s', OInizio:'%s', OFine:'%s', Data:'%s', IDPac:'%s', Descr:'%s', IDIstr:'%s'>" % (self.IDCorso, self.MaxPersone, self.IDSala, self.OraInizio, self.OraFine, self.Data, self.IDPaccheto, self.Descrizione, self.IDIstruttore)
 
 
 class Prenotazioni(Base):
@@ -130,7 +133,8 @@ class Prenotazioni(Base):
     corsi = relationship(Corsi, uselist=False)
     sale = relationship(Sale, uselist=False)
 
-    # TODO: pretty printing
+    def __repr__(self):
+        return "<Prenotazioni: ID:'%s', Data:'%s', OInizio:'%s', OFine:'%s', IDCliente:'%s', IDCorso:'%s', IDSala:'%s', Aprr:'%s'>" % (self.IDPrenotazione, self.Data, self.OraInizio, self.OraFine, self.IDCliente, self.IDCorso, self.IDSala, self.Approvata)
 
 
 Session = sessionmaker(bind=engine)       # creazione della factory
