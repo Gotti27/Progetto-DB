@@ -1,7 +1,7 @@
 # Progetto-DB
 Per far partire l'applicazione Flask:
 
-`FLASK_APP=run-py`\
+`FLASK_APP=run.py`\
 `flask run`
 
 
