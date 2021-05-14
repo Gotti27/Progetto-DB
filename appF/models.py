@@ -20,7 +20,7 @@ class Sale(Base):
 class Persone(Base):
     __tablename__ = 'persone'
 
-    CF = Column(VARCHAR, primary_key=True)
+    CF = Column(CHAR(16), primary_key=True)
     Nome = Column(VARCHAR, nullable=False)
     Cognome = Column(VARCHAR, nullable=False)
     Sesso = Column('Sesso', Enum('M', 'F'), nullable=False)
@@ -74,7 +74,7 @@ class GiorniFestivi(Base):
 class Clienti(Base):
     __tablename__ = 'clienti'
 
-    IDCliente = Column(VARCHAR, ForeignKey(Persone.CF), primary_key=True)
+    IDCliente = Column(CHAR(16), ForeignKey(Persone.CF), primary_key=True)
     DataIscrizione = Column(DATE, nullable=False)
     PagamentoMese = Column(BOOLEAN, nullable=False)
 
@@ -87,7 +87,7 @@ class Clienti(Base):
 class Staff(Base):
     __tablename__ = 'staff'
 
-    IDStaff = Column(VARCHAR, ForeignKey(Persone.CF), primary_key=True)
+    IDStaff = Column(CHAR(16), ForeignKey(Persone.CF), primary_key=True)
     Ruolo = Column('Ruolo', Enum('Istruttore', 'Gestore'), nullable=False)
 
     persone = relationship(Persone, uselist=False)
