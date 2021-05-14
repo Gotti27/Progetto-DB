@@ -12,6 +12,7 @@ login_manager.init_app(app)
 # TODO: CREARE CONNESSIONI DIVERSE
 db = SQLAlchemy(app)
 engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'], echo=True)
+
 """
 engine_ospite = create_engine(app.config['SQLALCHEMY_DATABASE_URI_OSPITE'], echo=True)
 engine_utente = create_engine(app.config['SQLALCHEMY_DATABASE_URI_UTENTE'], echo=True)
@@ -25,6 +26,17 @@ class User(UserMixin):
         self.email = email
         self.pwd = pwd
         self.role = role
+
+
+def get_user_by_email(username):
+    '''
+    :param username
+    :return: istanza di User
+        todo: da implementare per la route login
+        data una email (username) deve ritornare un'istanza di User
+        slide 13 di "Autenticazione con Flask"
+    '''
+    pass
 
 
 @login_manager.user_loader

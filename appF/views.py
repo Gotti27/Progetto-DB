@@ -1,6 +1,9 @@
-from flask import *
-from run import app
+import re
 
+from flask import *
+from flask_login import login_user, logout_user
+
+from run import app, db, login_manager, get_user_by_email
 from appF.models import *
 
 
@@ -19,71 +22,61 @@ def show_profile():
 def param_page():
     a = True
     b = "ciao"
-    c = [1,2,3,4,5,6]
+    c = [1, 2, 3, 4, 5, 6]
     return render_template('sale.html', sala=getSale())
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    msg = "HELO"
-    '''
     msg = ''
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
         username = request.form['username']
         password = request.form['password']
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM accounts WHERE username = % s AND password = % s', (username, password,))
-        account = cursor.fetchone()
-        if account:
-            session['loggedin'] = True
-            session['id'] = account['id']
-            session['username'] = account['username']
-            msg = 'Logged in successfully !'
-            return render_template('index.html', msg=msg)
+        logging = db.session.query(Persone).filter(Persone.Email == username
+                                                   and Persone.Password == password).one()
+        if logging is not None:
+            user = get_user_by_email(request.form['username']) # non funzionante
+            login_user(user)
+            return render_template('index.html')
         else:
-            msg = 'Incorrect username / password !'
-    '''
+            msg = 'Username o password non corretti'
 
     return render_template('login.html', msg=msg)
 
 
 @app.route('/logout')
+# @login_required
 def logout():
-    '''
-    session.pop('loggedin', None)
-    session.pop('id', None)
-    session.pop('username', None)
-    return redirect(url_for('login'))
-    '''
-    pass
+    logout_user() #da rivedere, non sono sicuro
+    return redirect(url_for('home'))
 
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     msg = ''
-    '''
-    if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'email' in request.form:
-        username = request.form['username']
-        password = request.form['password']
+    if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
         email = request.form['email']
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM accounts WHERE username = % s', (username,))
-        account = cursor.fetchone()
-        if account:
-            msg = 'Account already exists !'
+        registration = db.session.query(Persone).filter(Persone.Email == email).first()
+        if registration is not None:
+            msg = 'Account già esistente'
         elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
-            msg = 'Invalid email address !'
-        elif not re.match(r'[A-Za-z0-9]+', username):
-            msg = 'Username must contain only characters and numbers !'
-        elif not username or not password or not email:
-            msg = 'Please fill out the form !'
+            msg = 'Indirizzo email non valido'
+        elif not request.form['name'] or not request.form['surname'] or not request.form['DataNascita'] or not \
+        request.form['Codice fiscale'] or not request.form['email'] or not request.form['sex'] or not request.form[
+            'password']:
+            msg = 'Rimpire tutto il form'
         else:
-            cursor.execute('INSERT INTO accounts VALUES (NULL, % s, % s, % s)', (username, password, email,))
-            mysql.connection.commit()
-            msg = 'You have successfully registered !'
+            new_person = Persone(Nome=request.form['name'], Cognome=request.form['surname'],
+                                 DataNascita=request.form['DataNascita'], CF=request.form['Codice fiscale'],
+                                 Email=request.form['email'], Telefono=request.form['telefono'],
+                                 Sesso=request.form['sex'], Password=request.form['password'], Attivo=False)
+            session.add(new_person)
+            session.commit()
+            msg = 'Ti sei registrato con successo'
+            # TODO: far passare alla pagina loggata dell'utente??
     elif request.method == 'POST':
-        msg = 'Please fill out the form !'
-    '''
+        msg = 'Riempi tutti i campi del form'
+
     return render_template('register.html', msg=msg)
 
 
