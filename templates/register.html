@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title> Register </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="peni" align="center">
+        <div align="center" class="border">
+             <div class="header">
+                <h1 class="word">Register</h1>
+             </div></br></br></br>
+        <h2 class="word">
+            <form action="{{ url_for('register') }}" method="post">
+                <div class="msg">{{ msg }}</div>
+                    <input id="name" name="name" type="text" placeholder="Nome" class="textbox"/></br></br>
+                    <input id="surname" name="surname" type="text" placeholder="Cognome" class="textbox"/></br></br>
+                    <input id="dataNascita" name="DataNascita" type="date" placeholder="data di nascita" class="textbox"/></br></br>
+                    <input id="CF" name="Codice fiscale" type="text" placeholder="Codice Fiscale" class="textbox"/></br></br>
+                    <input id="email" name="email" type="text" placeholder="e-mail" class="textbox"/></br></br>
+                    <input id="password" name="password" type="password" placeholder="Password" class="textbox"/></br></br>
+                    <input id="telefono" name="telefono" type="tel" placeholder="telefono" class="textbox" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"/></br></br>
+
+                    <fieldset>
+                        <legend>Seeess!?</legend>
+                        <div>
+                            <input type="radio" name="sex" id="sex-m" value="M">
+                            <label for="sex-m">molto volentieri</label>
+                            <input type="radio" name="sex" id="sex-f" value="F">
+                            <label for="sex-f">oggi no</label>
+                        </div>
+                    </fieldset>
+
+                    <input type="submit" class="btn" value="Sign Up"></br>
+            </form>
+        </h2>
+        <p class="bottom">Hai già un account? <a class="bottom" href="{{url_for('login')}}">clicca qui per il login</a></p>
+      </div>
+    </div>
+</body>
+</html>
