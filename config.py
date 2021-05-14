@@ -9,5 +9,5 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False  # resolve overhead problem
 # BCRYPT_LOG_ROUNDS = 12 # Configuration for the Flask-Bcrypt extension = number of hashing rounds
 # MAIL_FROM_EMAIL = "robert@example.com" # For use in application emails
 
-# SECRET_KEY = "!giveUp(you)"
+SECRET_KEY = "gabibbo"
 # SESSION_PROTECTION = "basic"

@@ -11,7 +11,7 @@ class Sale(Base):
 
     IDSala = Column(INTEGER, primary_key=True)
     MaxPersone = Column(SMALLINT, nullable=False)
-    Tipo = Column(TEXT, nullable=True)
+    Tipo = Column(TEXT)
 
     def __repr__(self):
         return "<Sala: ID='%s', MaxP='%s', Tipo='%s'>" % (self.IDSala, self.MaxPersone, self.Tipo)
@@ -27,7 +27,7 @@ class Persone(Base):
     DataNascita = Column(DATE, nullable=False)
     Email = Column(TEXT, nullable=False, unique=True)
     Password = Column(TEXT, nullable=False)
-    Telefono = Column(TEXT, nullable=True)
+    Telefono = Column(TEXT)
     Attivo = Column(BOOLEAN, nullable=False)
 
     '''
@@ -45,7 +45,7 @@ class PacchettiCorsi(Base):
 
     IDPacchetto = Column(INTEGER, primary_key=True)
     Nome = Column(TEXT, nullable=False)
-    Descrizione = Column(TEXT, nullable=True)
+    Descrizione = Column(TEXT)
 
     def __repr__(self):
         return "<PacchettiCorsi: ID='%s', N='%s', Des='%s'>" % (self.IDPacchetto, self.Nome, self.Descrizione)
@@ -66,8 +66,8 @@ class GiorniFestivi(Base):
     __tablename__ = 'giorniFestivi'
 
     IDGiorno = Column(INTEGER, primary_key=True)
-    Apertura = Column(TIME, nullable=True)
-    Chiusura = Column(TIME, nullable=True)
+    Apertura = Column(TIME)
+    Chiusura = Column(TIME)
     Giorno = Column(DATE, nullable=False)
 
 
@@ -106,7 +106,7 @@ class Corsi(Base):
     OraFine = Column(TIME, nullable=False)
     Data = Column(DATE, nullable=False)
     IDPaccheto = Column(INTEGER, ForeignKey(PacchettiCorsi.IDPacchetto))
-    Descrizione = Column(TEXT, nullable=True)
+    Descrizione = Column(TEXT)
     IDIstruttore = Column(VARCHAR, ForeignKey(Staff.IDStaff), nullable=False)
 
     sale = relationship(Sale, uselist=False)
