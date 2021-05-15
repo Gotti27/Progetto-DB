@@ -3,27 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title> Register </title>
-    <!--<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
 <body>
-    <div align="center">
+    <div align="center" class="w3-container">
         <div align="center">
              <div>
                 <h1>Register</h1>
              </div></br></br></br>
-        <h2>
+        <h4>
             <form action="{{ url_for('register') }}" method="post">
                 <div >{{ msg }}</div>
-                    <input id="name" name="name" type="text" placeholder="Nome" class="textbox"/><br>
-                    <input id="surname" name="surname" type="text" placeholder="Cognome" class="textbox"/></br>
-                    <input id="dataNascita" name="DataNascita" type="date" placeholder="data di nascita" class="textbox"/></br>
-                    <input id="CF" name="Codice fiscale" type="text" placeholder="Codice Fiscale" class="textbox"/></br>
-                    <input id="email" name="email" type="text" placeholder="e-mail" class="textbox"/></br>
-                    <input id="password" name="password" type="password" placeholder="Password" class="textbox"/></br>
-                    <input id="telefono" name="telefono" type="tel" placeholder="telefono" class="textbox" /></br>
+                    <input id="name" name="name" type="text" placeholder="Nome" class="w3-input" style="width:500px"/><br>
+                    <input id="surname" name="surname" type="text" placeholder="Cognome"class="w3-input" style="width:500px"/></br>
+                    <input id="dataNascita" name="DataNascita" type="date" placeholder="data di nascita"class="w3-input" style="width:500px"/></br>
+                    <input id="CF" name="Codice fiscale" type="text" placeholder="Codice Fiscale" class="w3-input" style="width:500px"/></br>
+                    <input id="email" name="email" type="text" placeholder="e-mail" class="w3-input" style="width:500px"/></br>
+                    <input id="password" name="password" type="password" placeholder="Password" class="w3-input" style="width:500px"/></br>
+                    <input id="telefono" name="telefono" type="tel" placeholder="telefono" class="w3-input" style="width:500px" /></br>
                     <legend>Sesso:</legend>
                     <div>
                         <input type="radio" name="sex" id="sex-m" value="M">
@@ -31,9 +28,9 @@
                         <input type="radio" name="sex" id="sex-f" value="F">
                         <label for="sex-f">Donna</label>
                     </div>
-                    <input type="submit" value="Registrati"></br>
+                    <input type="submit" value="Registrati" class="w3-button w3-black"></br>
             </form>
-        </h2>
+        </h4>
         <p>Hai già un account? <a href="{{url_for('login')}}">clicca qui per il login</a></p>
       </div>
     </div>
