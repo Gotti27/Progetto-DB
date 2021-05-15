@@ -6,8 +6,30 @@
 </head>
 <body>
     <h1>Ciao Gestore fighissimo</h1>
-    <div id="calendar-div" style="background-color: #aaaaaa; height: 300px">
-        hi
+    <div style="width:70%; height:100px; margin:auto; background-color: #cccccc">
+        {% for n in ["LUN","MAR","MER","GIO","VEN","SAB","DOM"] %}
+        <div id="calendar-div" style="background-color: #aaaaaa; height: 30px; width: 14%; display: inline-block">
+            {{ n }}
+        </div>
+        {% endfor %}
     </div>
+
+    <div id="demo"></div>
 </body>
 </html>
+
+<script>
+    var d = new Date();
+    var year = d.getFullYear()
+    var month = d.getMonth()
+    var i = 1
+
+    var calendar = new Date(year, month, i);
+    do{
+        console.log(year + "/" + month + "/" + calendar.getDate());
+        i++;
+        calendar = new Date(year, month, i);
+    }while(calendar.getDate() != 1);
+
+
+</script>

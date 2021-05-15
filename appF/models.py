@@ -127,7 +127,7 @@ class Prenotazioni(Base):
     IDCliente = Column(VARCHAR, ForeignKey(Clienti.IDCliente), nullable=False)
     IDCorso = Column(INTEGER, ForeignKey(Corsi.IDCorso))
     IDSala = Column(INTEGER, ForeignKey(Sale.IDSala), nullable=False)
-    Approvata = Column(BOOLEAN, nullable=False)
+    Approvata = Column(BOOLEAN, nullable=False, default=True)
 
     clienti = relationship(Clienti, uselist=False)
     corsi = relationship(Corsi, uselist=False)
@@ -162,3 +162,9 @@ def addTestCliente():
 def getSale():
     testQuery = db.session.query(Sale).all()   # qui è necessario salvare la pending instance
     return testQuery
+
+def addTestPrenotazione():
+    i = 0
+    testAdd = Prenotazioni(Data=date.today(), OraInizio=time(13,0,0), OraFine=time(15,0,0), IDCliente="ABCDEFGHIJKLMNOP", IDSala=1)
+    session.add(testAdd)
+    session.commit()
