@@ -58,7 +58,7 @@ def register():
         registration = db.session.query(Persone).filter(Persone.Email == email).first()
         cf = db.session.query(Persone).filter(Persone.CF == request.form['Codice fiscale']).first()
         if registration is not None or cf is not None:
-            msg = 'Account già esistente'
+            msg = 'Persona già registrata'
         elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
             msg = 'Indirizzo email non valido'
         elif not request.form['name'] or not request.form['surname'] or not request.form['DataNascita'] or not \
@@ -66,14 +66,12 @@ def register():
             'password']:
             msg = 'Rimpire tutto il form'
         else:
-            new_person = Persone(Nome=request.form['name'], Cognome=request.form['surname'],
+            insert_cliente(Nome=request.form['name'], Cognome=request.form['surname'],
                                  DataNascita=request.form['DataNascita'], CF=request.form['Codice fiscale'],
                                  Email=request.form['email'], Telefono=request.form['telefono'],
                                  Sesso=request.form['sex'], Password=request.form['password'], Attivo=False)
-            session.add(new_person)
-            session.commit()
-            msg = 'Ti sei registrato con successo'
-            # TODO: far passare alla pagina loggata dell'utente??
+            msg = 'Ti sei registrato con successo!'
+            # TODO: far passare alla pagina loggata dell'utente?
     elif request.method == 'POST':
         msg = 'Riempi tutti i campi del form'
 

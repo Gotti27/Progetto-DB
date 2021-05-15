@@ -140,31 +140,33 @@ class Prenotazioni(Base):
 Session = sessionmaker(bind=engine)       # creazione della factory
 session = Session()
 
+def insert_persona(**kwargs):
+    toAdd = Persone(CF=kwargs['CF'], Nome=kwargs['Nome'], Cognome=kwargs['Cognome'], Sesso=kwargs['Sesso'], DataNascita=kwargs['DataNascita'],
+                      Email=kwargs['Email'], Password=kwargs['Password'], Attivo=kwargs['Attivo'], Telefono=kwargs['Telefono'])
+    session.add(toAdd)
+    session.commit()
+
+
+def insert_cliente(**kwargs):
+    insert_persona(CF=kwargs['CF'], Nome=kwargs['Nome'], Cognome=kwargs['Cognome'], Sesso=kwargs['Sesso'], DataNascita=kwargs['DataNascita'],
+                      Email=kwargs['Email'], Password=kwargs['Password'], Attivo=kwargs['Attivo'], Telefono=kwargs['Telefono'])
+    toAdd = Clienti(IDCliente=kwargs['CF'], DataIscrizione=date.today(), PagamentoMese=False)
+    session.add(toAdd)
+    session.commit()
+
 
 def addTestSala():
     testAdd = Sale(IDSala=1, MaxPersone=50, Tipo="Test2")
     session.add(testAdd)
     session.commit()
 
-def addTestPersona():
-    print("\t addPersona")
-    testAdd = Persone(CF="ABCDEFGHIJKLMNOP", Nome="Mario", Cognome="Rossi", Sesso="M", DataNascita=date.today(), Email="ciao@ciao.ciao", Password="1234", Attivo=True)
-    session.add(testAdd)
-    session.commit()
-
-def addTestCliente():
-    addTestPersona()
-    print("\t addCliente")
-    testAdd = Clienti(IDCliente="ABCDEFGHIJKLMNOP", DataIscrizione=date.today(), PagamentoMese=False)
-    session.add(testAdd)
-    session.commit()
 
 def getSale():
     testQuery = db.session.query(Sale).all()   # qui è necessario salvare la pending instance
     return testQuery
 
+
 def addTestPrenotazione():
-    i = 0
     testAdd = Prenotazioni(Data=date.today(), OraInizio=time(13,0,0), OraFine=time(15,0,0), IDCliente="ABCDEFGHIJKLMNOP", IDSala=1)
     session.add(testAdd)
     session.commit()
