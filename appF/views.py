@@ -61,6 +61,11 @@ def register():
             msg = 'Persona già registrata'
         elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
             msg = 'Indirizzo email non valido'
+
+        #elif not re.match(r'/^[A-Z]{6}\d{2}[A-Z]\d{2}[A-Z]\d{3}[A-Z]$/i', CF):
+        #    msg = 'Codice fiscale non valido'
+        #regex codice fiscale, ho messo il più generico (http://blog.marketto.it/2016/01/regex-validazione-codice-fiscale-con-omocodia/)
+
         elif not request.form['name'] or not request.form['surname'] or not request.form['DataNascita'] or not \
         request.form['Codice fiscale'] or not request.form['email'] or not request.form['sex'] or not request.form[
             'password']:
