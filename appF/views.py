@@ -9,7 +9,7 @@ from appF.models import *
 
 @app.route('/')
 def hello_world():
-    return render_template("sale.html")
+    return render_template("home.html")
 
 
 @app.route('/users/')
@@ -57,7 +57,8 @@ def register():
     if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
         email = request.form['email']
         registration = db.session.query(Persone).filter(Persone.Email == email).first()
-        if registration is not None:
+        cf = db.session.query(Persone).filter(Persone.CF == request.form['Codice fiscale']).first()
+        if registration is not None or cf is not None:
             msg = 'Account già esistente'
         elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
             msg = 'Indirizzo email non valido'
