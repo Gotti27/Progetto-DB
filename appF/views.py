@@ -14,7 +14,6 @@ def hello_world():
 
 @app.route('/users/')
 def show_profile():
-    addTestPersona()
     return f'Helo'
 
 
