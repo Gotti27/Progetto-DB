@@ -62,9 +62,13 @@ def register():
         elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
             msg = 'Indirizzo email non valido'
 
-        #elif not re.match(r'/^[A-Z]{6}\d{2}[A-Z]\d{2}[A-Z]\d{3}[A-Z]$/i', CF):
+        #elif not re.match(r'/^(?:[A-Z][AEIOU][AEIOUX]|[B-DF-HJ-NP-TV-Z]{2}[A-Z]){2}(?:[\dLMNP-V]{2}(?:[A-EHLMPR-T]
+        # (?:[04LQ][1-9MNP-V]|[15MR][\dLMNP-V]|[26NS][0-8LMNP-U])|[DHPS][37PT][0L]|[ACELMRT][37PT][01LM]|[AC-EHLMPR-T]
+        # [26NS][9V])|(?:[02468LNQSU][048LQU]|[13579MPRTV][26NS])B[26NS][9V])(?:[A-MZ][1-9MNP-V][\dLMNP-V]{2}|[A-M][0L]
+        # (?:[1-9MNP-V][\dLMNP-V]|[0L][1-9MNP-V]))[A-Z]$/i', CF):
         #    msg = 'Codice fiscale non valido'
-        #regex codice fiscale, ho messo il più generico (http://blog.marketto.it/2016/01/regex-validazione-codice-fiscale-con-omocodia/)
+        #(http://blog.marketto.it/2016/01/regex-validazione-codice-fiscale-con-omocodia/) REGEX PER CODICE FISCALE
+        #TODO: testarlo
 
         elif not request.form['name'] or not request.form['surname'] or not request.form['DataNascita'] or not \
         request.form['Codice fiscale'] or not request.form['email'] or not request.form['sex'] or not request.form[
