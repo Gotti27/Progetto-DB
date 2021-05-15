@@ -20,6 +20,7 @@ engine_istruttore = create_engine(app.config['SQLALCHEMY_DATABASE_URI_ISTRUTTORE
 engine_gestore = create_engine(app.config['SQLALCHEMY_DATABASE_URI_GESTORE'], echo=True)
 """
 
+
 class User(UserMixin):
     def __init__(self, id, email, pwd, role):
         self.id = id
@@ -29,28 +30,17 @@ class User(UserMixin):
 
 
 def get_user_by_email(username):
-    '''
-    :param username
-    :return: istanza di User
-        todo: da implementare per la route login
-        data una email (username) deve ritornare un'istanza di User
-        slide 13 di "Autenticazione con Flask"
-    '''
-    pass
+    user = db.session.query(User).filter_by(email=username)
+    return User(user.id, user.email, user.pwd, user.role)
 
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.get(user_id)
+    user = db.session.query(User).filter_by(id=user_id)
+    return User(user.id, user.email, user.pwd, user.role)
 
-"""def load_user ( user_id ):
-        conn = engine.connect ()
-        rs = conn.execute ( ’ SELECT * FROM Users WHERE id = ? ’ ,user_id )
-        user = rs.fetchone ()
-        conn.close ()
-return User (user.id, user.email, user.pwd, user.role)"""
 
-from appF.views import * # Non importato all'inizio per evitare dipendenze circolari
+from appF.views import *  # Non importato all'inizio per evitare dipendenze circolari
 
 if __name__ == '__main__':
     app.run()
