@@ -1,35 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
-    <title>Dashboard</title>
-</head>
-<body>
-    <h1>Ciao Gestore fighissimo</h1>
-    <div style="width:70%; height:100px; margin:auto; background-color: #cccccc">
-        {% for n in ["LUN","MAR","MER","GIO","VEN","SAB","DOM"] %}
-        <div id="calendar-div" style="background-color: #aaaaaa; height: 30px; width: 14%; display: inline-block">
-            {{ n }}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar App Vanilla JS</title>
+
+    <link rel="stylesheet" href="../static/calendar.css">
+  </head>
+  <body>
+
+    <div id="container">
+      <div id="header">
+        <div id="monthDisplay"></div>
+        <div>
+          <button id="backButton">Back</button>
+          <button id="nextButton">Next</button>
         </div>
-        {% endfor %}
+      </div>
+
+      <div id="weekdays">
+        <div>Lunedì</div>
+        <div>Martedì</div>
+        <div>Mercoledì</div>
+        <div>Giovedì</div>
+        <div>Venerdì</div>
+        <div>Sabato</div>
+        <div>Domenica</div>
+      </div>
+
+      <div id="calendar"></div>
     </div>
 
-    <div id="demo"></div>
-</body>
+    <div id="newEventModal">
+      <h2>New Event</h2>
+
+      <input id="eventTitleInput" placeholder="Event Title" />
+
+      <button id="saveButton">Save</button>
+      <button id="cancelButton">Cancel</button>
+    </div>
+
+    <div id="deleteEventModal">
+      <h2>Event</h2>
+
+      <p id="eventText"></p>
+
+      <button id="deleteButton">Delete</button>
+      <button id="closeButton">Close</button>
+    </div>
+
+    <div id="modalBackDrop"></div>
+
+    <br>
+    <div id="courses">{{ corsi }}</div>
+
+    <script type=text/javascript src="{{ url_for('static', filename='calendar.js') }}"></script>
+  </body>
 </html>
-
-<script>
-    var d = new Date();
-    var year = d.getFullYear()
-    var month = d.getMonth()
-    var i = 1
-
-    var calendar = new Date(year, month, i);
-    do{
-        console.log(year + "/" + month + "/" + calendar.getDate());
-        i++;
-        calendar = new Date(year, month, i);
-    }while(calendar.getDate() != 1);
-
-
-</script>

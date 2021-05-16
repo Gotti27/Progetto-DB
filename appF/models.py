@@ -105,16 +105,17 @@ class Corsi(Base):
     OraInizio = Column(TIME, nullable=False)
     OraFine = Column(TIME, nullable=False)
     Data = Column(DATE, nullable=False)
-    IDPaccheto = Column(INTEGER, ForeignKey(PacchettiCorsi.IDPacchetto))
     Descrizione = Column(TEXT)
-    IDIstruttore = Column(VARCHAR, ForeignKey(Staff.IDStaff), nullable=False)
+    Nome = Column(VARCHAR, nullable=False)
+    IDPacchetto = Column(INTEGER, ForeignKey(PacchettiCorsi.IDPacchetto))
+    IDIstruttore = Column(CHAR(16), ForeignKey(Staff.IDStaff), nullable=False)
 
     sale = relationship(Sale, uselist=False)
     pacchettiCorsi = relationship(PacchettiCorsi, uselist=False)
     staff = relationship(Staff, uselist=False)
 
     def __repr__(self):
-        return "<Corsi: ID:'%s', Max:'%s', IDSala:'%s', OInizio:'%s', OFine:'%s', Data:'%s', IDPac:'%s', Descr:'%s', IDIstr:'%s'>" % (self.IDCorso, self.MaxPersone, self.IDSala, self.OraInizio, self.OraFine, self.Data, self.IDPaccheto, self.Descrizione, self.IDIstruttore)
+        return "<ID:%s, Nome:%s, Max:%s, IDSala:%s, OInizio:%s, OFine:%s, Data:%s, Descr:%s, IDPac:%s, IDIstr:%s>" % (self.IDCorso, self.Nome, self.MaxPersone, self.IDSala, self.OraInizio, self.OraFine, self.Data, str(self.Descrizione), str(self.IDPacchetto), self.IDIstruttore)
 
 
 class Prenotazioni(Base):
@@ -140,19 +141,34 @@ class Prenotazioni(Base):
 Session = sessionmaker(bind=engine)       # creazione della factory
 session = Session()
 
-def insert_persona(**kwargs):
-    toAdd = Persone(CF=kwargs['CF'], Nome=kwargs['Nome'], Cognome=kwargs['Cognome'], Sesso=kwargs['Sesso'], DataNascita=kwargs['DataNascita'],
-                      Email=kwargs['Email'], Password=kwargs['Password'], Attivo=kwargs['Attivo'], Telefono=kwargs['Telefono'])
-    session.add(toAdd)
+def insert_persona(cf, nome, cognome, sesso, data_nascita, email, password, attivo, telefono=None):
+    to_add = Persone(CF=cf, Nome=nome, Cognome=cognome, Sesso=sesso, DataNascita=data_nascita, Email=email, Password=password, Attivo=attivo, Telefono=telefono)
+    session.add(to_add)
+    session.commit()
+    return toAdd
+
+
+def insert_cliente(persona):
+    to_add = Clienti(IDCliente=persona.CF, DataIscrizione=date.today(), PagamentoMese=False)
+    session.add(to_add)
     session.commit()
 
 
-def insert_cliente(**kwargs):
-    insert_persona(CF=kwargs['CF'], Nome=kwargs['Nome'], Cognome=kwargs['Cognome'], Sesso=kwargs['Sesso'], DataNascita=kwargs['DataNascita'],
-                      Email=kwargs['Email'], Password=kwargs['Password'], Attivo=kwargs['Attivo'], Telefono=kwargs['Telefono'])
-    toAdd = Clienti(IDCliente=kwargs['CF'], DataIscrizione=date.today(), PagamentoMese=False)
-    session.add(toAdd)
+def insert_istruttore(persona):
+    to_add = Staff(IDStaff=persona.CF, Ruolo='Istruttore')
+    session.add(to_add)
     session.commit()
+
+
+def insert_corso(max_persone, id_sala, ora_inizio, ora_fine, data, id_istruttore, id_pacchetto=None, descrizione=None):
+    to_add = Corsi(MaxPersone=max_persone, IDSala=id_sala, OraInizio=ora_inizio, OraFine=ora_fine, Data=data , IDIstruttore=id_istruttore, IDPacchetto=id_pacchetto, Descrizione=descrizione)
+    session.add(to_add)
+    session.commit()
+
+
+def get_corsi(mese, anno):
+    q = db.session.query(Corsi).all()
+    return q
 
 
 def addTestSala():

@@ -1,10 +1,14 @@
 import re
 
+from datetime import *
 from flask import *
 from flask_login import login_user, logout_user
 
 from run import app, db, login_manager, get_user_by_email
 from appF.models import *
+
+
+# insert_corso(10, 1, time(12,0,0), time(13,0,0), date.today(),"DCKDFY89H07C957C")
 
 
 @app.route('/')
@@ -75,6 +79,7 @@ def register():
             'password']:
             msg = 'Rimpire tutto il form'
         else:
+            # FIXME: sistemare argomenti
             insert_cliente(Nome=request.form['name'], Cognome=request.form['surname'],
                                  DataNascita=request.form['DataNascita'], CF=request.form['Codice fiscale'],
                                  Email=request.form['email'], Telefono=request.form['telefono'],
@@ -89,4 +94,4 @@ def register():
 
 @app.route('/dashboard')
 def adminDashboard():
-    return render_template('adminDashboard.html')
+    return render_template('adminDashboard.html', corsi=get_corsi(5, 2021))
