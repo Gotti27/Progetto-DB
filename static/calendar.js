@@ -36,24 +36,41 @@ coursesList.forEach(i =>{
 console.log(corsi)
 
 const calendar = document.getElementById('calendar');
-const newEventModal = document.getElementById('newEventModal');
-const deleteEventModal = document.getElementById('deleteEventModal');
+const dayModal = document.getElementById('dayModal');
 const backDrop = document.getElementById('modalBackDrop');
-const eventTitleInput = document.getElementById('eventTitleInput');
 const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const mesi = ['gen', 'feb', 'mar', 'apr', 'mag', 'giu', 'lug', 'ago', 'set', 'ott', 'nov', 'dic']
 
+
+function openCoursePage(x){
+    console.log(x);
+}
 
 function openModal(date) {
     clicked = date;
+    date = date.split('-')
 
-    const eventForDay = events.find(e => e.date === clicked);
+    document.getElementById('eventText').innerHTML = '';
+    document.getElementById('modalHeader').innerHTML = date[2].toString() + ' ' + mesi[date[1]-1] + ' '+ date[0];
 
-    if (eventForDay) {
-        document.getElementById('eventText').innerText = eventForDay.title;
-        deleteEventModal.style.display = 'block';
-    } else {
-        newEventModal.style.display = 'block';
-    }
+    let eventsForDay = [];
+    console.log(clicked)
+    corsi.forEach(e => {
+        if (e.data === clicked)
+            eventsForDay.push(e)
+    });
+    eventsForDay.sort(function(a, b){return (parseFloat(a.oraI.slice(0,2)) + parseFloat(a.oraI.slice(3,5))/60.0 ) - (parseFloat(b.oraI.slice(0,2)) + parseFloat(b.oraI.slice(3,5))/60.0) })
+    console.log(eventsForDay)
+
+    eventsForDay.forEach( x => {
+        const infoCorso = document.createElement('div');
+        infoCorso.addEventListener('click', () => openCoursePage(x.id))
+        infoCorso.classList.add('courseInfo');
+        infoCorso.innerHTML = x.id;
+        document.getElementById('eventText').appendChild(infoCorso);
+    });
+
+    dayModal.style.display = 'block';
 
     backDrop.style.display = 'block';
 }
@@ -118,36 +135,12 @@ function load() {
 }
 
 function closeModal() {
-    eventTitleInput.classList.remove('error');
-    newEventModal.style.display = 'none';
-    deleteEventModal.style.display = 'none';
+    dayModal.style.display = 'none';
     backDrop.style.display = 'none';
-    eventTitleInput.value = '';
     clicked = null;
     load();
 }
 
-function saveEvent() {
-    if (eventTitleInput.value) {
-        eventTitleInput.classList.remove('error');
-
-        events.push({
-            date: clicked,
-            title: eventTitleInput.value,
-        });
-
-        localStorage.setItem('events', JSON.stringify(events));
-        closeModal();
-    } else {
-        eventTitleInput.classList.add('error');
-    }
-}
-
-function deleteEvent() {
-    events = events.filter(e => e.date !== clicked);
-    localStorage.setItem('events', JSON.stringify(events));
-    closeModal();
-}
 
 function initButtons() {
     document.getElementById('nextButton').addEventListener('click', () => {
@@ -160,9 +153,6 @@ function initButtons() {
         load();
     });
 
-    document.getElementById('saveButton').addEventListener('click', saveEvent);
-    document.getElementById('cancelButton').addEventListener('click', closeModal);
-    document.getElementById('deleteButton').addEventListener('click', deleteEvent);
     document.getElementById('closeButton').addEventListener('click', closeModal);
 }
 

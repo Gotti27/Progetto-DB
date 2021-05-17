@@ -65,12 +65,15 @@ button {
   background-color:#e8f4fa;
 }
 .event {
-  font-size: 10px;
-  padding: 3px;
+  margin-left: 50%;
+  text-align: center;
+  font-size: 20px;
+  padding: 5px;
   background-color: #58bae4;
   color: white;
-  border-radius: 5px;
-  max-height: 55px;
+  border-radius: 25px;
+  height: 25px;
+  width: 25px;
   overflow: hidden;
 }
 .padding {
@@ -78,7 +81,7 @@ button {
   background-color: #FFFCFF !important;
   box-shadow: none !important;
 }
-#newEventModal, #deleteEventModal {
+#newEventModal, #dayModal{
   display: none;
   z-index: 20;
   padding: 25px;
@@ -122,4 +125,11 @@ button {
   height: 100vh;
   position: absolute;
   background-color: rgba(0,0,0,0.8);
+}
+.courseInfo{
+  width: 90%;
+  border-radius: 5px;
+  background-color: #58bae4;
+  margin: 5px auto 5px auto;
+  padding: 5px;
 }
