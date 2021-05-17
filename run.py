@@ -1,3 +1,4 @@
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin
@@ -20,27 +21,15 @@ engine_istruttore = create_engine(app.config['SQLALCHEMY_DATABASE_URI_ISTRUTTORE
 engine_gestore = create_engine(app.config['SQLALCHEMY_DATABASE_URI_GESTORE'], echo=True)
 """
 
-
-class User(UserMixin):
-    def __init__(self, id, email, pwd, role):
-        self.id = id
-        self.email = email
-        self.pwd = pwd
-        self.role = role
-
-
-def get_user_by_email(username):
-    user = db.session.query(User).filter_by(email=username)
-    return User(user.id, user.email, user.pwd, user.role)
+from appF.views import *  # Non importato all'inizio per evitare dipendenze circolari
+from appF.models import *
 
 
 @login_manager.user_loader
-def load_user(user_id):
-    user = db.session.query(User).filter_by(id=user_id)
-    return User(user.id, user.email, user.pwd, user.role)
-
-
-from appF.views import *  # Non importato all'inizio per evitare dipendenze circolari
+def load_user(cf):
+    # since the user_id is just the primary key of our user table, use it in the query for the user
+    q = db.session.query(Persona).filter(Persona.CF == cf)
+    return q.one()
 
 if __name__ == '__main__':
     app.run()

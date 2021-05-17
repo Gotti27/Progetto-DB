@@ -2,9 +2,9 @@ import re
 
 from datetime import *
 from flask import *
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, login_required
 
-from run import app, db, login_manager, get_user_by_email
+from run import app, db, login_manager
 from appF.models import *
 
 
@@ -12,21 +12,14 @@ from appF.models import *
 
 
 @app.route('/')
-def hello_world():
+def home():
     return render_template("home.html")
 
-
+'''
 @app.route('/users/')
 def show_profile():
     return f'Helo'
-
-
-@app.route('/sale/')
-def param_page():
-    a = True
-    b = "ciao"
-    c = [1, 2, 3, 4, 5, 6]
-    return render_template('sale.html', sala=getSale())
+'''
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -35,12 +28,12 @@ def login():
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
         username = request.form['username']
         password = request.form['password']
-        logging = db.session.query(Persone).filter(Persone.Email == username
-                                                   and Persone.Password == password).one()
+        logging = db.session.query(Persona).filter(Persona.Email == username
+                                                   and Persona.Password == password).one()
         if logging is not None:
-            user = get_user_by_email(request.form['username']) # non funzionante
+            user = get_persona_by_email(request.form['username'])
             login_user(user)
-            return render_template('index.html')
+            return redirect(url_for('show_profile', username=user.Email))
         else:
             msg = 'Username o password non corretti'
 
@@ -48,9 +41,9 @@ def login():
 
 
 @app.route('/logout')
-# @login_required
+@login_required
 def logout():
-    logout_user() #da rivedere, non sono sicuro
+    logout_user()
     return redirect(url_for('home'))
 
 
@@ -59,8 +52,8 @@ def register():
     msg = ''
     if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
         email = request.form['email']
-        registration = db.session.query(Persone).filter(Persone.Email == email).first()
-        cf = db.session.query(Persone).filter(Persone.CF == request.form['Codice fiscale']).first()
+        registration = db.session.query(Persona).filter(Persona.Email == email).first()
+        cf = db.session.query(Persona).filter(Persona.CF == request.form['Codice fiscale']).first()
         if registration is not None or cf is not None:
             msg = 'Persona già registrata'
         elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
@@ -79,19 +72,26 @@ def register():
             'password']:
             msg = 'Rimpire tutto il form'
         else:
-            # FIXME: sistemare argomenti
-            insert_cliente(Nome=request.form['name'], Cognome=request.form['surname'],
-                                 DataNascita=request.form['DataNascita'], CF=request.form['Codice fiscale'],
-                                 Email=request.form['email'], Telefono=request.form['telefono'],
-                                 Sesso=request.form['sex'], Password=request.form['password'], Attivo=False)
-            msg = 'Ti sei registrato con successo!'
-            # TODO: far passare alla pagina loggata dell'utente?
+            nuova_persona = insert_persona(nome=request.form['name'], cognome=request.form['surname'],
+                                 data_nascita=request.form['DataNascita'], cf=request.form['Codice fiscale'],
+                                 email=request.form['email'], telefono=request.form['telefono'],
+                                 sesso=request.form['sex'], password=request.form['password'], attivo=False)
+            insert_cliente(nuova_persona)
+            # msg = 'Ti sei registrato con successo!' da rimuovere
+            login_user(nuova_persona)
+            return redirect(url_for('show_profile', username=nuova_persona.Email))
     elif request.method == 'POST':
         msg = 'Riempi tutti i campi del form'
 
     return render_template('register.html', msg=msg)
 
 
+@app.route('/users/<username>')
+@login_required
+def show_profile(username):
+    return render_template('user_page.html', username=username)
+
+
 @app.route('/dashboard')
-def adminDashboard():
+def admin_dashboard():
     return render_template('adminDashboard.html', corsi=get_corsi(5, 2021))

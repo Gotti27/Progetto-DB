@@ -2,11 +2,12 @@ from run import db, engine
 from sqlalchemy import *
 from sqlalchemy.orm import *
 from datetime import *
+from flask_login import UserMixin
 
 Base = declarative_base()  # tabella = classe che eredita da Base
 
 
-class Sale(Base):
+class Sala(Base):
     __tablename__ = 'sale'
 
     IDSala = Column(INTEGER, primary_key=True)
@@ -17,7 +18,7 @@ class Sale(Base):
         return "<Sala: ID='%s', MaxP='%s', Tipo='%s'>" % (self.IDSala, self.MaxPersone, self.Tipo)
 
 
-class Persone(Base):
+class Persona(UserMixin, Base):
     __tablename__ = 'persone'
 
     CF = Column(CHAR(16), primary_key=True)
@@ -30,17 +31,17 @@ class Persone(Base):
     Telefono = Column(TEXT)
     Attivo = Column(BOOLEAN, nullable=False)
 
-    '''
-        per la questione di rappresentare il Sesso
-        #https://docs.sqlalchemy.org/en/14/core/type_basics.html?highlight=enum#sqlalchemy.types.Enum
-        https://stackoverflow.com/questions/20644292/how-to-create-enum-in-sqlalchemy/20646024
-    '''
+    def is_active(self):
+        return self.Attivo
+
+    def get_id(self):
+        return self.CF
 
     def __repr__(self):
         return "<Persona: CF='%s', N='%s', C='%s', S='%s', DN='%s', Email='%s', PW='%s', Tel='%s', Act='%s'>" % (self.CF, self.Nome, self.Cognome, self.Sesso, self.DataNascita, self.Email, self.Password, self.Telefono, self.Attivo)
 
 
-class PacchettiCorsi(Base):
+class PacchettoCorsi(Base):
     __tablename__ = 'pacchettiCorsi'
 
     IDPacchetto = Column(INTEGER, primary_key=True)
@@ -51,7 +52,7 @@ class PacchettiCorsi(Base):
         return "<PacchettiCorsi: ID='%s', N='%s', Des='%s'>" % (self.IDPacchetto, self.Nome, self.Descrizione)
 
 
-class OrariPalestra(Base):
+class OrarioPalestra(Base):
     __tablename__ = 'orariPalestra'
 
     Apertura = Column(DATE, primary_key=True)
@@ -62,7 +63,7 @@ class OrariPalestra(Base):
         return "<Palestra: A='%s', C='%s', Day='%s>" % (self.Apertura, self.Chiusura, self.GiornoSettimana)
 
 
-class GiorniFestivi(Base):
+class GiornoFestivo(Base):
     __tablename__ = 'giorniFestivi'
 
     IDGiorno = Column(INTEGER, primary_key=True)
@@ -71,14 +72,14 @@ class GiorniFestivi(Base):
     Giorno = Column(DATE, nullable=False)
 
 
-class Clienti(Base):
+class Cliente(Base):
     __tablename__ = 'clienti'
 
-    IDCliente = Column(CHAR(16), ForeignKey(Persone.CF), primary_key=True)
+    IDCliente = Column(CHAR(16), ForeignKey(Persona.CF), primary_key=True)
     DataIscrizione = Column(DATE, nullable=False)
     PagamentoMese = Column(BOOLEAN, nullable=False)
 
-    persone = relationship(Persone, uselist=False)
+    persone = relationship(Persona, uselist=False)
 
     def __repr__(self):
         return "<Clienti: ID:'%s', DatIscr:'%s', PagMese:'%s'>" % (self.IDCliente, self.DataIscrizione, self.PagamentoMese)
@@ -87,69 +88,71 @@ class Clienti(Base):
 class Staff(Base):
     __tablename__ = 'staff'
 
-    IDStaff = Column(CHAR(16), ForeignKey(Persone.CF), primary_key=True)
+    IDStaff = Column(CHAR(16), ForeignKey(Persona.CF), primary_key=True)
     Ruolo = Column('Ruolo', Enum('Istruttore', 'Gestore'), nullable=False)
 
-    persone = relationship(Persone, uselist=False)
+    persone = relationship(Persona, uselist=False)
 
     def __repr__(self):
         return "<Staff: ID:'%s', Role:'%s'>" % (self.IDStaff, self.Ruolo)
 
 
-class Corsi(Base):
+class Corso(Base):
     __tablename__ = 'corsi'
 
     IDCorso = Column(INTEGER, primary_key=True)
     MaxPersone = Column(SMALLINT, nullable=False)
-    IDSala = Column(INTEGER, ForeignKey(Sale.IDSala), nullable=False)
+    IDSala = Column(INTEGER, ForeignKey(Sala.IDSala), nullable=False)
     OraInizio = Column(TIME, nullable=False)
     OraFine = Column(TIME, nullable=False)
     Data = Column(DATE, nullable=False)
     Descrizione = Column(TEXT)
     Nome = Column(VARCHAR, nullable=False)
-    IDPacchetto = Column(INTEGER, ForeignKey(PacchettiCorsi.IDPacchetto))
+    IDPacchetto = Column(INTEGER, ForeignKey(PacchettoCorsi.IDPacchetto))
     IDIstruttore = Column(CHAR(16), ForeignKey(Staff.IDStaff), nullable=False)
 
-    sale = relationship(Sale, uselist=False)
-    pacchettiCorsi = relationship(PacchettiCorsi, uselist=False)
+    sale = relationship(Sala, uselist=False)
+    pacchettiCorsi = relationship(PacchettoCorsi, uselist=False)
     staff = relationship(Staff, uselist=False)
 
     def __repr__(self):
         return "<ID:%s, Nome:%s, Max:%s, IDSala:%s, OInizio:%s, OFine:%s, Data:%s, Descr:%s, IDPac:%s, IDIstr:%s>" % (self.IDCorso, self.Nome, self.MaxPersone, self.IDSala, self.OraInizio, self.OraFine, self.Data, str(self.Descrizione), str(self.IDPacchetto), self.IDIstruttore)
 
 
-class Prenotazioni(Base):
+class Prenotazione(Base):
     __tablename__ = 'prenotazioni'
 
     IDPrenotazione = Column(INTEGER, primary_key=True)
     Data = Column(DATE, nullable=False)
     OraInizio = Column(TIME, nullable=False)
     OraFine = Column(TIME, nullable=False)
-    IDCliente = Column(VARCHAR, ForeignKey(Clienti.IDCliente), nullable=False)
-    IDCorso = Column(INTEGER, ForeignKey(Corsi.IDCorso))
-    IDSala = Column(INTEGER, ForeignKey(Sale.IDSala), nullable=False)
+    IDCliente = Column(VARCHAR, ForeignKey(Cliente.IDCliente), nullable=False)
+    IDCorso = Column(INTEGER, ForeignKey(Corso.IDCorso))
+    IDSala = Column(INTEGER, ForeignKey(Sala.IDSala), nullable=False)
     Approvata = Column(BOOLEAN, nullable=False, default=True)
 
-    clienti = relationship(Clienti, uselist=False)
-    corsi = relationship(Corsi, uselist=False)
-    sale = relationship(Sale, uselist=False)
+    clienti = relationship(Cliente, uselist=False)
+    corsi = relationship(Corso, uselist=False)
+    sale = relationship(Sala, uselist=False)
 
     def __repr__(self):
-        return "<Prenotazioni: ID:'%s', Data:'%s', OInizio:'%s', OFine:'%s', IDCliente:'%s', IDCorso:'%s', IDSala:'%s', Aprr:'%s'>" % (self.IDPrenotazione, self.Data, self.OraInizio, self.OraFine, self.IDCliente, self.IDCorso, self.IDSala, self.Approvata)
+        return "<Prenotazioni: ID:'%s', Data:'%s', OInizio:'%s', OFine:'%s', IDCliente:'%s', IDCorso:'%s', IDSala:'%s', Aprr:'%s'>" %\
+               (self.IDPrenotazione, self.Data, self.OraInizio, self.OraFine, self.IDCliente, self.IDCorso, self.IDSala, self.Approvata)
 
 
 Session = sessionmaker(bind=engine)       # creazione della factory
 session = Session()
 
+
 def insert_persona(cf, nome, cognome, sesso, data_nascita, email, password, attivo, telefono=None):
-    to_add = Persone(CF=cf, Nome=nome, Cognome=cognome, Sesso=sesso, DataNascita=data_nascita, Email=email, Password=password, Attivo=attivo, Telefono=telefono)
+    to_add = Persona(CF=cf, Nome=nome, Cognome=cognome, Sesso=sesso, DataNascita=data_nascita, Email=email, Password=password, Attivo=attivo, Telefono=telefono)
     session.add(to_add)
     session.commit()
-    return toAdd
+    return to_add
 
 
 def insert_cliente(persona):
-    to_add = Clienti(IDCliente=persona.CF, DataIscrizione=date.today(), PagamentoMese=False)
+    to_add = Cliente(IDCliente=persona.CF, DataIscrizione=date.today(), PagamentoMese=False)
     session.add(to_add)
     session.commit()
 
@@ -161,28 +164,33 @@ def insert_istruttore(persona):
 
 
 def insert_corso(max_persone, id_sala, ora_inizio, ora_fine, data, id_istruttore, id_pacchetto=None, descrizione=None):
-    to_add = Corsi(MaxPersone=max_persone, IDSala=id_sala, OraInizio=ora_inizio, OraFine=ora_fine, Data=data , IDIstruttore=id_istruttore, IDPacchetto=id_pacchetto, Descrizione=descrizione)
+    to_add = Corso(MaxPersone=max_persone, IDSala=id_sala, OraInizio=ora_inizio, OraFine=ora_fine, Data=data , IDIstruttore=id_istruttore, IDPacchetto=id_pacchetto, Descrizione=descrizione)
     session.add(to_add)
     session.commit()
 
 
 def get_corsi(mese, anno):
-    q = db.session.query(Corsi).all()
+    q = db.session.query(Corso).all()
     return q
 
 
 def addTestSala():
-    testAdd = Sale(IDSala=1, MaxPersone=50, Tipo="Test2")
+    testAdd = Sala(IDSala=1, MaxPersone=50, Tipo="Test2")
     session.add(testAdd)
     session.commit()
 
 
-def getSale():
-    testQuery = db.session.query(Sale).all()   # qui è necessario salvare la pending instance
-    return testQuery
+def get_sale():
+    q = db.session.query(Sala).all()   # qui è necessario salvare la pending instance
+    return q
+
+
+def get_persona_by_email(email):
+    q = db.session.query(Persona).filter(Persona.Email == email)
+    return q.one()
 
 
 def addTestPrenotazione():
-    testAdd = Prenotazioni(Data=date.today(), OraInizio=time(13,0,0), OraFine=time(15,0,0), IDCliente="ABCDEFGHIJKLMNOP", IDSala=1)
+    testAdd = Prenotazione(Data=date.today(), OraInizio=time(13,0,0), OraFine=time(15,0,0), IDCliente="ABCDEFGHIJKLMNOP", IDSala=1)
     session.add(testAdd)
     session.commit()
