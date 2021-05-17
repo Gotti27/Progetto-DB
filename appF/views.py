@@ -27,7 +27,7 @@ def login():
         if logging is not None and bcrypt.checkpw(password, logging.Password.encode("utf-8")):
             user = get_persona_by_email(request.form['username'])
             login_user(user)
-            return redirect(url_for('show_profile'))
+            return redirect(url_for('show_profile', username=user.Email))
         else:
             msg = 'Username o password non corretti'
 
@@ -75,17 +75,18 @@ def register():
             insert_cliente(nuova_persona)
             # msg = 'Ti sei registrato con successo!' non visualizzato a causa del redirect
             login_user(nuova_persona)
-            return redirect(url_for('show_profile'))
+            return redirect(url_for('show_profile', username=nuova_persona.Email))
     elif request.method == 'POST':
         msg = 'Riempi tutti i campi del form'
 
     return render_template('register.html', msg=msg)
 
 
-@app.route('/user')
+@app.route('/user/<username>')
 @login_required
-def show_profile():
-    username = current_user.get_email
+def show_profile(username):
+    if not username == current_user.get_email:
+        username = current_user.get_email
     return render_template('user_page.html', username=username)
 
 
