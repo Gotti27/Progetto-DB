@@ -15,11 +15,7 @@ from appF.models import *
 def home():
     return render_template("home.html")
 
-'''
-@app.route('/users/')
-def show_profile():
-    return f'Helo'
-'''
+
 
 
 @app.route('/login', methods=['GET', 'POST'])

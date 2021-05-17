@@ -95,6 +95,7 @@ function load() {
         if (i > paddingDays) {
             daySquare.innerText = i - paddingDays;
             const eventForDay = corsi.find(e => e.data == dayString);
+            const nEventsForDay = corsi.filter(e => e.data == dayString).length;
 
             if (i - paddingDays === day && nav === 0) {
                 daySquare.id = 'currentDay';
@@ -103,7 +104,7 @@ function load() {
             if (eventForDay) {
                 const eventDiv = document.createElement('div');
                 eventDiv.classList.add('event');
-                eventDiv.innerText = eventForDay.nome;
+                eventDiv.innerText = nEventsForDay;
                 daySquare.appendChild(eventDiv);
             }
 
