@@ -37,6 +37,10 @@ class Persona(UserMixin, Base):
     def get_id(self):
         return self.CF
 
+    @property
+    def get_email(self):
+        return str(self.Email)
+
     def __repr__(self):
         return "<Persona: CF='%s', N='%s', C='%s', S='%s', DN='%s', Email='%s', PW='%s', Tel='%s', Act='%s'>" % (self.CF, self.Nome, self.Cognome, self.Sesso, self.DataNascita, self.Email, self.Password, self.Telefono, self.Attivo)
 

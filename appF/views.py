@@ -3,7 +3,7 @@ import re
 from datetime import *
 import bcrypt
 from flask import *
-from flask_login import login_user, logout_user, login_required
+from flask_login import login_user, logout_user, login_required, current_user
 
 from run import app, db, login_manager
 from appF.models import *
@@ -27,7 +27,7 @@ def login():
         if logging is not None and bcrypt.checkpw(password, logging.Password.encode("utf-8")):
             user = get_persona_by_email(request.form['username'])
             login_user(user)
-            return redirect(url_for('show_profile', username=user.Email))
+            return redirect(url_for('show_profile'))
         else:
             msg = 'Username o password non corretti'
 
@@ -75,16 +75,17 @@ def register():
             insert_cliente(nuova_persona)
             # msg = 'Ti sei registrato con successo!' non visualizzato a causa del redirect
             login_user(nuova_persona)
-            return redirect(url_for('show_profile', username=nuova_persona.Email))
+            return redirect(url_for('show_profile'))
     elif request.method == 'POST':
         msg = 'Riempi tutti i campi del form'
 
     return render_template('register.html', msg=msg)
 
 
-@app.route('/users/<username>')
+@app.route('/user')
 @login_required
-def show_profile(username):
+def show_profile():
+    username = current_user.get_email
     return render_template('user_page.html', username=username)
 
 
