@@ -1,27 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin dashboard</title>
+    <title>Calendar App Vanilla JS</title>
 
     <link rel="stylesheet" href="../static/calendar.css">
-  </head>
-  <body>
-    <button class="w3-button w3-black" style="margin-top:5px; margin-left:40%">
-        <a href="{{url_for('home')}}">Home</a>
-    </button>
+</head>
+<body>
 
-    <div id="container">
-      <div id="header">
+<div id="container">
+    <div id="header">
         <div id="monthDisplay"></div>
         <div>
-          <button id="backButton">Back</button>
-          <button id="nextButton">Next</button>
+            <button id="backButton"> << </button>
+            <button id="nextButton"> >> </button>
         </div>
-      </div>
+    </div>
 
-      <div id="weekdays">
+    <div id="weekdays">
         <div>Lunedì</div>
         <div>Martedì</div>
         <div>Mercoledì</div>
@@ -29,34 +26,27 @@
         <div>Venerdì</div>
         <div>Sabato</div>
         <div>Domenica</div>
-      </div>
-
-      <div id="calendar"></div>
     </div>
 
-    <div id="newEventModal">
-      <h2>New Event</h2>
+    <div id="calendar"></div>
+</div>
 
-      <input id="eventTitleInput" placeholder="Event Title" />
 
-      <button id="saveButton">Save</button>
-      <button id="cancelButton">Cancel</button>
-    </div>
 
-    <div id="deleteEventModal">
-      <h2>Event</h2>
+<div id="dayModal">
+    <h2 id="modalHeader"></h2>
 
-      <p id="eventText"></p>
+    <div id="eventText"></div>
 
-      <button id="deleteButton">Delete</button>
-      <button id="closeButton">Close</button>
-    </div>
+    <button id="closeButton">Close</button>
+</div>
 
-    <div id="modalBackDrop"></div>
+<div id="modalBackDrop"></div>
 
-    <br>
-    <div id="courses">{{ corsi }}</div>
+<br>
+<div id="courses">{{ corsi }}</div>
 
-    <script type=text/javascript src="{{ url_for('static', filename='calendar.js') }}"></script>
-  </body>
+<script type=text/javascript src="{{ url_for('static', filename='calendar.js') }}"></script>
+
+</body>
 </html>
