@@ -89,7 +89,13 @@ def show_profile(username):
         return redirect(url_for('show_profile', username=current_user.get_email))
     return render_template('user_page.html', username=username)
 
+# TODO: da eliminare in production
+@app.route('/dashboard')
+def temp_admin_dashboard():
+    return render_template('adminDashboard.html', corsi=get_corsi(5, 2021))
 
+# TODO: da decommentare in production
+'''
 @app.route('/dashboard')
 @login_required
 def admin_dashboard():
@@ -97,3 +103,4 @@ def admin_dashboard():
         return render_template('adminDashboard.html', corsi=get_corsi(5, 2021))  # TODO: impostare mese corretto
     else:
         abort(401)
+'''
