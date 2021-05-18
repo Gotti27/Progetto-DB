@@ -1,4 +1,5 @@
 let nav = 0;
+let delta = 0;
 let clicked = null;
 let events = localStorage.getItem('events') ? JSON.parse(localStorage.getItem('events')) : [];
 let tempCourses = document.getElementById('courses');
@@ -145,11 +146,19 @@ function closeModal() {
 function initButtons() {
     document.getElementById('nextButton').addEventListener('click', () => {
         nav++;
+        delta--;
+        load();
+    });
+
+    document.getElementById('todayButton').addEventListener('click', () => {
+        nav += delta;
+        delta = 0
         load();
     });
 
     document.getElementById('backButton').addEventListener('click', () => {
         nav--;
+        delta++;
         load();
     });
 

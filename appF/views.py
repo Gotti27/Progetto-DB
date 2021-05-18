@@ -48,7 +48,11 @@ def register():
         email = request.form['email']
         registration = db.session.query(Persona).filter(Persona.Email == email).first()
         cf = db.session.query(Persona).filter(Persona.CF == request.form['Codice fiscale']).first()
-        if registration is not None or cf is not None:
+        if not request.form['name'] or not request.form['surname'] or not request.form['DataNascita'] or not \
+                request.form['Codice fiscale'] or not request.form['email'] or not request.form['sex'] or not \
+                request.form['password']:
+            msg = 'Rimpire tutto il form'
+        elif registration is not None or cf is not None:
             msg = 'Persona già registrata'
         elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
             msg = 'Indirizzo email non valido'
@@ -61,10 +65,6 @@ def register():
         # (http://blog.marketto.it/2016/01/regex-validazione-codice-fiscale-con-omocodia/) REGEX PER CODICE FISCALE
         # TODO: testarlo
 
-        elif not request.form['name'] or not request.form['surname'] or not request.form['DataNascita'] or not \
-                request.form['Codice fiscale'] or not request.form['email'] or not request.form['sex'] or not \
-                request.form['password']:
-            msg = 'Rimpire tutto il form'
         else:
             nuova_persona = insert_persona(nome=request.form['name'], cognome=request.form['surname'],
                                            data_nascita=request.form['DataNascita'], cf=request.form['Codice fiscale'],
