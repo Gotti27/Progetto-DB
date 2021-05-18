@@ -5,7 +5,7 @@ import bcrypt
 from flask import *
 from flask_login import login_user, logout_user, login_required, current_user
 
-from run import app, db, login_manager
+from run import app, db
 from appF.models import *
 
 
@@ -86,10 +86,14 @@ def register():
 @login_required
 def show_profile(username):
     if not username == current_user.get_email:
-        username = current_user.get_email
+        return render_template('user_page.html', username=current_user.get_email)
     return render_template('user_page.html', username=username)
 
 
 @app.route('/dashboard')
+@login_required
 def admin_dashboard():
-    return render_template('adminDashboard.html', corsi=get_corsi(5, 2021))
+    if (db.session.query(Staff).filter(Staff.IDStaff == current_user.get_id()).filter(Staff.Ruolo == 'Gestore')).count():
+        return render_template('adminDashboard.html', corsi=get_corsi(5, 2021))  # TODO: impostare mese corretto
+    else:
+        abort(401)
