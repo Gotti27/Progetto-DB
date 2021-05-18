@@ -3,11 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>User Page</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
 <body>
     <div align="center">
         <p>hello {{username}}</p>
-        <button class="w3-button w3-black" style="margin-top:5px; margin-left:40%">
+        <button class="w3-button w3-black" style="margin-top:5px;">
+        <a href="{{url_for('home')}}">Home</a>
+        </button>
+        <button class="w3-button w3-black" style="margin-top:5px;">
         <a href="{{url_for('logout')}}">Logout</a>
         </button>
     </div>

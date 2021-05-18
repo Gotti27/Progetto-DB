@@ -22,7 +22,7 @@ def login():
     msg = ''
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
         username = request.form['username']
-        password = bytes(request.form['password'], encoding="utf-8")
+        password = bytes(request.form['password'], encoding="utf-8") # todo: controllare se è possibile .encode() chiedere a Mario
         logging = db.session.query(Persona).filter(Persona.Email == username).first()
         if logging is not None and bcrypt.checkpw(password, logging.Password.encode("utf-8")):
             user = get_persona_by_email(request.form['username'])
