@@ -5,7 +5,7 @@ import bcrypt
 from flask import *
 from flask_login import login_user, logout_user, login_required, current_user
 
-from run import app, db, login_manager
+from run import app, db
 from appF.models import *
 
 
@@ -48,7 +48,11 @@ def register():
         email = request.form['email']
         registration = db.session.query(Persona).filter(Persona.Email == email).first()
         cf = db.session.query(Persona).filter(Persona.CF == request.form['Codice fiscale']).first()
-        if registration is not None or cf is not None:
+        if not request.form['name'] or not request.form['surname'] or not request.form['DataNascita'] or not \
+                request.form['Codice fiscale'] or not request.form['email'] or not request.form['sex'] or not \
+                request.form['password']:
+            msg = 'Rimpire tutto il form'
+        elif registration is not None or cf is not None:
             msg = 'Persona già registrata'
         elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
             msg = 'Indirizzo email non valido'
@@ -61,10 +65,6 @@ def register():
         # (http://blog.marketto.it/2016/01/regex-validazione-codice-fiscale-con-omocodia/) REGEX PER CODICE FISCALE
         # TODO: testarlo
 
-        elif not request.form['name'] or not request.form['surname'] or not request.form['DataNascita'] or not \
-                request.form['Codice fiscale'] or not request.form['email'] or not request.form['sex'] or not \
-                request.form['password']:
-            msg = 'Rimpire tutto il form'
         else:
             nuova_persona = insert_persona(nome=request.form['name'], cognome=request.form['surname'],
                                            data_nascita=request.form['DataNascita'], cf=request.form['Codice fiscale'],
@@ -86,10 +86,21 @@ def register():
 @login_required
 def show_profile(username):
     if not username == current_user.get_email:
-        username = current_user.get_email
+        return redirect(url_for('show_profile', username=current_user.get_email))
     return render_template('user_page.html', username=username)
 
-
+# TODO: da eliminare in production
 @app.route('/dashboard')
-def admin_dashboard():
+def temp_admin_dashboard():
     return render_template('adminDashboard.html', corsi=get_corsi(5, 2021))
+
+# TODO: da decommentare in production
+'''
+@app.route('/dashboard')
+@login_required
+def admin_dashboard():
+    if (db.session.query(Staff).filter(Staff.IDStaff == current_user.get_id()).filter(Staff.Ruolo == 'Gestore')).count():
+        return render_template('adminDashboard.html', corsi=get_corsi(5, 2021))  # TODO: impostare mese corretto
+    else:
+        abort(401)
+'''
