@@ -86,7 +86,7 @@ def register():
 @login_required
 def show_profile(username):
     if not username == current_user.get_email:
-        return render_template('user_page.html', username=current_user.get_email)
+        return redirect(url_for('show_profile', username=current_user.get_email))
     return render_template('user_page.html', username=username)
 
 
