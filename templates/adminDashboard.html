@@ -5,7 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calendar App Vanilla JS</title>
 
-    <link rel="stylesheet" href="../static/calendar.css">
+    <link rel="stylesheet" href="/static/calendar.css">
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="{{url_for('static', filename='jquery.js') }}">\x3C/script>')</script>
+
 </head>
 <body>
 
@@ -45,8 +49,12 @@
 <div id="modalBackDrop"></div>
 
 <br>
-<div id="courses">{{ corsi }}</div>
 
+<script>
+    function getCorsi(){
+        return {{corsi | safe}}
+    }
+</script>
 <script type=text/javascript src="{{ url_for('static', filename='calendar.js') }}"></script>
 
 </body>

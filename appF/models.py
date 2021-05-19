@@ -100,7 +100,6 @@ class Staff(Base):
     def __repr__(self):
         return "<Staff: ID:'%s', Role:'%s'>" % (self.IDStaff, self.Ruolo)
 
-
 class Corso(Base):
     __tablename__ = 'corsi'
 
@@ -120,7 +119,7 @@ class Corso(Base):
     staff = relationship(Staff, uselist=False)
 
     def __repr__(self):
-        return "<ID:%s, Nome:%s, Max:%s, IDSala:%s, OInizio:%s, OFine:%s, Data:%s, Descr:%s, IDPac:%s, IDIstr:%s>" % (self.IDCorso, self.Nome, self.MaxPersone, self.IDSala, self.OraInizio, self.OraFine, self.Data, str(self.Descrizione), str(self.IDPacchetto), self.IDIstruttore)
+        return "ID:%s, Nome:%s, Max:%s, IDSala:%s, OInizio:%s, OFine:%s, Data:%s, Descr:%s, IDPac:%s, IDIstr:%s" % (self.IDCorso, self.Nome, self.MaxPersone, self.IDSala, self.OraInizio, self.OraFine, self.Data, str(self.Descrizione), str(self.IDPacchetto), self.IDIstruttore)
 
 
 class Prenotazione(Base):
@@ -174,8 +173,12 @@ def insert_corso(max_persone, id_sala, ora_inizio, ora_fine, data, id_istruttore
 
 
 def get_corsi(mese, anno):
-    q = db.session.query(Corso).all()
-    return q
+    q = db.session.query(Corso).filter(extract('year', Corso.Data)==anno).filter(extract('month', Corso.Data)==mese).order_by(Corso.OraInizio).all()
+    ret = []
+    for i in q:
+        ret.append({property: str(value) for property, value in vars(i).items()})
+        del ret[-1]['_sa_instance_state']
+    return ret
 
 
 def addTestSala():

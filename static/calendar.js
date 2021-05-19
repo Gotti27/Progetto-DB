@@ -1,50 +1,18 @@
-let nav = 0;
-let delta = 0;
 let clicked = null;
-let events = localStorage.getItem('events') ? JSON.parse(localStorage.getItem('events')) : [];
-let tempCourses = document.getElementById('courses');
-let coursesList = tempCourses.innerText;
 let corsi = [];
-const patt = /\<.+?\>/g;
-
-coursesList = coursesList.match(patt);
-
-class Corso {
-    constructor(s) {
-        let arr = [];
-        s = s.replace('<','').replace('>','');
-        s = s.split(', ');
-        s.forEach(i => {arr.push(i.split(/:(.+)/)[1])});
-        this.id = arr[0];
-        this.nome = arr[1]
-        this.maxP = arr[2];
-        this.idSala = arr[3];
-        this.oraI = arr[4];
-        this.oraF = arr[5];
-        this.data = arr[6];
-        this.idPacchetto = arr[7];
-        this.descrizione = arr[8];
-        this.idIstruttore = arr[9];
-
-        if (this.data[5] === '0'){this.data = this.data.slice(0,5) + this.data.slice(6)}
-    }
-}
-
-coursesList.forEach(i =>{
-    corsi.push(new Corso(i))
-})
-
-console.log(corsi)
 
 const calendar = document.getElementById('calendar');
 const dayModal = document.getElementById('dayModal');
 const backDrop = document.getElementById('modalBackDrop');
 const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const mesi = ['gen', 'feb', 'mar', 'apr', 'mag', 'giu', 'lug', 'ago', 'set', 'ott', 'nov', 'dic']
+const url = window.location.pathname.split('/');
+const month = parseInt(url.pop()) -1;
+const year = parseInt(url.pop());
 
 
 function openCoursePage(x){
-    console.log(x);
+    window.location.href = "http://127.0.0.1:5000/corso/"+x;
 }
 
 function openModal(date) {
@@ -55,19 +23,16 @@ function openModal(date) {
     document.getElementById('modalHeader').innerHTML = date[2].toString() + ' ' + mesi[date[1]-1] + ' '+ date[0];
 
     let eventsForDay = [];
-    console.log(clicked)
-    corsi.forEach(e => {
-        if (e.data === clicked)
-            eventsForDay.push(e)
+    corsi.forEach(c => {
+        if (c.Data === clicked)
+            eventsForDay.push(c)
     });
-    eventsForDay.sort(function(a, b){return (parseFloat(a.oraI.slice(0,2)) + parseFloat(a.oraI.slice(3,5))/60.0 ) - (parseFloat(b.oraI.slice(0,2)) + parseFloat(b.oraI.slice(3,5))/60.0) })
-    console.log(eventsForDay)
 
-    eventsForDay.forEach( x => {
+    eventsForDay.forEach( c => {
         const infoCorso = document.createElement('div');
-        infoCorso.addEventListener('click', () => openCoursePage(x.id))
+        infoCorso.addEventListener('click', () => openCoursePage(c.IDCorso))
         infoCorso.classList.add('courseInfo');
-        infoCorso.innerHTML = x.id;
+        infoCorso.innerHTML = c.Nome;
         document.getElementById('eventText').appendChild(infoCorso);
     });
 
@@ -77,15 +42,20 @@ function openModal(date) {
 }
 
 function load() {
-    const dt = new Date();
-
-    if (nav !== 0) {
-        dt.setMonth(new Date().getMonth() + nav);
-    }
+    const dt = new Date(year, month, (new Date().getDate()));
 
     const day = dt.getDate();
-    const month = dt.getMonth();
-    const year = dt.getFullYear();
+
+    console.log(month, year)
+
+    //updateMonth(month, year);
+    corsi = [];
+    corsi = getCorsi();
+    corsi.forEach(c => {
+        if (c.Data[5] === '0'){c.Data = c.Data.slice(0,5) + c.Data.slice(6)}
+    })
+
+    console.log(corsi)
 
     const firstDayOfMonth = new Date(year, month, 1);
     const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -102,7 +72,6 @@ function load() {
         `${dt.toLocaleDateString('it', { month: 'long' })} ${year}`;
 
     calendar.innerHTML = '';
-    tempCourses.innerHTML = '';
 
     for(let i = 1; i <= paddingDays + daysInMonth; i++) {
         const daySquare = document.createElement('div');
@@ -112,10 +81,10 @@ function load() {
 
         if (i > paddingDays) {
             daySquare.innerText = i - paddingDays;
-            const eventForDay = corsi.find(e => e.data == dayString);
-            const nEventsForDay = corsi.filter(e => e.data == dayString).length;
+            const eventForDay = corsi.find(e => e.Data == dayString);
+            const nEventsForDay = corsi.filter(e => e.Data == dayString).length;
 
-            if (i - paddingDays === day && nav === 0) {
+            if (i - paddingDays === day && month == (new Date().getMonth()) && year == (new Date().getFullYear())) {
                 daySquare.id = 'currentDay';
             }
 
@@ -145,25 +114,33 @@ function closeModal() {
 
 function initButtons() {
     document.getElementById('nextButton').addEventListener('click', () => {
-        nav++;
-        delta--;
-        load();
+        let newMonth = month+2;
+        let newYear = year;
+        if (month >= 11){
+            newYear++;
+            newMonth = 1;
+        }
+        window.location.href = "http://127.0.0.1:5000/dashboard/"+newYear+"/"+newMonth;
     });
 
     document.getElementById('todayButton').addEventListener('click', () => {
-        nav += delta;
-        delta = 0
-        load();
+        let dt = new Date()
+        window.location.href = "http://127.0.0.1:5000/dashboard/"+dt.getFullYear()+"/"+(dt.getMonth()+1);
     });
 
     document.getElementById('backButton').addEventListener('click', () => {
-        nav--;
-        delta++;
-        load();
+        let newMonth = month;
+        let newYear = year;
+        if (month <= 0){
+            newYear--;
+            newMonth = 12;
+        }
+        window.location.href = "http://127.0.0.1:5000/dashboard/"+newYear+"/"+newMonth;
     });
 
     document.getElementById('closeButton').addEventListener('click', closeModal);
 }
+
 
 initButtons();
 load();

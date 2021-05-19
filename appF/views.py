@@ -89,10 +89,18 @@ def show_profile(username):
         return redirect(url_for('show_profile', username=current_user.get_email))
     return render_template('user_page.html', username=username)
 
-# TODO: da eliminare in production
+
+
+# TODO: da eliminare/aggiornare in production
 @app.route('/dashboard')
-def temp_admin_dashboard():
-    return render_template('adminDashboard.html', corsi=get_corsi(5, 2021))
+def toady_dashboard():
+    return redirect(url_for('temp_admin_dashboard', anno=datetime.today().year, mese=datetime.today().month))
+
+@app.route('/dashboard/<anno>/<mese>', methods=['GET', 'POST'])
+def temp_admin_dashboard(anno, mese):
+    corsi = get_corsi(mese, anno)
+    return render_template('adminDashboard.html', corsi=corsi)
+
 
 # TODO: da decommentare in production
 '''
@@ -104,3 +112,7 @@ def admin_dashboard():
     else:
         abort(401)
 '''
+
+@app.route("/corso/<id>")
+def view_corso(id):
+    return render_template('sale.html', id=id)
