@@ -14,6 +14,8 @@ from appF.models import *
 
 @app.route('/')
 def home():
+    if current_user.is_authenticated:
+        return render_template("home.html", authenticated=True)
     return render_template("home.html")
 
 
@@ -72,7 +74,11 @@ def register():
                                            sesso=request.form['sex'],
                                            password=bcrypt.hashpw(request.form['password'].encode("utf-8"),
                                                                   bcrypt.gensalt()).decode("utf-8"), attivo=False)
-            insert_cliente(nuova_persona)
+            if (db.session.query(Staff).filter(Staff.IDStaff == current_user.get_id())
+                    .filter(Staff.Ruolo == 'Gestore')).count():
+                insert_istruttore(nuova_persona)
+            else:
+                insert_cliente(nuova_persona)
             # msg = 'Ti sei registrato con successo!' non visualizzato a causa del redirect
             login_user(nuova_persona)
             return redirect(url_for('show_profile', username=nuova_persona.Email))
@@ -90,11 +96,11 @@ def show_profile(username):
     return render_template('user_page.html', username=username)
 
 
-
 # TODO: da eliminare/aggiornare in production
 @app.route('/dashboard')
 def toady_dashboard():
     return redirect(url_for('temp_admin_dashboard', anno=datetime.today().year, mese=datetime.today().month))
+
 
 @app.route('/dashboard/<anno>/<mese>', methods=['GET', 'POST'])
 def temp_admin_dashboard(anno, mese):
@@ -115,4 +121,8 @@ def admin_dashboard():
 
 @app.route("/corso/<id>")
 def view_corso(id):
-    return render_template('sale.html', id=id)
+    corso = db.session.query(Corso).filter(Corso.IDCorso == id).first()
+    istruttore = db.session.query(Persona).filter(Persona.CF == corso.IDIstruttore).first()
+    return render_template('corso.html', nome=corso.Nome, descrizione=corso.Descrizione, sala=corso.IDSala,
+                           nome_istr=istruttore.Nome, cognome_istr=istruttore.Cognome)
+

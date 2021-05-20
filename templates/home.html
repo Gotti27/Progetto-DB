@@ -14,11 +14,15 @@
          <a href="{{url_for('register')}}">clicca qui per registrarti</a></p>
          <a href="{{url_for('toady_dashboard')}}">clicca qui per vedere la dashboard dell'admin</a></p>
     </div>
-    <button class="w3-button w3-black" style="margin-top:5px; margin-left:40%">
-        <a href="{{url_for('logout')}}">Logout</a>
-    </button>
-    <button class="w3-button w3-black" style="margin-top:5px;">
-        <a href="https://youtu.be/dQw4w9WgXcQ">Magic button (definetly not Rick Astley)</a>
-    </button>
+    <div align="center">
+        {% if authenticated%}
+        <button class="w3-button w3-black">
+            <a href="{{url_for('logout')}}">Logout</a>
+        </button>
+        {% endif %}
+        <button class="w3-button w3-black" >
+            <a href="https://youtu.be/dQw4w9WgXcQ" target="_blank"> Magic button (definetly not Rick Astley)</a>
+        </button>
+    </div>
 </body>
 </html>
