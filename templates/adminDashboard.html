@@ -12,7 +12,6 @@
 
 </head>
 <body>
-
 <div id="container">
     <div id="header">
         <div id="monthDisplay"></div>
@@ -51,11 +50,42 @@
 <br>
 
 <script>
+    function getAnno(){
+        return {{anno}}
+    }
+    function getMese(){
+        return {{mese}}
+    }
+    function nextDate(){
+        {% if mese == 12 %}
+            $.ajax("{{ url_for('temp_admin_dashboard', anno = anno+1, mese = 1) }}").done(function (reply) {
+                console.log(reply)
+                $('#calendarContainer').html(reply);
+            });
+        {% else %}
+            $.ajax("{{ url_for('temp_admin_dashboard', anno = anno, mese = mese+ 1) }}").done(function (reply) {
+                console.log(reply)
+                $('#calendarContainer').html(reply);
+            });
+        {% endif %}
+    }
+    function prevDate(){
+        {% if mese == 1 %}
+            $.ajax("{{ url_for('temp_admin_dashboard', anno = anno-1, mese = 12) }}").done(function (reply) {
+                console.log(reply)
+                $('#calendarContainer').html(reply);
+            });
+        {% else %}
+            $.ajax("{{ url_for('temp_admin_dashboard', anno = anno, mese = mese-1) }}").done(function (reply) {
+                console.log(reply)
+                $('#calendarContainer').html(reply);
+            });
+        {% endif %}
+    }
     function getCorsi(){
         return {{corsi | safe}}
     }
 </script>
 <script type=text/javascript src="{{ url_for('static', filename='calendar.js') }}"></script>
-
 </body>
 </html>

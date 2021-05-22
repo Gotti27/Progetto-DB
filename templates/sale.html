@@ -3,13 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>Lista sale</title>
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 </head>
 <body>
 
+<div id="calendarContainer">Loading...</div>
+<div id="test"></div>
 
 <h1>Corso</h1>
 <h2>ID: {{ id }}</h2>
+<button onclick="updateMese()" style="color:#000000">NEXT MESE</button>
+
+<script>
+    $(document).ready( function() {
+        $.ajax("{{ url_for('toady_dashboard') }}").done(function (reply) {
+            $('#calendarContainer').html(reply);
+        });
+    });
+
+</script>
 
 </body>
 </html>

@@ -1,15 +1,16 @@
 let clicked = null;
 let corsi = [];
 
+console.log(window.location.pathname)
+
 const calendar = document.getElementById('calendar');
 const dayModal = document.getElementById('dayModal');
 const backDrop = document.getElementById('modalBackDrop');
 const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const mesi = ['gen', 'feb', 'mar', 'apr', 'mag', 'giu', 'lug', 'ago', 'set', 'ott', 'nov', 'dic']
 const url = window.location.pathname.split('/');
-const month = parseInt(url.pop()) -1;
-const year = parseInt(url.pop());
-
+const month = getMese() -1;
+const year = getAnno();
 
 function openCoursePage(x){
     window.location.href = "http://127.0.0.1:5000/corso/"+x;
@@ -114,13 +115,7 @@ function closeModal() {
 
 function initButtons() {
     document.getElementById('nextButton').addEventListener('click', () => {
-        let newMonth = month+2;
-        let newYear = year;
-        if (month >= 11){
-            newYear++;
-            newMonth = 1;
-        }
-        window.location.href = "http://127.0.0.1:5000/dashboard/"+newYear+"/"+newMonth;
+        nextDate();
     });
 
     document.getElementById('todayButton').addEventListener('click', () => {
@@ -129,13 +124,7 @@ function initButtons() {
     });
 
     document.getElementById('backButton').addEventListener('click', () => {
-        let newMonth = month;
-        let newYear = year;
-        if (month <= 0){
-            newYear--;
-            newMonth = 12;
-        }
-        window.location.href = "http://127.0.0.1:5000/dashboard/"+newYear+"/"+newMonth;
+        prevDate();
     });
 
     document.getElementById('closeButton').addEventListener('click', closeModal);

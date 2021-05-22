@@ -102,10 +102,10 @@ def toady_dashboard():
     return redirect(url_for('temp_admin_dashboard', anno=datetime.today().year, mese=datetime.today().month))
 
 
-@app.route('/dashboard/<anno>/<mese>', methods=['GET', 'POST'])
+@app.route('/dashboard/<int:anno>/<int:mese>', methods=['GET', 'POST'])
 def temp_admin_dashboard(anno, mese):
     corsi = get_corsi(mese, anno)
-    return render_template('adminDashboard.html', corsi=corsi)
+    return render_template('adminDashboard.html', corsi=corsi, anno=anno, mese=mese)
 
 
 # TODO: da decommentare in production
@@ -126,3 +126,6 @@ def view_corso(id):
     return render_template('corso.html', nome=corso.Nome, descrizione=corso.Descrizione, sala=corso.IDSala,
                            nome_istr=istruttore.Nome, cognome_istr=istruttore.Cognome)
 
+@app.route("/debug")
+def test_view():
+    return render_template('sale.html')
