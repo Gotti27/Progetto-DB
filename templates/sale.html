@@ -16,7 +16,7 @@
 
 <script>
     $(document).ready( function() {
-        $.ajax("{{ url_for('toady_dashboard') }}").done(function (reply) {
+        $.ajax("{{ url_for('today_dashboard') }}").done(function (reply) {
             $('#calendarContainer').html(reply);
         });
     });

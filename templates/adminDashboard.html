@@ -18,7 +18,9 @@
         <div>
             <button id="backButton"> << </button>
             <button id="todayButton"> oggi </button>
+            <button id="reloadButton">&#x21bb;</button>
             <button id="nextButton"> >> </button>
+
         </div>
     </div>
 
@@ -59,12 +61,10 @@
     function nextDate(){
         {% if mese == 12 %}
             $.ajax("{{ url_for('temp_admin_dashboard', anno = anno+1, mese = 1) }}").done(function (reply) {
-                console.log(reply)
                 $('#calendarContainer').html(reply);
             });
         {% else %}
             $.ajax("{{ url_for('temp_admin_dashboard', anno = anno, mese = mese+ 1) }}").done(function (reply) {
-                console.log(reply)
                 $('#calendarContainer').html(reply);
             });
         {% endif %}
@@ -72,15 +72,23 @@
     function prevDate(){
         {% if mese == 1 %}
             $.ajax("{{ url_for('temp_admin_dashboard', anno = anno-1, mese = 12) }}").done(function (reply) {
-                console.log(reply)
                 $('#calendarContainer').html(reply);
             });
         {% else %}
             $.ajax("{{ url_for('temp_admin_dashboard', anno = anno, mese = mese-1) }}").done(function (reply) {
-                console.log(reply)
                 $('#calendarContainer').html(reply);
             });
         {% endif %}
+    }
+    function todayDate(){
+        $.ajax("{{ url_for('today_dashboard') }}").done(function (reply) {
+            $('#calendarContainer').html(reply);
+        });
+    }
+    function reloadDate(){
+        $.ajax("{{ url_for('temp_admin_dashboard', anno = anno, mese = mese) }}").done(function (reply) {
+            $('#calendarContainer').html(reply);
+        });
     }
     function getCorsi(){
         return {{corsi | safe}}

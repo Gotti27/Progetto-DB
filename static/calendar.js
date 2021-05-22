@@ -119,8 +119,7 @@ function initButtons() {
     });
 
     document.getElementById('todayButton').addEventListener('click', () => {
-        let dt = new Date()
-        window.location.href = "http://127.0.0.1:5000/dashboard/"+dt.getFullYear()+"/"+(dt.getMonth()+1);
+        todayDate();
     });
 
     document.getElementById('backButton').addEventListener('click', () => {
@@ -128,6 +127,10 @@ function initButtons() {
     });
 
     document.getElementById('closeButton').addEventListener('click', closeModal);
+
+    $('#reloadButton').on('click', ()=>{
+        reloadDate();
+    })
 }
 
 

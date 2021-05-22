@@ -98,7 +98,7 @@ def show_profile(username):
 
 # TODO: da eliminare/aggiornare in production
 @app.route('/dashboard')
-def toady_dashboard():
+def today_dashboard():
     return redirect(url_for('temp_admin_dashboard', anno=datetime.today().year, mese=datetime.today().month))
 
 
