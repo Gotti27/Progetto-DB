@@ -97,15 +97,15 @@ def show_profile(username):
 
 
 # TODO: da eliminare/aggiornare in production
-@app.route('/dashboard')
-def today_dashboard():
-    return redirect(url_for('temp_admin_dashboard', anno=datetime.today().year, mese=datetime.today().month))
+@app.route('/calendar')
+def calendar_view_today():
+    return redirect(url_for('calendar_view', anno=datetime.today().year, mese=datetime.today().month))
 
 
-@app.route('/dashboard/<int:anno>/<int:mese>', methods=['GET', 'POST'])
-def temp_admin_dashboard(anno, mese):
+@app.route('/calendar/<int:anno>/<int:mese>', methods=['GET', 'POST'])
+def calendar_view(anno, mese):
     corsi = get_corsi(mese, anno)
-    return render_template('adminDashboard.html', corsi=corsi, anno=anno, mese=mese)
+    return render_template('calendar.html', corsi=corsi, anno=anno, mese=mese)
 
 
 # TODO: da decommentare in production
@@ -114,7 +114,7 @@ def temp_admin_dashboard(anno, mese):
 @login_required
 def admin_dashboard():
     if (db.session.query(Staff).filter(Staff.IDStaff == current_user.get_id()).filter(Staff.Ruolo == 'Gestore')).count():
-        return render_template('adminDashboard.html', corsi=get_corsi(5, 2021))  # TODO: impostare mese corretto
+        return render_template('calendar.html', corsi=get_corsi(5, 2021))  # TODO: impostare mese corretto
     else:
         abort(401)
 '''
@@ -126,6 +126,6 @@ def view_corso(id):
     return render_template('corso.html', nome=corso.Nome, descrizione=corso.Descrizione, sala=corso.IDSala,
                            nome_istr=istruttore.Nome, cognome_istr=istruttore.Cognome)
 
-@app.route("/debug")
-def test_view():
-    return render_template('sale.html')
+@app.route("/dashboard")
+def dashboard_view():
+    return render_template('adminDashboard.html')

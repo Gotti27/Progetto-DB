@@ -105,6 +105,7 @@ class Corso(Base):
 
     IDCorso = Column(INTEGER, primary_key=True)
     MaxPersone = Column(SMALLINT, nullable=False)
+    MinPersone = Column(SMALLINT, nullable=False)
     IDSala = Column(INTEGER, ForeignKey(Sala.IDSala), nullable=False)
     OraInizio = Column(TIME, nullable=False)
     OraFine = Column(TIME, nullable=False)
@@ -119,7 +120,7 @@ class Corso(Base):
     staff = relationship(Staff, uselist=False)
 
     def __repr__(self):
-        return "ID:%s, Nome:%s, Max:%s, IDSala:%s, OInizio:%s, OFine:%s, Data:%s, Descr:%s, IDPac:%s, IDIstr:%s" % (self.IDCorso, self.Nome, self.MaxPersone, self.IDSala, self.OraInizio, self.OraFine, self.Data, str(self.Descrizione), str(self.IDPacchetto), self.IDIstruttore)
+        return "ID:%s, Nome:%s, Max:%s, Min:%s, IDSala:%s, OInizio:%s, OFine:%s, Data:%s, Descr:%s, IDPac:%s, IDIstr:%s" % (self.IDCorso, self.Nome, self.MaxPersone, self.MinPersone, self.IDSala, self.OraInizio, self.OraFine, self.Data, str(self.Descrizione), str(self.IDPacchetto), self.IDIstruttore)
 
 
 class Prenotazione(Base):

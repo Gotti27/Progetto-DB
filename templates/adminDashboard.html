@@ -2,98 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calendar App Vanilla JS</title>
-
-    <link rel="stylesheet" href="/static/calendar.css">
-
+    <title>Admin dashboard</title>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="{{url_for('static', filename='jquery.js') }}">\x3C/script>')</script>
-
 </head>
 <body>
-<div id="container">
-    <div id="header">
-        <div id="monthDisplay"></div>
-        <div>
-            <button id="backButton"> << </button>
-            <button id="todayButton"> oggi </button>
-            <button id="reloadButton">&#x21bb;</button>
-            <button id="nextButton"> >> </button>
-
-        </div>
+<div style="height: 800px; display:block">
+    <div id="calendarContainer"><img src="https://media3.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif?cid=790b7611571d973053c38bc13f748ca7461ef601b62dd84e&rid=giphy.gif&ct=g" style="display:block; margin:auto; width: 25%;">
     </div>
-
-    <div id="weekdays">
-        <div>Lunedì</div>
-        <div>Martedì</div>
-        <div>Mercoledì</div>
-        <div>Giovedì</div>
-        <div>Venerdì</div>
-        <div>Sabato</div>
-        <div>Domenica</div>
-    </div>
-
-    <div id="calendar"></div>
 </div>
 
-
-
-<div id="dayModal">
-    <h2 id="modalHeader"></h2>
-
-    <div id="eventText"></div>
-
-    <button id="closeButton" style="margin-top: 20px">Close</button>
-</div>
-
-<div id="modalBackDrop"></div>
-
-<br>
+<h1>helo</h1>
 
 <script>
-    function getAnno(){
-        return {{anno}}
-    }
-    function getMese(){
-        return {{mese}}
-    }
-    function nextDate(){
-        {% if mese == 12 %}
-            $.ajax("{{ url_for('temp_admin_dashboard', anno = anno+1, mese = 1) }}").done(function (reply) {
-                $('#calendarContainer').html(reply);
-            });
-        {% else %}
-            $.ajax("{{ url_for('temp_admin_dashboard', anno = anno, mese = mese+ 1) }}").done(function (reply) {
-                $('#calendarContainer').html(reply);
-            });
-        {% endif %}
-    }
-    function prevDate(){
-        {% if mese == 1 %}
-            $.ajax("{{ url_for('temp_admin_dashboard', anno = anno-1, mese = 12) }}").done(function (reply) {
-                $('#calendarContainer').html(reply);
-            });
-        {% else %}
-            $.ajax("{{ url_for('temp_admin_dashboard', anno = anno, mese = mese-1) }}").done(function (reply) {
-                $('#calendarContainer').html(reply);
-            });
-        {% endif %}
-    }
-    function todayDate(){
-        $.ajax("{{ url_for('today_dashboard') }}").done(function (reply) {
+    $(document).ready( function() {
+        $.ajax("{{ url_for('calendar_view_today') }}").done(function (reply) {
             $('#calendarContainer').html(reply);
         });
-    }
-    function reloadDate(){
-        $.ajax("{{ url_for('temp_admin_dashboard', anno = anno, mese = mese) }}").done(function (reply) {
-            $('#calendarContainer').html(reply);
-        });
-    }
-    function getCorsi(){
-        return {{corsi | safe}}
-    }
+    });
 </script>
-<script type=text/javascript src="{{ url_for('static', filename='calendar.js') }}"></script>
+
+<div style="width:50%; height:400px; background-color:#ffcccc">
+
+
+</div>
+
 </body>
 </html>

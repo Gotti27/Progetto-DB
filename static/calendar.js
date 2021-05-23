@@ -1,11 +1,9 @@
 let clicked = null;
 let corsi = [];
 
-console.log(window.location.pathname)
-
-const calendar = document.getElementById('calendar');
-const dayModal = document.getElementById('dayModal');
-const backDrop = document.getElementById('modalBackDrop');
+const calendar = $('div #calendar');
+const dayModal = $('#dayModal');
+const backDrop = $('#modalBackDrop');
 const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const mesi = ['gen', 'feb', 'mar', 'apr', 'mag', 'giu', 'lug', 'ago', 'set', 'ott', 'nov', 'dic']
 const url = window.location.pathname.split('/');
@@ -20,47 +18,25 @@ function openModal(date) {
     clicked = date;
     date = date.split('-')
 
-    document.getElementById('eventText').innerHTML = '';
-    document.getElementById('modalHeader').innerHTML = date[2].toString() + ' ' + mesi[date[1]-1] + ' '+ date[0];
+    $('#eventText').empty();
+    $('#modalHeader').html(date[2].toString() + ' ' + mesi[date[1]-1] + ' ' + date[0]);
 
-    let eventsForDay = [];
     corsi.forEach(c => {
         if (c.Data === clicked)
-            eventsForDay.push(c)
+            $('#eventText').append(jQuery('<div/>',{
+                "class": 'courseInfo'
+            }).html(c.Nome).on('click', () => openCoursePage(c.IDCorso)));
     });
 
-    eventsForDay.forEach( c => {
-        const infoCorso = document.createElement('div');
-        infoCorso.addEventListener('click', () => openCoursePage(c.IDCorso))
-        infoCorso.classList.add('courseInfo');
-        infoCorso.innerHTML = c.Nome;
-        document.getElementById('eventText').appendChild(infoCorso);
-    });
-
-    dayModal.style.display = 'block';
-
-    backDrop.style.display = 'block';
+    dayModal.show();
+    backDrop.show();
 }
 
 function load() {
     const dt = new Date(year, month, (new Date().getDate()));
-
     const day = dt.getDate();
-
-    console.log(month, year)
-
-    //updateMonth(month, year);
-    corsi = [];
-    corsi = getCorsi();
-    corsi.forEach(c => {
-        if (c.Data[5] === '0'){c.Data = c.Data.slice(0,5) + c.Data.slice(6)}
-    })
-
-    console.log(corsi)
-
     const firstDayOfMonth = new Date(year, month, 1);
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-
     const dateString = firstDayOfMonth.toLocaleDateString('en-us', {
         weekday: 'long',
         year: 'numeric',
@@ -69,70 +45,59 @@ function load() {
     });
     const paddingDays = weekdays.indexOf(dateString.split(', ')[0]);
 
-    document.getElementById('monthDisplay').innerText =
-        `${dt.toLocaleDateString('it', { month: 'long' })} ${year}`;
+    corsi = getCorsi();
+    corsi.forEach(c => {
+        if (c.Data[5] === '0'){c.Data = c.Data.slice(0,5) + c.Data.slice(6)}
+    })
 
-    calendar.innerHTML = '';
+    $('#monthDisplay').text(`${dt.toLocaleDateString('it', { month: 'long' })} ${year}`);
+
+    calendar.empty();
 
     for(let i = 1; i <= paddingDays + daysInMonth; i++) {
-        const daySquare = document.createElement('div');
-        daySquare.classList.add('day');
-
+        const daySquare = jQuery('<div/>',{
+            "class": 'day'
+        }).on('click', () => openModal(dayString));
         const dayString = `${year}-${month + 1}-${i - paddingDays}`;
 
         if (i > paddingDays) {
-            daySquare.innerText = i - paddingDays;
-            const eventForDay = corsi.find(e => e.Data == dayString);
-            const nEventsForDay = corsi.filter(e => e.Data == dayString).length;
+            daySquare.text(i - paddingDays);
+            const eventsForDay = corsi.filter(e => e.Data == dayString).length;
 
             if (i - paddingDays === day && month == (new Date().getMonth()) && year == (new Date().getFullYear())) {
                 daySquare.id = 'currentDay';
             }
-
-            if (eventForDay) {
-                const eventDiv = document.createElement('div');
-                eventDiv.classList.add('event');
-                eventDiv.innerText = nEventsForDay;
-                daySquare.appendChild(eventDiv);
+            if (eventsForDay > 0) {
+                daySquare.append(jQuery("<div/>", {
+                    "class": 'event'
+                }).text(eventsForDay))
             }
-
-            daySquare.addEventListener('click', () => openModal(dayString));
         } else {
-            daySquare.classList.add('padding');
+            daySquare.addClass('padding');
         }
 
-        calendar.appendChild(daySquare);
+        calendar.append(daySquare);
     }
 }
 
 function closeModal() {
-    dayModal.style.display = 'none';
-    backDrop.style.display = 'none';
+    dayModal.hide();
+    backDrop.hide();
     clicked = null;
     load();
 }
 
-
 function initButtons() {
-    document.getElementById('nextButton').addEventListener('click', () => {
-        nextDate();
-    });
+    $('#nextButton').on('click', () => { nextDate(); });
 
-    document.getElementById('todayButton').addEventListener('click', () => {
-        todayDate();
-    });
+    $('#todayButton').on('click', () => { todayDate(); });
 
-    document.getElementById('backButton').addEventListener('click', () => {
-        prevDate();
-    });
+    $('#backButton').on('click', () => { prevDate(); });
 
-    document.getElementById('closeButton').addEventListener('click', closeModal);
+    $('#closeButton').on('click', closeModal);
 
-    $('#reloadButton').on('click', ()=>{
-        reloadDate();
-    })
+    $('#reloadButton').on('click', ()=>{ reloadDate(); })
 }
-
 
 initButtons();
 load();
