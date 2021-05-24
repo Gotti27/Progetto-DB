@@ -175,7 +175,7 @@ def numero_iscritti_corso(corso):
 
 
 def get_sale():
-    q = db.session.query(Sala).all()   # qui è necessario salvare la pending instance
+    q = db.session.query(Sala).all()
     return q
 
 
