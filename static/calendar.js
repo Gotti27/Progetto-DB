@@ -65,7 +65,7 @@ function load() {
             const eventsForDay = corsi.filter(e => e.Data == dayString).length;
 
             if (i - paddingDays === day && month == (new Date().getMonth()) && year == (new Date().getFullYear())) {
-                daySquare.id = 'currentDay';
+                daySquare.attr('id','currentDay');
             }
             if (eventsForDay > 0) {
                 daySquare.append(jQuery("<div/>", {

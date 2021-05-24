@@ -10,7 +10,7 @@ https://docs.google.com/spreadsheets/d/11KIOxlNzZyOvWzAp3gcyVts9LM_70kXUfcY_hgRx
 
 ## Files and directories
 templates/ &#8594; file html \
-static/    &#8594; file css \
+static/    &#8594; file css e js \
 instance/  &#8594; file di configurazione al di fuori del version control \
 appF/      &#8594; collegamento con DB (models.py) e flask (views.py) \
 config.py  &#8594; impostazioni di configurazione \

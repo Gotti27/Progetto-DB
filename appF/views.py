@@ -96,7 +96,6 @@ def show_profile(username):
     return render_template('user_page.html', username=username)
 
 
-# TODO: da eliminare/aggiornare in production
 @app.route('/calendar')
 def calendar_view_today():
     return redirect(url_for('calendar_view', anno=datetime.today().year, mese=datetime.today().month))
@@ -125,6 +124,7 @@ def view_corso(id):
     istruttore = db.session.query(Persona).filter(Persona.CF == corso.IDIstruttore).first()
     return render_template('corso.html', corso=corso, istruttore=istruttore, iscritti=numero_iscritti_corso(corso.IDCorso))
 
+# TODO: da eliminare/aggiornare in production
 @app.route("/dashboard")
 def dashboard_view():
     return render_template('adminDashboard.html')
