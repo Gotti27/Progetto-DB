@@ -6,13 +6,43 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
 <body>
-    <div class="w3css-container" align="center">
-        <h1>Corso di {{ nome }}</h1>
-        <div>
-            {{ descrizione }}
+    <div class="w3-container w3-light-grey" style="width:75%; margin:auto; margin-top:32px" >
+        <div class=" w3-section" id="intro">
+            <h1>{{ corso.Nome }}</h1>
+            <p class="w3-margin-left w3-opacity">
+                {% if corso.Descrizione %}
+                    {{ corso.Descrizione }}
+                {% endif %}
+            </p>
         </div>
-        <h2>il corso si terrà nella sala: {{ sala }}</h2>
-        <h2>l'istruttore del corso è: {{ nome_istr }} {{ cognome_istr }}</h2>
+
+        <div class="w3-border-top"></div>
+
+        <div class="w3-container" style="display:flex">
+            <div class="w3-card w3-section w3-container" id="info-card" style="width:400px; display:flex">
+                <div class="" id="info" style="width:325px">
+                    <h4> Orario: <span class="w3-opacity">{{corso.OraInizio.strftime('%H:%M')}}-{{corso.OraFine.strftime('%H:%M')}}</span></h4>
+                    <h4> Sala: <span class="w3-opacity">{{ corso.IDSala }}</span></h4>
+                    <h4> Istruttore: <span class="w3-opacity">{{ istruttore.Nome }} {{ istruttore.Cognome }} </span></h4>
+                    <h4> Posti rimanenti: <span class="w3-opacity">{{ corso.MaxPersone - iscritti }} </span></h4>
+                </div>
+                <div class="w3-display-container">
+                    {% if corso.MaxPersone - iscritti >= 5 %}
+                        <div class="w3-green w3-circle w3-display-middle" style="width:50px; height:50px; display:flex"></div>
+                    {% elif corso.MaxPersone - iscritti == 0 %}
+                        <div class="w3-amber w3-circle w3-display-middle" style="width:50px; height:50px; display:flex"></div>
+                    {% else %}
+                        <div class="w3-red w3-circle w3-display-middle" style="width:50px; height:50px; display:flex"></div>
+                    {% endif %}
+                </div>
+
+            </div>
+            <button class="w3-button w3-black w3-middle" style="height:32px; margin:auto; line-height:50%; margin-left: 32px; border-radius:4px">
+                <a href="https://youtu.be/dQw4w9WgXcQ" target="_blank" style="text-decoration:none"> Iscriviti! </a>
+            </button>
+        </div>
+
+
     </div>
 </body>
 </html>

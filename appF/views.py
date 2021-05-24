@@ -123,8 +123,7 @@ def admin_dashboard():
 def view_corso(id):
     corso = db.session.query(Corso).filter(Corso.IDCorso == id).first()
     istruttore = db.session.query(Persona).filter(Persona.CF == corso.IDIstruttore).first()
-    return render_template('corso.html', nome=corso.Nome, descrizione=corso.Descrizione, sala=corso.IDSala,
-                           nome_istr=istruttore.Nome, cognome_istr=istruttore.Cognome)
+    return render_template('corso.html', corso=corso, istruttore=istruttore, iscritti=numero_iscritti_corso(corso.IDCorso))
 
 @app.route("/dashboard")
 def dashboard_view():

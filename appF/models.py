@@ -182,10 +182,9 @@ def get_corsi(mese, anno):
     return ret
 
 
-def addTestSala():
-    testAdd = Sala(IDSala=1, MaxPersone=50, Tipo="Test2")
-    session.add(testAdd)
-    session.commit()
+def numero_iscritti_corso(corso):
+    iscr = db.session.query(Prenotazione).filter(Prenotazione.IDCorso == corso).filter(Prenotazione.Approvata).count()
+    return iscr
 
 
 def get_sale():
