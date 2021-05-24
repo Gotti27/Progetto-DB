@@ -24,7 +24,8 @@ def login():
     msg = ''
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
         username = request.form['username']
-        password = bytes(request.form['password'], encoding="utf-8") # todo: controllare se è possibile .encode() chiedere a Mario
+        password = bytes(request.form['password'],
+                         encoding="utf-8")  # todo: controllare se è possibile .encode() chiedere a Mario
         logging = db.session.query(Persona).filter(Persona.Email == username).first()
         if logging is not None and bcrypt.checkpw(password, logging.Password.encode("utf-8")):
             user = get_persona_by_email(request.form['username'])
@@ -88,12 +89,26 @@ def register():
     return render_template('register.html', msg=msg)
 
 
-@app.route('/user/<username>')
+@app.route('/user/<username>', methods=['GET', 'POST'])
 @login_required
 def show_profile(username):
+    msg = ""
     if not username == current_user.get_email:
-        return redirect(url_for('show_profile', username=current_user.get_email))
-    return render_template('user_page.html', username=username)
+        return redirect(url_for('show_profile', username=current_user.get_email, msg=msg))
+
+    if request.method == 'POST':
+        new_book = workout_book(persona=get_persona_by_email(username), data=request.form['Data'],
+                                oraInizio=request.form['oraInizio'], oraFine=request.form['oraFine'],
+                                sala=request.form['IDSala'], corso=request.form['IDCorso'])
+
+        if new_book is None:
+            msg = 'Errore fatale, la data scelta non è valida'
+        elif not new_book.Approvata:
+            msg = 'Tutto pieno, sei stato messo in coda'
+        else:
+            msg = 'Prenotazione effettuata con successo'
+
+    return render_template('user_page.html', username=username, msg=msg)
 
 
 @app.route('/calendar')
@@ -118,11 +133,14 @@ def admin_dashboard():
         abort(401)
 '''
 
+
 @app.route("/corso/<id>")
 def view_corso(id):
     corso = db.session.query(Corso).filter(Corso.IDCorso == id).first()
     istruttore = db.session.query(Persona).filter(Persona.CF == corso.IDIstruttore).first()
-    return render_template('corso.html', corso=corso, istruttore=istruttore, iscritti=numero_iscritti_corso(corso.IDCorso))
+    return render_template('corso.html', corso=corso, istruttore=istruttore,
+                           iscritti=numero_iscritti_corso(corso.IDCorso))
+
 
 # TODO: da eliminare/aggiornare in production
 @app.route("/dashboard")

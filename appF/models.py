@@ -42,7 +42,9 @@ class Persona(UserMixin, Base):
         return str(self.Email)
 
     def __repr__(self):
-        return "<Persona: CF='%s', N='%s', C='%s', S='%s', DN='%s', Email='%s', PW='%s', Tel='%s', Act='%s'>" % (self.CF, self.Nome, self.Cognome, self.Sesso, self.DataNascita, self.Email, self.Password, self.Telefono, self.Attivo)
+        return "<Persona: CF='%s', N='%s', C='%s', S='%s', DN='%s', Email='%s', PW='%s', Tel='%s', Act='%s'>" % (
+        self.CF, self.Nome, self.Cognome, self.Sesso, self.DataNascita, self.Email, self.Password, self.Telefono,
+        self.Attivo)
 
 
 class OrarioPalestra(Base):
@@ -74,8 +76,9 @@ class Cliente(Base):
     persone = relationship(Persona, uselist=False)
 
     def __repr__(self):
-        return "<Clienti: ID:'%s', DatIscr:'%s', PagMese:'%s'>" % (self.IDCliente, self.DataIscrizione, self.PagamentoMese)
-    
+        return "<Clienti: ID:'%s', DatIscr:'%s', PagMese:'%s'>" % (
+        self.IDCliente, self.DataIscrizione, self.PagamentoMese)
+
 
 class Staff(Base):
     __tablename__ = 'staff'
@@ -87,6 +90,7 @@ class Staff(Base):
 
     def __repr__(self):
         return "<Staff: ID:'%s', Role:'%s'>" % (self.IDStaff, self.Ruolo)
+
 
 class Corso(Base):
     __tablename__ = 'corsi'
@@ -126,16 +130,18 @@ class Prenotazione(Base):
     sale = relationship(Sala, uselist=False)
 
     def __repr__(self):
-        return "<Prenotazioni: ID:'%s', Data:'%s', OInizio:'%s', OFine:'%s', IDCliente:'%s', IDCorso:'%s', IDSala:'%s', Aprr:'%s'>" %\
-               (self.IDPrenotazione, self.Data, self.OraInizio, self.OraFine, self.IDCliente, self.IDCorso, self.IDSala, self.Approvata)
+        return "<Prenotazioni: ID:'%s', Data:'%s', OInizio:'%s', OFine:'%s', IDCliente:'%s', IDCorso:'%s', IDSala:'%s', Aprr:'%s'>" % \
+               (self.IDPrenotazione, self.Data, self.OraInizio, self.OraFine, self.IDCliente, self.IDCorso, self.IDSala,
+                self.Approvata)
 
 
-Session = sessionmaker(bind=engine)       # creazione della factory
+Session = sessionmaker(bind=engine)  # creazione della factory
 session = Session()
 
 
 def insert_persona(cf, nome, cognome, sesso, data_nascita, email, password, attivo, telefono=None):
-    to_add = Persona(CF=cf, Nome=nome, Cognome=cognome, Sesso=sesso, DataNascita=data_nascita, Email=email, Password=password, Attivo=attivo, Telefono=telefono)
+    to_add = Persona(CF=cf, Nome=nome, Cognome=cognome, Sesso=sesso, DataNascita=data_nascita, Email=email,
+                     Password=password, Attivo=attivo, Telefono=telefono)
     session.add(to_add)
     session.commit()
     return to_add
@@ -154,13 +160,15 @@ def insert_istruttore(persona):
 
 
 def insert_corso(max_persone, id_sala, ora_inizio, ora_fine, data, id_istruttore, id_pacchetto=None, descrizione=None):
-    to_add = Corso(MaxPersone=max_persone, IDSala=id_sala, OraInizio=ora_inizio, OraFine=ora_fine, Data=data , IDIstruttore=id_istruttore, IDPacchetto=id_pacchetto, Descrizione=descrizione)
+    to_add = Corso(MaxPersone=max_persone, IDSala=id_sala, OraInizio=ora_inizio, OraFine=ora_fine, Data=data,
+                   IDIstruttore=id_istruttore, IDPacchetto=id_pacchetto, Descrizione=descrizione)
     session.add(to_add)
     session.commit()
 
 
 def get_corsi(mese, anno):
-    q = db.session.query(Corso).filter(extract('year', Corso.Data)==anno).filter(extract('month', Corso.Data)==mese).order_by(Corso.OraInizio).all()
+    q = db.session.query(Corso).filter(extract('year', Corso.Data) == anno).filter(
+        extract('month', Corso.Data) == mese).order_by(Corso.OraInizio).all()
     ret = []
     for i in q:
         ret.append({property: str(value) for property, value in vars(i).items()})
@@ -184,6 +192,56 @@ def get_persona_by_email(email):
 
 
 def addTestPrenotazione():
-    testAdd = Prenotazione(Data=date.today(), OraInizio=time(13,0,0), OraFine=time(15,0,0), IDCliente="ABCDEFGHIJKLMNOP", IDSala=1)
+    testAdd = Prenotazione(Data=date.today(), OraInizio=time(13, 0, 0), OraFine=time(15, 0, 0),
+                           IDCliente="ABCDEFGHIJKLMNOP", IDSala=1)
     session.add(testAdd)
     session.commit()
+
+
+def workout_book(persona, data, oraInizio, oraFine, sala, corso=None):
+    approved = True
+    day = int(datetime.date(datetime.strptime(str(data), '%Y-%m-%d')).weekday())
+    # todo: segnalo mie bestemmie da elminare
+    if oraInizio.split(':')[1] != '00' and oraInizio.split(':')[1] != '15' and oraInizio.split(':')[1] != '30' and \
+            oraInizio.split(':')[1] != '45' or oraFine.split(':')[1] != '00' and oraFine.split(':')[1] != '15' and\
+            oraFine.split(':')[1] != '30' and oraFine.split(':')[1] != '45':
+        print("Porcodio ci stanno hackerando")
+        return None
+    my_time = []  # lista dei quarti d'ora = tempoDiApertura * 4
+    giorni_festivi = db.session.query(GiornoFestivo).filter(GiornoFestivo.Giorno == data).first()
+    if giorni_festivi is not None and (oraInizio < giorni_festivi.Apertura or oraFine > giorni_festivi.Chiusura):
+        return None
+    giorni_feriali = db.session.query(OrarioPalestra).filter(OrarioPalestra.GiornoSettimana == day).first()
+
+    if oraInizio < str(giorni_feriali.Apertura) or oraFine > str(giorni_feriali.Chiusura):
+        return None
+
+    if corso == '':
+        max_number = db.session.query(Sala).filter(Sala.IDSala == sala).first().MaxPersone
+        available = db.session.query(Prenotazione).filter(Prenotazione.Data == data and Prenotazione.OraFine > oraInizio
+                                                          and Prenotazione.OraInizio < oraFine and
+                                                          Prenotazione.Sala == sala and Prenotazione.Approvata).all()
+        apertura = int(int(str(giorni_feriali.Apertura).split(':')[0])*4 + int(str(giorni_feriali.Apertura).split(':')[1])/15)
+        chiusura = int(int(str(giorni_feriali.Chiusura).split(':')[0])*4 + int(str(giorni_feriali.Chiusura).split(':')[1])/15)
+        for _ in range(apertura, chiusura):
+            my_time.append(0)
+        for booked in available:
+            start = (int(str(booked.OraInizio).split(':')[0])-apertura)*4 + (int(str(booked.OraInizio).split(':')[1])/15)
+            end = (int(str(booked.OraFine).split(':')[0])-apertura)*4 + int(str(booked.OraFine).split(':')[1])/15
+            for t in range(int(start), int(end)):
+                my_time[t] += 1
+        for t in my_time:
+            if max_number - t < 1:
+                approved = False
+                break
+        new_book = Prenotazione(Data=data, OraInizio=oraInizio, OraFine=oraFine, IDCliente=persona.CF,
+                                IDCorso=None, IDSala=sala, Approvata=approved)
+    else:
+        disponibilita_corso = db.session.query(Corso).filter(Corso.IDCorso == corso).first().MaxPersone
+        if disponibilita_corso - numero_iscritti_corso(corso) < 1:
+            approved = False
+        new_book = Prenotazione(Data=data, OraInizio=oraInizio, OraFine=oraFine, IDCliente=persona.CF,
+                                IDCorso=corso, IDSala=sala, Approvata=approved)
+    session.add(new_book)
+    session.commit()
+    return new_book

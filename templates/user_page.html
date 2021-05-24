@@ -8,6 +8,17 @@
 <body>
     <div align="center">
         <p>hello {{username}}</p>
+
+        <form action="{{ url_for('show_profile', username=username) }}" method="post" class="w3-container">
+            <p>{{ msg }}</p>
+            <input id="inputDate" name="Data" type="date" required><br>
+            <input type="time" id="oraInizio" name="oraInizio" min="06:00" max="23:00" required>
+            <input type="time" id="oraFine" name="oraFine" min="06:00" max="23:00" required><br>
+            <input id="IDCorso" name="IDCorso" type="text" ><br>
+            <input id="IDSala" name="IDSala" type="text" required><br>
+            <input type="submit" value="Prenotati">
+        </form>
+
         <button class="w3-button w3-black" style="margin-top:5px;">
         <a href="{{url_for('home')}}">Home</a>
         </button>
@@ -15,5 +26,18 @@
         <a href="{{url_for('logout')}}">Logout</a>
         </button>
     </div>
+
+    <script>
+        let dtToday = new Date();
+        let month = dtToday.getMonth() + 1;
+        let day = dtToday.getDate();
+        let year = dtToday.getFullYear();
+        if(month < 10)
+            month = '0' + month.toString();
+        if(day < 10)
+            day = '0' + day.toString();
+        let minDate = year + '-' + month + '-' + day;
+        document.getElementById("inputDate").setAttribute('min',minDate);
+    </script>
 </body>
 </html>
