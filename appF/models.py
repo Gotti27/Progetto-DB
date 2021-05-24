@@ -45,17 +45,6 @@ class Persona(UserMixin, Base):
         return "<Persona: CF='%s', N='%s', C='%s', S='%s', DN='%s', Email='%s', PW='%s', Tel='%s', Act='%s'>" % (self.CF, self.Nome, self.Cognome, self.Sesso, self.DataNascita, self.Email, self.Password, self.Telefono, self.Attivo)
 
 
-class PacchettoCorsi(Base):
-    __tablename__ = 'pacchettiCorsi'
-
-    IDPacchetto = Column(INTEGER, primary_key=True)
-    Nome = Column(TEXT, nullable=False)
-    Descrizione = Column(TEXT)
-
-    def __repr__(self):
-        return "<PacchettiCorsi: ID='%s', N='%s', Des='%s'>" % (self.IDPacchetto, self.Nome, self.Descrizione)
-
-
 class OrarioPalestra(Base):
     __tablename__ = 'orariPalestra'
 
@@ -112,15 +101,13 @@ class Corso(Base):
     Data = Column(DATE, nullable=False)
     Descrizione = Column(TEXT)
     Nome = Column(VARCHAR, nullable=False)
-    IDPacchetto = Column(INTEGER, ForeignKey(PacchettoCorsi.IDPacchetto))
     IDIstruttore = Column(CHAR(16), ForeignKey(Staff.IDStaff), nullable=False)
 
     sale = relationship(Sala, uselist=False)
-    pacchettiCorsi = relationship(PacchettoCorsi, uselist=False)
     staff = relationship(Staff, uselist=False)
 
     def __repr__(self):
-        return "ID:%s, Nome:%s, Max:%s, Min:%s, IDSala:%s, OInizio:%s, OFine:%s, Data:%s, Descr:%s, IDPac:%s, IDIstr:%s" % (self.IDCorso, self.Nome, self.MaxPersone, self.MinPersone, self.IDSala, self.OraInizio, self.OraFine, self.Data, str(self.Descrizione), str(self.IDPacchetto), self.IDIstruttore)
+        return "ID:%s, Nome:%s, Max:%s, Min:%s, IDSala:%s, OInizio:%s, OFine:%s, Data:%s, Descr:%s, IDIstr:%s" % (self.IDCorso, self.Nome, self.MaxPersone, self.MinPersone, self.IDSala, self.OraInizio, self.OraFine, self.Data, str(self.Descrizione), self.IDIstruttore)
 
 
 class Prenotazione(Base):
