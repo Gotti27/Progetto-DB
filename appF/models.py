@@ -50,7 +50,7 @@ class OrarioPalestra(Base):
 
     Apertura = Column(DATE, primary_key=True)
     Chiusura = Column(DATE, primary_key=True)
-    GiornoSettimana = Column(INTEGER, nullable=False)
+    GiornoSettimana = Column(INTEGER, primary_key=True)
 
     def __repr__(self):
         return "<Palestra: A='%s', C='%s', Day='%s>" % (self.Apertura, self.Chiusura, self.GiornoSettimana)
@@ -59,10 +59,9 @@ class OrarioPalestra(Base):
 class GiornoFestivo(Base):
     __tablename__ = 'giorniFestivi'
 
-    IDGiorno = Column(INTEGER, primary_key=True)
     Apertura = Column(TIME)
     Chiusura = Column(TIME)
-    Giorno = Column(DATE, nullable=False)
+    Giorno = Column(DATE, primary_key=True)
 
 
 class Cliente(Base):

@@ -22,8 +22,12 @@
 </script>
 
 <div style="width:50%; height:400px; background-color:#ffcccc">
-
-
+    <form action="{{ url_for('login') }}" method="post" class="w3-container">
+        <div class="msg">{{ msg }}</div>
+        <input id="username" name="username" type="text" placeholder="e-mail" class="w3-input" style="width:500px"/><br>
+        <input id="password" name="password" type="password" placeholder="password" class="w3-input" style="width:500px"/><br>
+        <input type="submit" class="w3-button w3-black" value="Accedi"><br>
+    </form>
 </div>
 
 </body>
