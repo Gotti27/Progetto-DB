@@ -69,7 +69,8 @@ function load() {
             }
             if (eventsForDay > 0) {
                 daySquare.append(jQuery("<div/>", {
-                    "class": 'event'
+                    "class": 'event',
+                    "style": 'line-height:50%'
                 }).text(eventsForDay))
             }
         } else {

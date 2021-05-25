@@ -159,10 +159,9 @@ def insert_istruttore(persona):
     session.commit()
 
 
-def insert_corso(max_persone, id_sala, ora_inizio, ora_fine, data, id_istruttore, id_pacchetto=None, descrizione=None):
-    to_add = Corso(MaxPersone=max_persone, IDSala=id_sala, OraInizio=ora_inizio, OraFine=ora_fine, Data=data,
-                   IDIstruttore=id_istruttore, IDPacchetto=id_pacchetto, Descrizione=descrizione)
-    session.add(to_add)
+def insert_corso(max_persone, min_persone, id_sala, ora_inizio, ora_fine, data, id_istruttore, nome, descrizione=None):
+    c = Corso(MaxPersone=max_persone, MinPersone=min_persone, IDSala=id_sala, OraInizio=ora_inizio, OraFine=ora_fine, Data=data , IDIstruttore=id_istruttore,  Descrizione=descrizione, Nome=nome)
+    session.add(c)
     session.commit()
 
 

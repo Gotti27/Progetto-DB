@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <title>Admin dashboard</title>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
+
 <body>
-<div style="height: 800px; display:block">
+<div class="w3-border-bottom" style="height: 800px; display:block">
     <div id="calendarContainer"><img src="https://media3.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif?cid=790b7611571d973053c38bc13f748ca7461ef601b62dd84e&rid=giphy.gif&ct=g" style="display:block; margin:auto; width: 25%;">
     </div>
 </div>
-
-<h1>helo</h1>
 
 <script>
     $(document).ready( function() {
@@ -21,14 +21,38 @@
     });
 </script>
 
-<div style="width:50%; height:400px; background-color:#ffcccc">
-    <form action="{{ url_for('login') }}" method="post" class="w3-container">
-        <div class="msg">{{ msg }}</div>
-        <input id="username" name="username" type="text" placeholder="e-mail" class="w3-input" style="width:500px"/><br>
-        <input id="password" name="password" type="password" placeholder="password" class="w3-input" style="width:500px"/><br>
-        <input type="submit" class="w3-button w3-black" value="Accedi"><br>
-    </form>
+<div class="w3-row">
+    <div class="w3-container w3-third w3-light-gray">
+        <form action="{{ url_for('dashboard_view') }}" method="post" class="w3-container w3-margin" id="nuovoCorso">
+            <h2 class="">Inserisci nuovi corsi</h2>
+            <p class="w3-pale-red" id="errMessage"></p>
+            <input id="nome" name="nome" type="text" placeholder="Nome corso" class="w3-input w3-margin-bottom"/>
+            <select class="w3-select w3-margin-bottom" id="sala" name="sala">
+                <option value="-1" disabled selected hidden>Sala</option>
+                {%for i in sale%}
+                <option value="{{i.IDSala}},{{i.MaxPersone}}">{{ i.IDSala }}</option>
+                {%endfor%}
+            </select>
+            <div class="w3-row w3-margin-bottom">
+                <input id="minPersone" name="minPersone" type="number" min="0" placeholder="Minimo persone" class="w3-input w3-col s3 w3-margin-right" />
+                <input id="maxPersone" name="maxPersone" type="number" min="1" placeholder="Massimo persone" class="w3-input w3-col s3" />
+            </div>
+            <div class="w3-row w3-margin-bottom">
+                <input id="oraInizio" name="oraInizio" type="time" placeholder="Orario di inizio" class="w3-input w3-col s3 w3-margin-right" />
+                <input id="oraFine" name="oraFine" type="time" placeholder="Orario di fine" class="w3-input w3-col s3" />
+            </div>
+            <input id="istruttore" name="istruttore" type="text" placeholder="Codice istruttore" class="w3-input w3-margin-bottom" />
+            <input id="dataInizio" name="dataInizio" type="date" placeholder="Data inizio" class="w3-input w3-margin-bottom" />
+            <input id="dataFine" name="dataFine" type="date" placeholder="Data fine"class="w3-input w3-margin-bottom" />
+            <input type="submit" value="Aggiungi" class="w3-button w3-black">
+        </form>
+    </div>
+    <div class="w3-container w3-third w3-pink">
+        HIII
+    </div>
 </div>
+
+<script src="{{ url_for('static', filename='nuovoCorso.js') }}"></script>
 
 </body>
 </html>

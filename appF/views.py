@@ -143,6 +143,9 @@ def view_corso(id):
 
 
 # TODO: da eliminare/aggiornare in production
-@app.route("/dashboard")
+@app.route("/dashboard", methods=['GET', 'POST'])
 def dashboard_view():
-    return render_template('adminDashboard.html')
+    if request.method == 'POST':
+        insert_corso(nome=request.form['nome'], min_persone=request.form['minPersone'], max_persone=request.form['maxPersone'], ora_inizio=request.form['oraInizio'], ora_fine=request.form['oraFine'], id_sala=request.form['sala'], id_istruttore=request.form['istruttore'], data=request.form['dataInizio'])
+
+    return render_template('adminDashboard.html', sale=get_sale())
