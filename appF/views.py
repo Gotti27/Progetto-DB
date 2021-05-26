@@ -163,10 +163,17 @@ def dashboard_view():
 @app.route("/dashboard", methods=['GET', 'POST'])  # TODO: eliminare in production
 def dashboard_view():
     if request.method == 'POST' and 'nome' in request.form:
-        insert_corso(nome=request.form['nome'], min_persone=request.form['minPersone'],
-                     max_persone=request.form['maxPersone'], ora_inizio=request.form['oraInizio'],
-                     ora_fine=request.form['oraFine'], id_sala=request.form['sala'],
-                     id_istruttore=request.form['istruttore'], data=request.form['dataInizio'])
+        start = datetime.strptime(request.form['settimanaInizio'] + '-1', "%Y-W%W-%w")
+        reps = int(request.form['ripetizioni'])
+        giorni_settimana = ['lun', 'mar', 'mer', 'gio', 'ven', 'sab', 'dom']
+        weekdays = [i in request.form.keys() for i in giorni_settimana]
+        for i in range(reps):
+            for j, v in enumerate(weekdays):
+                if v:
+                    new_date = start + timedelta(days=j)
+                    print(new_date)
+            start += timedelta(days=7)
+        # insert_corso(nome=request.form['nome'], min_persone=request.form['minPersone'], max_persone=request.form['maxPersone'], ora_inizio=request.form['oraInizio'], ora_fine=request.form['oraFine'], id_sala=request.form['sala'].split(',')[0], id_istruttore=request.form['istruttore'], data=request.form['dataInizio'], descrizione=request.form['descrizione'])
 
     # todo: gestire messaggi
     if request.method == 'POST' and 'attivazione' in request.form:
@@ -182,4 +189,4 @@ def dashboard_view():
     if request.method == 'POST' and 'tipo' in request.form:
         insert_sala(max_persone=request.form['MaxPersone'], tipo=request.form['tipo'])
 
-    return render_template('adminDashboard.html', sale=get_sale())
+    return render_template('adminDashboard.html', sale=get_sale(), istruttori=get_istruttori())

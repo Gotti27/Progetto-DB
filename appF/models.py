@@ -185,6 +185,11 @@ def get_sale():
     return q
 
 
+def get_istruttori():
+    q = db.session.query(Staff.IDStaff, Persona.Nome, Persona.Cognome).filter(Staff.Ruolo == "Istruttore", Persona.CF == Staff.IDStaff).all()
+    return q
+
+
 def get_persona_by_email(email):
     q = db.session.query(Persona).filter(Persona.Email == email)
     return q.one()
