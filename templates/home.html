@@ -11,8 +11,14 @@
     </div>
     <div class="w3-container", align="center">
          <a href="{{url_for('login')}}">clicca qui per login</a></p>
+         {% if not authenticated %}
          <a href="{{url_for('register')}}">clicca qui per registrarti</a></p>
+         {% endif %}
+         <!-- DA ELLIMINARE IN PRODUCTION -->
          <a href="{{url_for('dashboard_view')}}">clicca qui per vedere la dashboard dell'admin</a></p>
+         <!--{% if admin %} DA DECOMMENTARE IN PRODUCTION
+         <a href="{{url_for('dashboard_view')}}">clicca qui per vedere la dashboard dell'admin</a></p>
+         {% endif %}-->
     </div>
     <div align="center">
         {% if authenticated%}

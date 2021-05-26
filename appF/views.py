@@ -15,8 +15,12 @@ from appF.models import *
 @app.route('/')
 def home():
     if current_user.is_authenticated:
-        return render_template("home.html", authenticated=True)
-    return render_template("home.html")
+        if (db.session.query(Staff).filter(Staff.IDStaff == current_user.get_id()).filter(Staff.Ruolo == 'Gestore')).count():
+            return render_template("home.html", authenticated=True, admin=True)
+        else:
+            return render_template("home.html", authenticated=True, admin=False)
+    else:
+        return render_template("home.html", authenticated=False, admin=False)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -30,7 +34,10 @@ def login():
         if logging is not None and bcrypt.checkpw(password, logging.Password.encode("utf-8")):
             user = get_persona_by_email(request.form['username'])
             login_user(user)
-            return redirect(url_for('show_profile', username=user.Email))
+            if (db.session.query(Staff).filter(Staff.IDStaff == user.get_id()).filter(Staff.Ruolo == 'Gestore')).count():
+                return redirect(url_for('dashboard_view'))
+            else:
+                return redirect(url_for('show_profile', username=user.Email))
         else:
             msg = 'Username o password non corretti'
 
@@ -46,47 +53,49 @@ def logout():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    msg = ''
-    if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
-        email = request.form['email']
-        registration = db.session.query(Persona).filter(Persona.Email == email).first()
-        cf = db.session.query(Persona).filter(Persona.CF == request.form['Codice fiscale']).first()
-        if not request.form['name'] or not request.form['surname'] or not request.form['DataNascita'] or not \
-                request.form['Codice fiscale'] or not request.form['email'] or not request.form['sex'] or not \
-                request.form['password']:
-            msg = 'Rimpire tutto il form'
-        elif registration is not None or cf is not None:
-            msg = 'Persona già registrata'
-        elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
-            msg = 'Indirizzo email non valido'
+    if current_user.is_authenticated:
+        return redirect(url_for('show_profile', username=current_user.get_email))
+    else:
+        msg = ''
+        if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
+            email = request.form['email']
+            registration = db.session.query(Persona).filter(Persona.Email == email).first()
+            cf = db.session.query(Persona).filter(Persona.CF == request.form['Codice fiscale']).first()
+            if not request.form['name'] or not request.form['surname'] or not request.form['DataNascita'] or not \
+                    request.form['Codice fiscale'] or not request.form['email'] or not request.form['sex'] or not \
+                    request.form['password']:
+                msg = 'Rimpire tutto il form'
+            elif registration is not None or cf is not None:
+                msg = 'Persona già registrata'
+            elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+                msg = 'Indirizzo email non valido'
 
-        # elif not re.match(r'/^(?:[A-Z][AEIOU][AEIOUX]|[B-DF-HJ-NP-TV-Z]{2}[A-Z]){2}(?:[\dLMNP-V]{2}(?:[A-EHLMPR-T]
-        # (?:[04LQ][1-9MNP-V]|[15MR][\dLMNP-V]|[26NS][0-8LMNP-U])|[DHPS][37PT][0L]|[ACELMRT][37PT][01LM]|[AC-EHLMPR-T]
-        # [26NS][9V])|(?:[02468LNQSU][048LQU]|[13579MPRTV][26NS])B[26NS][9V])(?:[A-MZ][1-9MNP-V][\dLMNP-V]{2}|[A-M][0L]
-        # (?:[1-9MNP-V][\dLMNP-V]|[0L][1-9MNP-V]))[A-Z]$/i', CF):
-        #    msg = 'Codice fiscale non valido'
-        # (http://blog.marketto.it/2016/01/regex-validazione-codice-fiscale-con-omocodia/) REGEX PER CODICE FISCALE
-        # TODO: testarlo
+            # elif not re.match(r'/^(?:[A-Z][AEIOU][AEIOUX]|[B-DF-HJ-NP-TV-Z]{2}[A-Z]){2}(?:[\dLMNP-V]{2}(?:[A-EHLMPR-T]
+            # (?:[04LQ][1-9MNP-V]|[15MR][\dLMNP-V]|[26NS][0-8LMNP-U])|[DHPS][37PT][0L]|[ACELMRT][37PT][01LM]|[AC-EHLMPR-T]
+            # [26NS][9V])|(?:[02468LNQSU][048LQU]|[13579MPRTV][26NS])B[26NS][9V])(?:[A-MZ][1-9MNP-V][\dLMNP-V]{2}|[A-M][0L]
+            # (?:[1-9MNP-V][\dLMNP-V]|[0L][1-9MNP-V]))[A-Z]$/i', CF):
+            #    msg = 'Codice fiscale non valido'
+            # (http://blog.marketto.it/2016/01/regex-validazione-codice-fiscale-con-omocodia/) REGEX PER CODICE FISCALE
+            # TODO: testarlo
 
-        else:
-            nuova_persona = insert_persona(nome=request.form['name'], cognome=request.form['surname'],
-                                           data_nascita=request.form['DataNascita'], cf=request.form['Codice fiscale'],
-                                           email=request.form['email'], telefono=request.form['telefono'],
-                                           sesso=request.form['sex'],
-                                           password=bcrypt.hashpw(request.form['password'].encode("utf-8"),
-                                                                  bcrypt.gensalt()).decode("utf-8"), attivo=False)
-            if (db.session.query(Staff).filter(Staff.IDStaff == current_user.get_id())
-                    .filter(Staff.Ruolo == 'Gestore')).count():
-                insert_istruttore(nuova_persona)
             else:
-                insert_cliente(nuova_persona)
-            # msg = 'Ti sei registrato con successo!' non visualizzato a causa del redirect
-            login_user(nuova_persona)
-            return redirect(url_for('show_profile', username=nuova_persona.Email))
-    elif request.method == 'POST':
-        msg = 'Riempi tutti i campi del form'
+                nuova_persona = insert_persona(nome=request.form['name'], cognome=request.form['surname'],
+                                               data_nascita=request.form['DataNascita'], cf=request.form['Codice fiscale'],
+                                               email=request.form['email'], telefono=request.form['telefono'],
+                                               sesso=request.form['sex'],
+                                               password=bcrypt.hashpw(request.form['password'].encode("utf-8"),
+                                                                      bcrypt.gensalt()).decode("utf-8"), attivo=False)
+                if (db.session.query(Staff).filter(Staff.IDStaff == current_user.get_id()).filter(Staff.Ruolo == 'Gestore')).count():
+                    insert_istruttore(nuova_persona)
+                else:
+                    insert_cliente(nuova_persona)
+                # msg = 'Ti sei registrato con successo!' non visualizzato a causa del redirect
+                login_user(nuova_persona)
+                return redirect(url_for('show_profile', username=nuova_persona.Email))
+        elif request.method == 'POST':
+            msg = 'Riempi tutti i campi del form'
 
-    return render_template('register.html', msg=msg)
+        return render_template('register.html', msg=msg)
 
 
 @app.route('/user/<username>', methods=['GET', 'POST'])
@@ -122,18 +131,6 @@ def calendar_view(anno, mese):
     return render_template('calendar.html', corsi=corsi, anno=anno, mese=mese)
 
 
-# TODO: da decommentare in production
-'''
-@app.route('/dashboard')
-@login_required
-def admin_dashboard():
-    if (db.session.query(Staff).filter(Staff.IDStaff == current_user.get_id()).filter(Staff.Ruolo == 'Gestore')).count():
-        return render_template('calendar.html', corsi=get_corsi(5, 2021))  # TODO: impostare mese corretto
-    else:
-        abort(401)
-'''
-
-
 @app.route("/corso/<id>")
 def view_corso(id):
     corso = db.session.query(Corso).filter(Corso.IDCorso == id).first()
@@ -142,8 +139,22 @@ def view_corso(id):
                            iscritti=numero_iscritti_corso(corso.IDCorso))
 
 
-# TODO: da eliminare/aggiornare in production
-@app.route("/dashboard", methods=['GET', 'POST'])
+# TODO: usare in production
+"""" 
+@app.route("/dashboard", methods=['GET', 'POST']) 
+@login_required
+def dashboard_view():
+    if (db.session.query(Staff).filter(Staff.IDStaff == current_user.get_id()).filter(Staff.Ruolo == 'Gestore')).count():
+        if request.method == 'POST':
+            insert_corso(nome=request.form['nome'], min_persone=request.form['minPersone'], max_persone=request.form['maxPersone'], ora_inizio=request.form['oraInizio'], ora_fine=request.form['oraFine'], id_sala=request.form['sala'], id_istruttore=request.form['istruttore'], data=request.form['dataInizio'])
+
+        return render_template('adminDashboard.html', sale=get_sale())
+    else:
+        abort(401)
+"""
+
+
+@app.route("/dashboard", methods=['GET', 'POST'])  # TODO: elliminare in production
 def dashboard_view():
     if request.method == 'POST':
         insert_corso(nome=request.form['nome'], min_persone=request.form['minPersone'], max_persone=request.form['maxPersone'], ora_inizio=request.form['oraInizio'], ora_fine=request.form['oraFine'], id_sala=request.form['sala'], id_istruttore=request.form['istruttore'], data=request.form['dataInizio'])

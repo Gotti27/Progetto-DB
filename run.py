@@ -31,5 +31,6 @@ def load_user(cf):
     q = db.session.query(Persona).filter(Persona.CF == cf)
     return q.one()
 
+
 if __name__ == '__main__':
     app.run()
