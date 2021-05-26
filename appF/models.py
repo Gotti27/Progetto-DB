@@ -197,6 +197,32 @@ def addTestPrenotazione():
     session.commit()
 
 
+def attiva_persona(persona):
+    db.session.query(Persona).filter(Persona.CF == persona).update({'Attivo': True})
+    db.session.commit()
+
+
+def disattiva_persona(persona):
+    db.session.query(Persona).filter(Persona.CF == persona).update({'Attivo': False})
+    db.session.commit()
+
+
+def setta_pagante(cliente):
+    db.session.query(Cliente).filter(Cliente.IDCliente == cliente).update({'PagamentoMese': True})
+    db.session.commit()
+
+
+def setta_non_pagante(cliente):
+    db.session.query(Cliente).filter(Cliente.IDCliente == cliente).update({'PagamentoMese': False})
+    db.session.commit()
+
+
+def insert_sala(max_persone, tipo):
+    to_add = Sala(MaxPersone=max_persone, Tipo=tipo)
+    session.add(to_add)
+    session.commit()
+
+
 def workout_book(persona, data, oraInizio, oraFine, sala, corso=None):
     approved = True
     day = int(datetime.date(datetime.strptime(str(data), '%Y-%m-%d')).weekday())

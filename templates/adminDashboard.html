@@ -47,8 +47,44 @@
             <input type="submit" value="Aggiungi" class="w3-button w3-black">
         </form>
     </div>
+
+    <!--
     <div class="w3-container w3-third w3-pink">
         HIII
+    </div>
+    -->
+
+    <div class="w3-container w3-third w3-light-gray">
+        <h2>Opzioni su persona</h2>
+        <form action="{{ url_for('dashboard_view') }}" method="post" class="w3-container w3-margin" id="modificaCliente">
+            <input name="codiceFiscale" type="text" placeholder="codice fiscale" class="w3-input" /><br>
+            <input type="radio" name="attivazione" id="attiva" value="attiva">
+            <label for="attiva">attiva</label>
+            <input type="radio" name="attivazione" id="disattiva" value="disattiva">
+            <label for="disattiva">disattiva</label><br><br>
+            <input type="submit" class="w3-button w3-black" value="Conferma"><br>
+        </form>
+        <h2>Opzioni su cliente</h2>
+        <form action="{{ url_for('dashboard_view') }}" method="post" class="w3-container w3-margin" id="modificaStaff">
+            <input name="codiceFiscale" type="text" placeholder="codice fiscale" class="w3-input" /><br>
+            <input type="radio" name="pagante" id="pagante" value="pagante">
+            <label for="pagante">pagante</label>
+            <input type="radio" name="pagante" id="non pagante" value="non pagante">
+            <label for="non pagante">non pagante</label><br><br>
+            <input type="submit" class="w3-button w3-black" value="Conferma"><br>
+        </form>
+    </div>
+
+    <div class="w3-container w3-third w3-light-gray">
+        <h2>
+            <a href="{{url_for('register')}}">Registra un istruttore</a>
+        </h2>
+        <h2>Crea una sala</h2>
+        <form action="{{ url_for('dashboard_view') }}" method="post" class="w3-container w3-margin" id="creaSala">
+            <input name="tipo" type="text" placeholder="tipo di sala" class="w3-input">
+            <input name="MaxPersone" type="number" placeholder="max persone" class="w3-input" min="0"><br>
+            <input type="submit" class="w3-button w3-black" value="Crea sala"><br>
+        </form>
     </div>
 </div>
 

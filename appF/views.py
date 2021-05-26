@@ -106,12 +106,18 @@ def show_profile(username):
         return redirect(url_for('show_profile', username=current_user.get_email, msg=msg))
 
     if request.method == 'POST':
+        is_active = db.session.query(Persona.Attivo).filter(Persona.Email == current_user.get_email).first()
         new_book = workout_book(persona=get_persona_by_email(username), data=request.form['Data'],
                                 oraInizio=request.form['oraInizio'], oraFine=request.form['oraFine'],
                                 sala=request.form['IDSala'], corso=request.form['IDCorso'])
 
         if new_book is None:
             msg = 'Errore fatale, la data scelta non è valida'
+        elif not is_active:
+            #todo: messaggio provvisorio
+            msg = 'Non sei ancora autorizzato ad accedere alla palestra,' \
+                  'la tua prenotazione è registrata ma è in attesa di validazione, ' \
+                  'contatta il gestore per essere abilitato'
         elif not new_book.Approvata:
             msg = 'Tutto pieno, sei stato messo in coda'
         else:
@@ -154,9 +160,26 @@ def dashboard_view():
 """
 
 
-@app.route("/dashboard", methods=['GET', 'POST'])  # TODO: elliminare in production
+@app.route("/dashboard", methods=['GET', 'POST'])  # TODO: eliminare in production
 def dashboard_view():
-    if request.method == 'POST':
-        insert_corso(nome=request.form['nome'], min_persone=request.form['minPersone'], max_persone=request.form['maxPersone'], ora_inizio=request.form['oraInizio'], ora_fine=request.form['oraFine'], id_sala=request.form['sala'], id_istruttore=request.form['istruttore'], data=request.form['dataInizio'])
+    if request.method == 'POST' and 'nome' in request.form:
+        insert_corso(nome=request.form['nome'], min_persone=request.form['minPersone'],
+                     max_persone=request.form['maxPersone'], ora_inizio=request.form['oraInizio'],
+                     ora_fine=request.form['oraFine'], id_sala=request.form['sala'],
+                     id_istruttore=request.form['istruttore'], data=request.form['dataInizio'])
+
+    # todo: gestire messaggi
+    if request.method == 'POST' and 'attivazione' in request.form:
+        if 'attivazione' in request.form and request.form['attivazione'] == 'attiva':
+            attiva_persona(persona=request.form['codiceFiscale'])
+        elif 'attivazione' in request.form and request.form['attivazione'] == 'disattiva':
+            disattiva_persona(persona=request.form['codiceFiscale'])
+    if request.method == 'POST' and 'pagante' in request.form:
+        if 'pagante' in request.form and request.form['pagante'] == 'pagante':
+            setta_pagante(cliente=request.form['codiceFiscale'])
+        elif 'pagante' in request.form and request.form['pagante'] == 'non pagante':
+            setta_non_pagante(cliente=request.form['codiceFiscale'])
+    if request.method == 'POST' and 'tipo' in request.form:
+        insert_sala(max_persone=request.form['MaxPersone'], tipo=request.form['tipo'])
 
     return render_template('adminDashboard.html', sale=get_sale())
