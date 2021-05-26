@@ -123,7 +123,7 @@ def show_profile(username):
         else:
             msg = 'Prenotazione effettuata con successo'
 
-    return render_template('user_page.html', username=username, msg=msg)
+    return render_template('user_page.html', persona=get_persona_by_email(username), username=username, msg=msg)
 
 
 @app.route('/calendar')
@@ -189,4 +189,13 @@ def dashboard_view():
     if request.method == 'POST' and 'tipo' in request.form:
         insert_sala(max_persone=request.form['MaxPersone'], tipo=request.form['tipo'])
 
-    return render_template('adminDashboard.html', sale=get_sale(), istruttori=get_istruttori())
+    return render_template('adminDashboard.html', sale=get_sale())
+
+
+@app.route("/debug")
+def testing():
+    user = get_persona_by_cf('GLFNTN95T05E387I')
+    positivi = contact_tracing(user, 7)
+    for p in positivi:
+        print(p.CF)
+    return render_template("index.html")
