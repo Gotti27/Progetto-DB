@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Corsi</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<body>
+    <div class="w3-container" align="center">
+        <h1 style="font-family: Arial">I nostri corsi</h1>
+    </div>
+
+    {% for corso in lista_corsi %}
+    <div class="w3-card-4 w3-margin">
+        <header class="w3-container w3-light-grey" align="center">
+          <h3>{{ corso.Nome }}</h3>
+        </header>
+
+        <div class="w3-container" align="center">
+          <p>{{corso.Data}}  {{corso.OraInizio.strftime('%H:%M')}}-{{corso.OraFine.strftime('%H:%M')}}</p>
+        </div>
+
+        <button class="w3-button w3-block w3-dark-grey">
+          <a href="/corso/{{corso.IDCorso}}">pagina corso</a>
+        </button>
+    </div>
+    {% endfor %}
+
+</body>
+</html>
