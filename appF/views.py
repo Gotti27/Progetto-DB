@@ -14,6 +14,7 @@ from appF.models import *
 
 @app.route('/')
 def home():
+    get_time_step()
     if current_user.is_authenticated:
         if (db.session.query(Staff).filter(Staff.IDStaff == current_user.get_id()).filter(Staff.Ruolo == 'Gestore')).count():
             return render_template("home.html", authenticated=True, admin=True)
@@ -107,9 +108,9 @@ def show_profile(username):
 
     if request.method == 'POST':
         is_active = db.session.query(Persona.Attivo).filter(Persona.Email == current_user.get_email).first()
-        new_book = workout_book(persona=get_persona_by_email(username), data=request.form['Data'],
-                                oraInizio=request.form['oraInizio'], oraFine=request.form['oraFine'],
-                                sala=request.form['IDSala'], corso=request.form['IDCorso'])
+        new_book = insert_prenotazione(persona=get_persona_by_email(username), data=request.form['Data'],
+                                       ora_inizio=request.form['oraInizio'], ora_fine=request.form['oraFine'],
+                                       sala=request.form['IDSala'], corso=request.form['IDCorso'])
 
         if new_book is None:
             msg = 'Errore fatale, la data scelta non è valida'
@@ -160,7 +161,7 @@ def dashboard_view():
 """
 
 
-@app.route("/dashboard", methods=['GET', 'POST'])  # TODO: eliminare in production
+@app.route("/dashboard", methods=['GET', 'POST'])
 def dashboard_view():
     if request.method == 'POST' and 'nome' in request.form:
         start = datetime.strptime(request.form['settimanaInizio'] + '-1', "%Y-W%W-%w")
@@ -175,17 +176,19 @@ def dashboard_view():
             start += timedelta(days=7)
         # insert_corso(nome=request.form['nome'], min_persone=request.form['minPersone'], max_persone=request.form['maxPersone'], ora_inizio=request.form['oraInizio'], ora_fine=request.form['oraFine'], id_sala=request.form['sala'].split(',')[0], id_istruttore=request.form['istruttore'], data=request.form['dataInizio'], descrizione=request.form['descrizione'])
 
-    # todo: gestire messaggi
+    # TODO: gestire messaggi
     if request.method == 'POST' and 'attivazione' in request.form:
         if 'attivazione' in request.form and request.form['attivazione'] == 'attiva':
             attiva_persona(persona=request.form['codiceFiscale'])
         elif 'attivazione' in request.form and request.form['attivazione'] == 'disattiva':
             disattiva_persona(persona=request.form['codiceFiscale'])
+
     if request.method == 'POST' and 'pagante' in request.form:
         if 'pagante' in request.form and request.form['pagante'] == 'pagante':
             setta_pagante(cliente=request.form['codiceFiscale'])
         elif 'pagante' in request.form and request.form['pagante'] == 'non pagante':
             setta_non_pagante(cliente=request.form['codiceFiscale'])
+
     if request.method == 'POST' and 'tipo' in request.form:
         insert_sala(max_persone=request.form['MaxPersone'], tipo=request.form['tipo'])
     if request.method == 'POST' and 'da tracciare' in request.form:

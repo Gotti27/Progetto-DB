@@ -68,6 +68,12 @@ class GiornoFestivo(Base):
     Giorno = Column(DATE, primary_key=True)
 
 
+class Generali(Base):
+    __tablename__ = 'generali'
+
+    MinutiScaglioni = Column(INTEGER, primary_key=True)
+
+
 class Cliente(Base):
     __tablename__ = 'clienti'
 
@@ -207,13 +213,6 @@ def get_persona_by_cf(cf):
     return q.one()
 
 
-def addTestPrenotazione():
-    testAdd = Prenotazione(Data=date.today(), OraInizio=time(13, 0, 0), OraFine=time(15, 0, 0),
-                           IDCliente="ABCDEFGHIJKLMNOP", IDSala=1)
-    session.add(testAdd)
-    session.commit()
-
-
 def attiva_persona(persona):
     db.session.query(Persona).filter(Persona.CF == persona).update({'Attivo': True})
     db.session.commit()
@@ -240,54 +239,53 @@ def insert_sala(max_persone, tipo):
     session.commit()
 
 
-def workout_book(persona, data, oraInizio, oraFine, sala, corso=None):
-    # FIXME: non si possono usare and, or nella filter
-    # todo: sostituire il quarto d'ora nei calcoli con l'intervallo deciso dal gestore
+def get_time_step():
+    q = db.session.query(Generali).one().MinutiScaglioni
+    return q
+
+
+def insert_prenotazione(persona, data, ora_inizio, ora_fine, sala, corso=None):
     approved = True
     day = int(datetime.date(datetime.strptime(str(data), '%Y-%m-%d')).weekday())
-    # todo: segnalo mie bestemmie da elminare
-    if oraInizio.split(':')[1] != '00' and oraInizio.split(':')[1] != '15' and oraInizio.split(':')[1] != '30' and \
-            oraInizio.split(':')[1] != '45' or oraFine.split(':')[1] != '00' and oraFine.split(':')[1] != '15' and \
-            oraFine.split(':')[1] != '30' and oraFine.split(':')[1] != '45':
+    time_step = get_time_step()
+    # TODO: segnalo mie bestemmie da elminare
+    if int(ora_inizio.split(':')[1]) % time_step != 0 or int(ora_fine.split(':')[1]) % time_step != 0:
         print("Porcodio ci stanno hackerando")
         return None
-    my_time = []  # lista dei quarti d'ora = tempoDiApertura * 4
-    giorni_festivi = db.session.query(GiornoFestivo).filter(GiornoFestivo.Giorno == data).first()
-    if giorni_festivi is not None and (oraInizio < giorni_festivi.Apertura or oraFine > giorni_festivi.Chiusura):
-        return None
-    giorni_feriali = db.session.query(OrarioPalestra).filter(OrarioPalestra.GiornoSettimana == day).first()
 
-    if oraInizio < str(giorni_feriali.Apertura) or oraFine > str(giorni_feriali.Chiusura):
+    orari_giorno = db.session.query(GiornoFestivo).filter(GiornoFestivo.Giorno == data).first()
+    if orari_giorno is None:
+        orari_giorno = db.session.query(OrarioPalestra).filter(OrarioPalestra.GiornoSettimana == day).first()
+
+    if orari_giorno is None or ora_inizio < str(orari_giorno.Apertura) or ora_fine > str(orari_giorno.Chiusura):
         return None
 
     if corso == '':
         max_number = db.session.query(Sala).filter(Sala.IDSala == sala).first().MaxPersone
-        available = db.session.query(Prenotazione).filter(Prenotazione.Data == data and Prenotazione.OraFine > oraInizio
-                                                          and Prenotazione.OraInizio < oraFine and
-                                                          Prenotazione.Sala == sala and Prenotazione.Approvata).all()
-        apertura = int(
-            int(str(giorni_feriali.Apertura).split(':')[0]) * 4 + int(str(giorni_feriali.Apertura).split(':')[1]) / 15)
-        chiusura = int(
-            int(str(giorni_feriali.Chiusura).split(':')[0]) * 4 + int(str(giorni_feriali.Chiusura).split(':')[1]) / 15)
-        for _ in range(apertura, chiusura):
-            my_time.append(0)
+        available = db.session.query(Prenotazione).filter(Prenotazione.Data == data, Prenotazione.OraFine > ora_inizio,
+                                                           Prenotazione.OraInizio < ora_fine,
+                                                          Prenotazione.Sala == sala, Prenotazione.Approvata).all()
+
+        inizio_allenamento = int(str(ora_inizio).split(':')[0])*(60//time_step) + int(str(ora_inizio).split(':')[1])//time_step
+        fine_allenamento = int(str(ora_fine).split(':')[0])*(60//time_step) + int(str(ora_fine).split(':')[1])//time_step
+        my_time = [0]*(fine_allenamento-inizio_allenamento)
+
         for booked in available:
-            start = (int(str(booked.OraInizio).split(':')[0]) - apertura) * 4 + (
-                    int(str(booked.OraInizio).split(':')[1]) / 15)
-            end = (int(str(booked.OraFine).split(':')[0]) - apertura) * 4 + int(str(booked.OraFine).split(':')[1]) / 15
-            for t in range(int(start), int(end)):
+            start = (int(str(booked.OraInizio).split(':')[0])-inizio_allenamento)*(60//time_step) + int(str(booked.OraInizio).split(':')[1])//time_step
+            end = (int(str(booked.OraFine).split(':')[0])-inizio_allenamento)*(60//time_step) + int(str(booked.OraFine).split(':')[1])//time_step
+            for t in range(max(start, 0), min(end, len(my_time))):
                 my_time[t] += 1
         for t in my_time:
             if max_number - t < 1:
                 approved = False
                 break
-        new_book = Prenotazione(Data=data, OraInizio=oraInizio, OraFine=oraFine, IDCliente=persona.CF,
+        new_book = Prenotazione(Data=data, OraInizio=ora_inizio, OraFine=ora_fine, IDCliente=persona.CF,
                                 IDCorso=None, IDSala=sala, Approvata=approved)
     else:
         disponibilita_corso = db.session.query(Corso).filter(Corso.IDCorso == corso).first().MaxPersone
         if disponibilita_corso - numero_iscritti_corso(corso) < 1:
             approved = False
-        new_book = Prenotazione(Data=data, OraInizio=oraInizio, OraFine=oraFine, IDCliente=persona.CF,
+        new_book = Prenotazione(Data=data, OraInizio=ora_inizio, OraFine=ora_fine, IDCliente=persona.CF,
                                 IDCorso=corso, IDSala=sala, Approvata=approved)
     session.add(new_book)
     session.commit()
