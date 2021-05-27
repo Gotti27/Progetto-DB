@@ -140,7 +140,7 @@ def calendar_view(anno, mese):
 
 
 @app.route("/corsi")
-def list_corsi():
+def lista_corsi():
     lista_corsi = db.session.query(Corso).filter(Corso.Data >= date.today()).filter(Corso.OraInizio > time()).all()
     return render_template('corsi.html', lista_corsi=lista_corsi)
 
