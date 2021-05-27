@@ -1,4 +1,5 @@
 import re
+import time
 
 from datetime import *
 import bcrypt
@@ -136,6 +137,12 @@ def calendar_view_today():
 def calendar_view(anno, mese):
     corsi = get_corsi(mese, anno)
     return render_template('calendar.html', corsi=corsi, anno=anno, mese=mese)
+
+
+@app.route("/corsi")
+def list_corsi():
+    lista_corsi = db.session.query(Corso).filter(Corso.Data >= date.today()).filter(Corso.OraInizio > time()).all()
+    return render_template('corsi.html', lista_corsi=lista_corsi)
 
 
 @app.route("/corso/<id>")
