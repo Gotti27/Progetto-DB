@@ -264,7 +264,7 @@ def insert_prenotazione(persona, data, ora_inizio, ora_fine, sala, corso=None):
         max_number = db.session.query(Sala).filter(Sala.IDSala == sala).first().MaxPersone
         available = db.session.query(Prenotazione).filter(Prenotazione.Data == data, Prenotazione.OraFine > ora_inizio,
                                                            Prenotazione.OraInizio < ora_fine,
-                                                          Prenotazione.Sala == sala, Prenotazione.Approvata).all()
+                                                          Prenotazione.IDSala == sala, Prenotazione.Approvata).all()
 
         inizio_allenamento = int(str(ora_inizio).split(':')[0])*(60//time_step) + int(str(ora_inizio).split(':')[1])//time_step
         fine_allenamento = int(str(ora_fine).split(':')[0])*(60//time_step) + int(str(ora_fine).split(':')[1])//time_step
