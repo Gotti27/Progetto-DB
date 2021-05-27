@@ -100,6 +100,13 @@
             <input name="MaxPersone" type="number" placeholder="max persone" class="w3-input" min="0"><br>
             <input type="submit" class="w3-button w3-black" value="Crea sala"><br>
         </form>
+
+        <h2>Traccia i contatti di una persona</h2>
+        <form action="{{ url_for('dashboard_view') }}" method="post" class="w3-container w3-margin" id="contact tracing">
+            <input name="da tracciare" type="text" placeholder="codice fiscale" class="w3-input">
+            <input name="giorni" type="number" placeholder="quanti giorni andare a ritroso" class="w3-input" min="0" max="7"><br>
+            <input type="submit" class="w3-button w3-black" value="Traccia"><br>
+        </form>
     </div>
 </div>
 

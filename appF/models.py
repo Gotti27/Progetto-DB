@@ -113,8 +113,9 @@ class Corso(Base):
 
     def __repr__(self):
         return "ID:%s, Nome:%s, Max:%s, Min:%s, IDSala:%s, OInizio:%s, OFine:%s, Data:%s, Descr:%s, IDIstr:%s" % (
-        self.IDCorso, self.Nome, self.MaxPersone, self.MinPersone, self.IDSala, self.OraInizio, self.OraFine, self.Data,
-        str(self.Descrizione), self.IDIstruttore)
+            self.IDCorso, self.Nome, self.MaxPersone, self.MinPersone, self.IDSala, self.OraInizio, self.OraFine,
+            self.Data,
+            str(self.Descrizione), self.IDIstruttore)
 
 
 class Prenotazione(Base):
@@ -191,7 +192,8 @@ def get_sale():
 
 
 def get_istruttori():
-    q = db.session.query(Staff.IDStaff, Persona.Nome, Persona.Cognome).filter(Staff.Ruolo == "Istruttore", Persona.CF == Staff.IDStaff).all()
+    q = db.session.query(Staff.IDStaff, Persona.Nome, Persona.Cognome).filter(Staff.Ruolo == "Istruttore",
+                                                                              Persona.CF == Staff.IDStaff).all()
     return q
 
 
@@ -271,7 +273,7 @@ def workout_book(persona, data, oraInizio, oraFine, sala, corso=None):
             my_time.append(0)
         for booked in available:
             start = (int(str(booked.OraInizio).split(':')[0]) - apertura) * 4 + (
-                        int(str(booked.OraInizio).split(':')[1]) / 15)
+                    int(str(booked.OraInizio).split(':')[1]) / 15)
             end = (int(str(booked.OraFine).split(':')[0]) - apertura) * 4 + int(str(booked.OraFine).split(':')[1]) / 15
             for t in range(int(start), int(end)):
                 my_time[t] += 1
@@ -296,32 +298,39 @@ def contact_tracing(zero, giorni):
     """
     rudimentale algoritmo di contact tracing che prende in input un positivo e un numero di giorni da analizzare
     e ritorna una lista di potenziali positivi
-    TODO: testare su più date
+    TODO: testare su corsi e istruttori
 
     :param zero: positivo iniziale
     :param giorni: numero di giorni che si vuole prendere in considerazione (max=7)
     :return: lista di potenziali positivi
     """
     potential_infected = []
+    giorni = int(giorni)
     if giorni > 7:
         giorni = 7
 
     last_zero_appearance_date = db.session.query(Prenotazione).filter(
-        Prenotazione.IDCliente == zero.CF, Prenotazione.Data <= datetime.today()).order_by(
-        Prenotazione.Data.desc()).first()
+        Prenotazione.IDCliente == zero.CF, Prenotazione.Data <= datetime.today(),
+        Prenotazione.Approvata == true()).order_by(Prenotazione.Data.desc()).first()
     if last_zero_appearance_date is not None:
         last_zero_appearance_date = last_zero_appearance_date.Data
     else:
         return []
     lower_limit_date = last_zero_appearance_date - timedelta(days=giorni)
-    last_zero_appearances = db.session.query(Prenotazione)\
-        .filter(Prenotazione.IDCliente == zero.CF, Prenotazione.Data >= lower_limit_date)\
-        .order_by(Prenotazione.Data.desc()).all()
+    last_zero_appearances = db.session.query(Prenotazione) \
+        .filter(Prenotazione.IDCliente == zero.CF, Prenotazione.Data >= lower_limit_date,
+                Prenotazione.Approvata == true()).order_by(Prenotazione.Data.desc()).all()
 
     for appearance in last_zero_appearances:
         prenotazioni = db.session.query(Prenotazione).filter(
             Prenotazione.Data == appearance.Data, Prenotazione.IDSala == appearance.IDSala,
-            or_(Prenotazione.OraFine >= appearance.OraInizio, Prenotazione.OraInizio <= appearance.OraFine)).all()
+            or_(Prenotazione.OraFine >= appearance.OraInizio, Prenotazione.OraInizio <= appearance.OraFine),
+            Prenotazione.Approvata == true()).all()
+
+        if appearance.IDCorso is not None:
+            istruttore = db.session.query(Corso).filter(Corso.IDCorso == appearance.IDCorso).first().IDIstruttore
+            potential_infected.append(istruttore)
+
         for p in prenotazioni:
             potential_infected.append(p.IDCliente)
 

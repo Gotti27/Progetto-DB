@@ -188,14 +188,13 @@ def dashboard_view():
             setta_non_pagante(cliente=request.form['codiceFiscale'])
     if request.method == 'POST' and 'tipo' in request.form:
         insert_sala(max_persone=request.form['MaxPersone'], tipo=request.form['tipo'])
+    if request.method == 'POST' and 'da tracciare' in request.form:
+        return redirect(url_for('report', zero=request.form['da tracciare'], giorni=request.form['giorni']))
 
     return render_template('adminDashboard.html', sale=get_sale())
 
 
-@app.route("/debug")
-def testing():
-    user = get_persona_by_cf('GLFNTN95T05E387I')
-    positivi = contact_tracing(user, 7)
-    for p in positivi:
-        print(p.CF)
-    return render_template("index.html")
+@app.route("/report/<zero>/<giorni>")
+def report(zero, giorni):
+    tracciati = contact_tracing(zero=get_persona_by_cf(zero), giorni=giorni)
+    return render_template('report.html', positivi=tracciati)
