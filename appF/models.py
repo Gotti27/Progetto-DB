@@ -263,16 +263,20 @@ def insert_prenotazione(persona, data, ora_inizio, ora_fine, sala, corso=None):
     if corso == '':
         max_number = db.session.query(Sala).filter(Sala.IDSala == sala).first().MaxPersone
         available = db.session.query(Prenotazione).filter(Prenotazione.Data == data, Prenotazione.OraFine > ora_inizio,
-                                                           Prenotazione.OraInizio < ora_fine,
+                                                          Prenotazione.OraInizio < ora_fine,
                                                           Prenotazione.IDSala == sala, Prenotazione.Approvata).all()
 
-        inizio_allenamento = int(str(ora_inizio).split(':')[0])*(60//time_step) + int(str(ora_inizio).split(':')[1])//time_step
-        fine_allenamento = int(str(ora_fine).split(':')[0])*(60//time_step) + int(str(ora_fine).split(':')[1])//time_step
-        my_time = [0]*(fine_allenamento-inizio_allenamento)
+        inizio_allenamento = int(str(ora_inizio).split(':')[0]) * (60 // time_step) + int(
+            str(ora_inizio).split(':')[1]) // time_step
+        fine_allenamento = int(str(ora_fine).split(':')[0]) * (60 // time_step) + int(
+            str(ora_fine).split(':')[1]) // time_step
+        my_time = [0] * (fine_allenamento - inizio_allenamento)
 
         for booked in available:
-            start = (int(str(booked.OraInizio).split(':')[0])-inizio_allenamento)*(60//time_step) + int(str(booked.OraInizio).split(':')[1])//time_step
-            end = (int(str(booked.OraFine).split(':')[0])-inizio_allenamento)*(60//time_step) + int(str(booked.OraFine).split(':')[1])//time_step
+            start = (int(str(booked.OraInizio).split(':')[0]) - inizio_allenamento) * (60 // time_step) + int(
+                str(booked.OraInizio).split(':')[1]) // time_step
+            end = (int(str(booked.OraFine).split(':')[0]) - inizio_allenamento) * (60 // time_step) + int(
+                str(booked.OraFine).split(':')[1]) // time_step
             for t in range(max(start, 0), min(end, len(my_time))):
                 my_time[t] += 1
         for t in my_time:
@@ -292,20 +296,20 @@ def insert_prenotazione(persona, data, ora_inizio, ora_fine, sala, corso=None):
     return new_book
 
 
-def contact_tracing(zero, giorni):
+def contact_tracing(zero, days):
     """
     rudimentale algoritmo di contact tracing che prende in input un positivo e un numero di giorni da analizzare
     e ritorna una lista di potenziali positivi
     TODO: testare su corsi e istruttori
 
     :param zero: positivo iniziale
-    :param giorni: numero di giorni che si vuole prendere in considerazione (max=7)
+    :param days: numero di giorni che si vuole prendere in considerazione (max=7)
     :return: lista di potenziali positivi
     """
     potential_infected = []
-    giorni = int(giorni)
-    if giorni > 7:
-        giorni = 7
+    days = int(days)
+    if days > 7:
+        days = 7
 
     last_zero_appearance_date = db.session.query(Prenotazione).filter(
         Prenotazione.IDCliente == zero.CF, Prenotazione.Data <= datetime.today(),
@@ -314,7 +318,7 @@ def contact_tracing(zero, giorni):
         last_zero_appearance_date = last_zero_appearance_date.Data
     else:
         return []
-    lower_limit_date = last_zero_appearance_date - timedelta(days=giorni)
+    lower_limit_date = last_zero_appearance_date - timedelta(days=days)
     last_zero_appearances = db.session.query(Prenotazione) \
         .filter(Prenotazione.IDCliente == zero.CF, Prenotazione.Data >= lower_limit_date,
                 Prenotazione.Approvata == true()).order_by(Prenotazione.Data.desc()).all()
@@ -332,9 +336,13 @@ def contact_tracing(zero, giorni):
         for p in prenotazioni:
             potential_infected.append(p.IDCliente)
 
+    """
     potential_infected_distinct = set(potential_infected)
     potential_infected = []
     for person in potential_infected_distinct:
         potential_infected.append(get_persona_by_cf(person))
 
+    (list(set(potential_infected)))
     return potential_infected
+    """
+    return [get_persona_by_cf(cf) for cf in (list(set(potential_infected)))]

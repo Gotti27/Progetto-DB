@@ -206,5 +206,5 @@ def dashboard_view():
 
 @app.route("/report/<zero>/<giorni>")
 def report(zero, giorni):
-    tracciati = contact_tracing(zero=get_persona_by_cf(zero), giorni=giorni)
+    tracciati = contact_tracing(zero=get_persona_by_cf(zero), days=giorni)
     return render_template('report.html', positivi=tracciati)
