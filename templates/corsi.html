@@ -7,22 +7,22 @@
 </head>
 <body>
     <div class="w3-container" align="center">
-        <h1 style="font-family: Arial">I nostri corsi</h1>
+        <h1>I nostri corsi</h1>
     </div>
 
     {% for corso in lista_corsi %}
-    <div class="w3-card-4 w3-margin">
+    <div class=" w3-card-4 w3-margin">
         <header class="w3-container w3-light-grey" align="center">
-          <h3>{{ corso.Nome }}</h3>
+          <h2>{{ corso.Nome }}</h2>
         </header>
 
-        <div class="w3-container" align="center">
-          <p>{{corso.Data}}  {{corso.OraInizio.strftime('%H:%M')}}-{{corso.OraFine.strftime('%H:%M')}}</p>
+        <div class="w3-display-container" align="center">
+            <p> Data: {{corso.Data.strftime('%a %d %B')}}</p>
+            <p> Orario: {{corso.OraInizio.strftime('%H:%M')}} - {{corso.OraFine.strftime('%H:%M')}}</p>
+
+            <a class="w3-button w3-round w3-margin-right w3-dark-grey w3-display-right w3-display-hover" href="/corso/{{corso.IDCorso}}">Scopri di più</a>
         </div>
 
-        <button class="w3-button w3-block w3-dark-grey">
-          <a href="/corso/{{corso.IDCorso}}">pagina corso</a>
-        </button>
     </div>
     {% endfor %}
 

@@ -96,14 +96,14 @@
         </h2>
         <h2>Crea una sala</h2>
         <form action="{{ url_for('dashboard_view') }}" method="post" class="w3-container w3-margin" id="creaSala">
-            <input name="tipo" type="text" placeholder="tipo di sala" class="w3-input">
-            <input name="MaxPersone" type="number" placeholder="max persone" class="w3-input" min="0"><br>
+            <label for="tipoSala">Tipo di sala</label><input id="tipoSala" name="tipo" type="text" placeholder="tipo" class="w3-input w3-margin-bottom">
+            <label for="maxPersoneNewSala">Numero massimo di persone</label><input id="maxPersoneNewSala" name="MaxPersone" type="number" placeholder="max persone" class="w3-input" min="0"><br>
             <input type="submit" class="w3-button w3-black" value="Crea sala"><br>
         </form>
 
         <h2>Traccia i contatti di una persona</h2>
         <form action="{{ url_for('dashboard_view') }}" method="post" class="w3-container w3-margin" id="contact tracing">
-            <input name="da tracciare" type="text" placeholder="codice fiscale" class="w3-input">
+            <input name="da tracciare" type="text" placeholder="codice fiscale" class="w3-input w3-margin-bottom">
             <input name="giorni" type="number" placeholder="quanti giorni andare a ritroso" class="w3-input" min="0" max="7"><br>
             <input type="submit" class="w3-button w3-black" value="Traccia"><br>
         </form>

@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from sqlalchemy import create_engine
+import locale
 
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_object("config")
@@ -19,6 +20,8 @@ engine_utente = create_engine(app.config['SQLALCHEMY_DATABASE_URI_UTENTE'], echo
 engine_istruttore = create_engine(app.config['SQLALCHEMY_DATABASE_URI_ISTRUTTORE'], echo=True)
 engine_gestore = create_engine(app.config['SQLALCHEMY_DATABASE_URI_GESTORE'], echo=True)
 """
+
+locale.setlocale(locale.LC_ALL, 'it_IT')
 
 from appF.views import *  # Non importato all'inizio per evitare dipendenze circolari
 from appF.models import *

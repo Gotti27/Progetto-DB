@@ -187,6 +187,10 @@ def get_corsi(mese, anno):
     return ret
 
 
+def get_corsi_futuri():
+    q = db.session.query(Corso).filter(Corso.Data >= date.today()).filter(Corso.OraInizio > time()).order_by(Corso.Data).all()
+    return q
+
 def numero_iscritti_corso(corso):
     iscr = db.session.query(Prenotazione).filter(Prenotazione.IDCorso == corso).filter(Prenotazione.Approvata).count()
     return iscr

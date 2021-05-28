@@ -4,8 +4,24 @@
     <meta charset="UTF-8">
     <title>Super Mega Palestra Pokemon</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 </head>
 <body>
+    <div class="w3-bar w3-light-grey w3-border-bottom">
+        <a class="w3-bar-item w3-button w3-xlarge" href="{{url_for('lista_corsi')}}">Corsi</a>
+        <div class="w3-dropdown-hover w3-right">
+            {% if not authenticated %}
+            <button class="w3-button w3-xlarge">Accedi</button>
+            <div class="w3-dropdown-content w3-bar-block w3-card-4" style="right:0">
+                <a href="{{url_for('login')}}" class="w3-bar-item w3-button">Login</a>
+                <a href="{{url_for('register')}}"class="w3-bar-item w3-button">Registrati</a>
+            </div>
+            {% else %}
+            <button class="w3-button w3-xlarge"><i class="w3-green w3-circle w3-xlarge material-icons" style="padding: 4px">person</i></button>
+
+            {% endif %}
+        </div>
+    </div>
     <div class="w3-container" align="center">
         <h1 style="font-family: Arial">iGym</h1>
     </div>
@@ -19,7 +35,6 @@
          <!--{% if admin %} DA DECOMMENTARE IN PRODUCTION
          <a href="{{url_for('dashboard_view')}}">clicca qui per vedere la dashboard dell'admin</a></p>
          {% endif %}-->
-        <a href="{{url_for('lista_corsi')}}">I nostri corsi</a></p>
     </div>
     <div align="center">
         {% if current_user.is_authenticated %}
