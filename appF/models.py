@@ -249,7 +249,7 @@ def insert_prenotazione(persona, data, ora_inizio, ora_fine, sala, corso=None):
     day = int(datetime.date(datetime.strptime(str(data), '%Y-%m-%d')).weekday())
     time_step = get_time_step()
     # TODO: segnalo mie bestemmie da elminare
-    if int(ora_inizio.split(':')[1]) % time_step != 0 or int(ora_fine.split(':')[1]) % time_step != 0:
+    if int(str(ora_inizio).split(':')[1]) % time_step != 0 or int(str(ora_fine).split(':')[1]) % time_step != 0:
         print("Porcodio ci stanno hackerando")
         return None
 
@@ -257,7 +257,7 @@ def insert_prenotazione(persona, data, ora_inizio, ora_fine, sala, corso=None):
     if orari_giorno is None:
         orari_giorno = db.session.query(OrarioPalestra).filter(OrarioPalestra.GiornoSettimana == day).first()
 
-    if orari_giorno is None or ora_inizio < str(orari_giorno.Apertura) or ora_fine > str(orari_giorno.Chiusura):
+    if orari_giorno is None or ora_inizio < orari_giorno.Apertura or ora_fine > orari_giorno.Chiusura:
         return None
 
     if corso == '':

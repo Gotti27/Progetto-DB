@@ -1,28 +1,19 @@
 import re
 import time
-
-from datetime import *
 import bcrypt
 from flask import *
 from flask_login import login_user, logout_user, login_required, current_user
-
 from run import app, db
 from appF.models import *
-
-
-# insert_corso(10, 1, time(12,0,0), time(13,0,0), date.today(),"DCKDFY89H07C957C")
 
 
 @app.route('/')
 def home():
     get_time_step()
-    if current_user.is_authenticated:
-        if (db.session.query(Staff).filter(Staff.IDStaff == current_user.get_id()).filter(Staff.Ruolo == 'Gestore')).count():
-            return render_template("home.html", authenticated=True, admin=True)
-        else:
-            return render_template("home.html", authenticated=True, admin=False)
+    if (db.session.query(Staff).filter(Staff.IDStaff == current_user.get_id()).filter(Staff.Ruolo == 'Gestore')).count():
+        return render_template("home.html", current_user=current_user, admin=True)
     else:
-        return render_template("home.html", authenticated=False, admin=False)
+        return render_template("home.html", current_user=current_user, admin=False)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -145,12 +136,19 @@ def lista_corsi():
     return render_template('corsi.html', lista_corsi=lista_corsi)
 
 
-@app.route("/corso/<id>")
+@app.route("/corso/<id>", methods=['GET', 'POST'])
 def view_corso(id):
     corso = db.session.query(Corso).filter(Corso.IDCorso == id).first()
     istruttore = db.session.query(Persona).filter(Persona.CF == corso.IDIstruttore).first()
-    return render_template('corso.html', corso=corso, istruttore=istruttore,
-                           iscritti=numero_iscritti_corso(corso.IDCorso))
+
+    if request.method == 'POST':
+        if current_user.is_authenticated:
+            insert_prenotazione(current_user, corso.Data, corso.OraInizio, corso.OraFine, corso.IDSala, corso.IDCorso)
+            # TODO: gestire eventuali messaggi per mancata disponibilità ecc..
+        # else:
+            # TODO: implemetare redirect to login e redirect back
+
+    return render_template('corso.html', corso=corso, istruttore=istruttore, iscritti=numero_iscritti_corso(corso.IDCorso))
 
 
 # TODO: usare in production

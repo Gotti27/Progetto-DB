@@ -35,11 +35,12 @@
                         <div class="w3-red w3-circle w3-display-middle" style="width:50px; height:50px; display:flex"></div>
                     {% endif %}
                 </div>
-
             </div>
-            <button class="w3-button w3-black w3-middle" style="height:32px; margin:auto; line-height:50%; margin-left: 32px; border-radius:4px">
-                <a href="https://youtu.be/dQw4w9WgXcQ" target="_blank" style="text-decoration:none"> Iscriviti! </a>
-            </button>
+            <form action="{{ url_for('view_corso', id=corso.IDCorso) }}" method="post" style="height:32px; margin:auto; line-height:100%; margin-left: 32px; border-radius:4px">
+                <button class="w3-button w3-black w3-middle">
+                    <sub> Iscriviti! </sub>
+                </button>
+            </form>
         </div>
 
     </div>
