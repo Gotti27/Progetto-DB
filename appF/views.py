@@ -1,9 +1,12 @@
 import re
 import time
 import bcrypt
+import pdfkit
 from flask import *
 from flask_login import login_user, logout_user, login_required, current_user
-from run import app, db
+from flask_mail import Message
+
+from run import app, db, mail
 from appF.models import *
 
 
@@ -202,7 +205,35 @@ def dashboard_view():
     return render_template('adminDashboard.html', sale=get_sale())
 
 
-@app.route("/report/<zero>/<giorni>")
+@app.route("/report/<zero>/<giorni>", methods=['GET', 'POST'])
 def report(zero, giorni):
+    messaggio = ""
     tracciati = contact_tracing(zero=get_persona_by_cf(zero), days=giorni)
-    return render_template('report.html', positivi=tracciati)
+    if request.method == 'POST':
+        form = request.form['form-name']
+        if form == 'esporta':
+            path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe' # path di mario, da modificare
+            pdf_config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
+            rendered = render_template('printable_report.html', zero=get_persona_by_cf(zero), positivi=tracciati,
+                                       giorni=giorni)
+            pdf = pdfkit.from_string(rendered, False, configuration=pdf_config)
+            response = make_response(pdf)
+            response.headers['Content-Type'] = 'report'
+            response.headers['Content-Disposition'] = 'attachment; filename=report.pdf'
+            return response
+        if form == 'notifica' or form == 'disattiva':
+            # TODO: email non funzionante, da configurare
+            subject = "Segnalazione possibile contagio"
+            sender = (db.session.query(Persona).filter(Persona.CF == 'ADMINADMIN').first()).Email
+            # msg.html = render_template('', ...)
+            for person in tracciati:
+                msg = Message(subject=subject, sender=sender, recipients=person.Email)
+                if form == 'disattiva':
+                    msg.body = "potresti essere stato contagiato e sei disattivato, caro" + person.Nome
+                    disattiva_persona(persona=person.CF)
+                else:
+                    msg.body = "potresti essere stato contagiato, caro" + person.Nome
+                mail.send(msg)
+            messaggio = "operazione avvenuta con successo"
+
+    return render_template('report.html', msg=messaggio, zero=zero, giorni=giorni, positivi=tracciati)

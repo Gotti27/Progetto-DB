@@ -214,7 +214,7 @@ def get_persona_by_email(email):
 
 def get_persona_by_cf(cf):
     q = db.session.query(Persona).filter(Persona.CF == cf)
-    return q.one()
+    return q.first()
 
 
 def attiva_persona(persona):
@@ -310,7 +310,7 @@ def contact_tracing(zero, days):
     :param days: numero di giorni che si vuole prendere in considerazione (max=7)
     :return: lista di potenziali positivi
     """
-    potential_infected = []
+    potential_infected = [zero.CF]
     days = int(days)
     if days > 7:
         days = 7
@@ -350,3 +350,8 @@ def contact_tracing(zero, days):
     return potential_infected
     """
     return [get_persona_by_cf(cf) for cf in (list(set(potential_infected)))]
+
+
+
+
+

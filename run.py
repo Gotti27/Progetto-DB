@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from sqlalchemy import create_engine
@@ -13,6 +14,16 @@ login_manager.init_app(app)
 # TODO: CREARE CONNESSIONI DIVERSE
 db = SQLAlchemy(app)
 engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'], echo=True)
+
+mail = Mail(app)
+
+app.config['MAIL_SERVER'] = 'smtp.gmail.com' # TODO: da configurare
+app.config['MAIL_PORT'] = 465 # da configurare
+app.config['MAIL_USERNAME'] = 'yourId@gmail.com' # da configurare
+app.config['MAIL_PASSWORD'] = '*****' # da configurare
+# app.config['MAIL_USE_TLS'] = False
+# app.config['MAIL_USE_SSL'] = True
+
 
 """
 engine_ospite = create_engine(app.config['SQLALCHEMY_DATABASE_URI_OSPITE'], echo=True)

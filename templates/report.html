@@ -6,9 +6,29 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
 <body>
-    <div class="w3-row">
-        <h2>Report positivi</h2>
-        aggiungere pulsanti per funzionalità
+    <div class="w3-row w3-light-gray">
+        <div class="w3-container">
+            <h2>Report positivi</h2>
+            {{ msg }}
+        </div>
+        <div class="w3-container w3-quarter w3-light-gray">
+            <form action="{{ url_for('report', zero=zero, giorni=giorni) }}" method="post" class="w3-container w3-margin">
+                <input type="hidden" name="form-name" value="notifica">
+                <input type="submit" class="w3-button w3-black" value="Notifica"/>
+            </form>
+        </div>
+        <div class="w3-container w3-quarter w3-light-gray">
+            <form action="{{ url_for('report', zero=zero, giorni=giorni) }}" method="post" class="w3-container w3-margin">
+                <input type="hidden" name="form-name" value="esporta">
+                <input type="submit" class="w3-button w3-black" value="Esporta PDF" />
+            </form>
+        </div>
+        <div class="w3-container w3-quarter w3-light-gray">
+            <form action="{{ url_for('report', zero=zero, giorni=giorni) }}" method="post" class="w3-container w3-margin">
+                <input type="hidden" name="form-name" value="disattiva">
+                <input type="submit" class="w3-button w3-black" value="Notifica e Disattiva" />
+            </form>
+        </div>
     </div>
 
     <div class="w3-row">

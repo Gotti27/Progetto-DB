@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Report</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<body>
+    <div class="w3-row">
+        <h2>Report potenzialmente infetti</h2>
+        <p>
+            Le seguenti persone sono entrate in contatto con il positivo {{ zero.CF }}
+            nei {{ giorni }} giorni precedenti all'ultimo ingresso di {{ zero.CF }}.
+            Vengono quindi segnalati come potenziali infetti.
+        </p>
+    </div>
+    <div class="w3-row">
+        <table class="w3-table-all">
+            <tr>
+                <th>Nome</th>
+                <th>Cognome</th>
+                <th>Codice Fiscale</th>
+                <th>e-mail</th>
+            </tr>
+            {% for person in positivi %}
+                <tr>
+                    <th> {{ person.Nome }} </th>
+                    <th> {{ person.Cognome }} </th>
+                    <th> {{ person.CF }} </th>
+                    <th> {{ person.Email }} </th>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</body>
+</html>
