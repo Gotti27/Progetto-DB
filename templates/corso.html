@@ -6,6 +6,10 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
 <body>
+    <div class="w3-container" align="center">
+        <a class="w3-button w3-black w3-margin-top" href="{{url_for('home')}}">Home</a>
+    </div>
+
     <div class="w3-container w3-light-grey" style="width:75%; margin:auto; margin-top:32px" >
         <div class=" w3-section" id="intro">
             <h1>{{ corso.Nome }}</h1>
@@ -37,19 +41,14 @@
                 </div>
             </div>
             <form action="{{ url_for('view_corso', id=corso.IDCorso) }}" method="post" style="height:32px; margin:auto; line-height:100%; margin-left: 32px; border-radius:4px">
-                <button class="w3-button w3-black w3-middle">
-                    <sub> Iscriviti! </sub>
+                <button class="w3-button w3-black">
+                    Iscriviti!
                 </button>
             </form>
         </div>
 
     </div>
     <hr>
-    <div class="w3-container" align="center">
-        <button class="w3-button w3-black w3-margin">
-            <a href="{{url_for('home')}}">Home</a>
-        </button>
-    </div>
 
 </body>
 </html>

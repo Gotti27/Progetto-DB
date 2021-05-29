@@ -13,10 +13,8 @@ from appF.models import *
 @app.route('/')
 def home():
     get_time_step()
-    if (db.session.query(Staff).filter(Staff.IDStaff == current_user.get_id()).filter(Staff.Ruolo == 'Gestore')).count():
-        return render_template("home.html", current_user=current_user, admin=True)
-    else:
-        return render_template("home.html", current_user=current_user, admin=False)
+    is_admin = (db.session.query(Staff).filter(Staff.IDStaff == current_user.get_id()).filter(Staff.Ruolo == 'Gestore')).count() > 0
+    return render_template("home.html", current_user=current_user, admin=is_admin)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -33,7 +31,7 @@ def login():
             if (db.session.query(Staff).filter(Staff.IDStaff == user.get_id()).filter(Staff.Ruolo == 'Gestore')).count():
                 return redirect(url_for('dashboard_view'))
             else:
-                return redirect(url_for('show_profile', username=user.Email))
+                return redirect(url_for('profile_view', username=user.Email))
         else:
             msg = 'Username o password non corretti'
 
@@ -50,7 +48,7 @@ def logout():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('show_profile', username=current_user.get_email))
+        return redirect(url_for('profile_view', username=current_user.get_email))
     else:
         msg = ''
         if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
@@ -87,7 +85,7 @@ def register():
                     insert_cliente(nuova_persona)
                 # msg = 'Ti sei registrato con successo!' non visualizzato a causa del redirect
                 login_user(nuova_persona)
-                return redirect(url_for('show_profile', username=nuova_persona.Email))
+                return redirect(url_for('profile_view', username=nuova_persona.Email))
         elif request.method == 'POST':
             msg = 'Riempi tutti i campi del form'
 
@@ -96,10 +94,10 @@ def register():
 
 @app.route('/user/<username>', methods=['GET', 'POST'])
 @login_required
-def show_profile(username):
+def profile_view(username):
     msg = ""
     if not username == current_user.get_email:
-        return redirect(url_for('show_profile', username=current_user.get_email, msg=msg))
+        return redirect(url_for('profile_view', username=current_user.get_email, msg=msg))
 
     if request.method == 'POST':
         is_active = db.session.query(Persona.Attivo).filter(Persona.Email == current_user.get_email).first()

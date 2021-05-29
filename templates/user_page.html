@@ -7,12 +7,8 @@
 </head>
 <body>
     <div class="w3-row w3-container w3-light-gray">
-        <button class="w3-button w3-black" style="margin-top:5px;">
-        <a href="{{url_for('home')}}">Home</a>
-        </button>
-        <button class="w3-button w3-black" style="margin-top:5px;">
-        <a href="{{url_for('logout')}}">Logout</a>
-        </button>
+        <a class="w3-button w3-black w3-margin-top" href="{{url_for('home')}}">Home</a>
+        <a class="w3-button w3-black w3-margin-top" href="{{url_for('logout')}}">Logout</a>
         <div align="center" class="w3-container">
             <h2>Welcome back {{persona.Nome}} {{persona.Cognome}}!</h2>
         </div>
@@ -21,7 +17,7 @@
         <div class="w3-container w3-quarter w3-light-gray">
             <div class="w3-container w3-light-gray">
                 <h3>Form prenotazione da eliminare</h3>
-                <form action="{{ url_for('show_profile', username=username) }}" method="post"
+                <form action="{{ url_for('profile_view', username=username) }}" method="post"
                       class="w3-container w3-margin" id="nuovaPrenotazione">
                     <p>{{msg}}</p>
                     <input id="inputDate" name="Data" type="date" placeholder="Data" class="w3-input w3-margin-bottom" required>
@@ -29,7 +25,7 @@
                     <input type="time" id="oraFine" name="oraFine" min="06:00" max="23:00" placeholder="ora fine" class="w3-input w3-margin-bottom" required>
                     <input id="IDCorso" name="IDCorso" type="text" placeholder="idcorso" class="w3-input w3-margin-bottom" >
                     <input id="IDSala" name="IDSala" type="text" placeholder="idsala" class="w3-input w3-margin-bottom" required>
-                    <input type="submit" value="Prenota">
+                    <input class="w3-button w3-black" type="submit" value="Prenota">
                 </form>
             </div>
 
