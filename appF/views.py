@@ -14,7 +14,7 @@ from appF.models import *
 def home():
     get_time_step()
     is_admin = (db.session.query(Staff).filter(Staff.IDStaff == current_user.get_id()).filter(Staff.Ruolo == 'Gestore')).count() > 0
-    return render_template("home.html", current_user=current_user, admin=is_admin)
+    return render_template("home.html", admin=is_admin)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -122,12 +122,17 @@ def profile_view(username):
 
 @app.route('/calendar')
 def calendar_view_today():
-    return redirect(url_for('calendar_view', anno=datetime.today().year, mese=datetime.today().month))
+    user = request.args.get('user')
+    return redirect(url_for('calendar_view', anno=datetime.today().year, mese=datetime.today().month, user=user))
 
 
 @app.route('/calendar/<int:anno>/<int:mese>', methods=['GET', 'POST'])
 def calendar_view(anno, mese):
-    corsi = get_corsi(mese, anno)
+    user = request.args.get('user')
+    if user is None:
+        corsi = get_corsi(mese, anno)
+    else:
+        corsi = get_prenotazioni_persona(user, mese, anno)
     return render_template('calendar.html', corsi=corsi, anno=anno, mese=mese)
 
 

@@ -1,5 +1,4 @@
 body {
-  margin-top: 50px;
   justify-content: center;
   background-color: #FFFCFF;
 }
@@ -126,7 +125,16 @@ button {
   position: absolute;
   background-color: rgba(0,0,0,0.8);
 }
+
 .courseInfo{
+  width: 90%;
+  border-radius: 5px;
+  background-color: #58bae4;
+  margin: 5px auto 5px auto;
+  padding: 5px;
+}
+
+.prenotazioneInfo{
   width: 90%;
   border-radius: 5px;
   background-color: #58bae4;

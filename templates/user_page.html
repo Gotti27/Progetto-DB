@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="it">
 <head>
     <meta charset="UTF-8">
     <title>User Page</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 </head>
 <body>
     <div class="w3-row w3-container w3-light-gray">
@@ -13,6 +13,20 @@
             <h2>Welcome back {{persona.Nome}} {{persona.Cognome}}!</h2>
         </div>
     </div>
+
+    <div style="height: 800px">
+        <div id="calendarContainer"><img src="https://media3.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif?cid=790b7611571d973053c38bc13f748ca7461ef601b62dd84e&rid=giphy.gif&ct=g" style="display:block; margin:auto; width: 25%;">
+        </div>
+    </div>
+
+    <script>
+        $(document).ready( function() {
+            $.ajax("{{ url_for('calendar_view_today', user=persona.CF ) }}").done(function (reply) {
+                $('#calendarContainer').html(reply);
+            });
+        });
+    </script>
+
     <div class="w3-row">
         <div class="w3-container w3-quarter w3-light-gray">
             <div class="w3-container w3-light-gray">
@@ -30,8 +44,9 @@
             </div>
 
         </div>
-        <div class="w3-container w3-half w3-light-gray">
-            qui il calendario
+        <div class="w3-container w3-half">
+            Calendario Qui
+
         </div>
         <div class="w3-container w3-quarter w3-light-gray">
 

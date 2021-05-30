@@ -6,12 +6,12 @@ const dayModal = $('#dayModal');
 const backDrop = $('#modalBackDrop');
 const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const mesi = ['gen', 'feb', 'mar', 'apr', 'mag', 'giu', 'lug', 'ago', 'set', 'ott', 'nov', 'dic']
-const url = window.location.pathname.split('/');
+const url = window.location.href.split('/');
 const month = getMese() -1;
 const year = getAnno();
 
 function openCoursePage(x){
-    window.location.href = "http://127.0.0.1:5000/corso/"+x;
+    window.location.href = "http://" + url[2] +"/corso/"+x;
 }
 
 function openModal(date) {
@@ -23,9 +23,21 @@ function openModal(date) {
 
     corsi.forEach(c => {
         if (c.Data === clicked)
-            $('#eventText').append(jQuery('<div/>',{
-                "class": 'courseInfo'
-            }).html(c.Nome).on('click', () => openCoursePage(c.IDCorso)));
+            if (c.type == "corso"){
+                $('#eventText').append(jQuery('<div/>',{
+                    "class": 'courseInfo'
+                }).html(c.Nome).on('click', () => openCoursePage(c.IDCorso)));
+            }
+            else {
+                $('#eventText').append(jQuery('<div/>',{
+                    "class": 'prenotazioneInfo'
+                }).html( () => {
+                    if (c.IDCorso != "None")
+                        return c.IDCorso;
+                    return "Allenamento libero"
+                } ));
+            }
+
     });
 
     dayModal.show();

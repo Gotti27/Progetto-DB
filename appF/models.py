@@ -74,6 +74,13 @@ class Generali(Base):
     MinutiScaglioni = Column(INTEGER, primary_key=True)
 
 
+class Notifica(Base):
+    __tablename__ = 'notifiche'
+
+    IDNotifica = Column(INTEGER, primary_key=True)
+    Testo = Column(TEXT, nullable=False)
+
+
 class Cliente(Base):
     __tablename__ = 'clienti'
 
@@ -146,6 +153,25 @@ class Prenotazione(Base):
                 self.Approvata)
 
 
+class NotificaDestinatario(Base):
+    __tablename__ = 'notificaDestinatario'
+
+    IDNotifica = Column(INTEGER, ForeignKey(Notifica.IDNotifica), primary_key=True)
+    CF = Column(CHAR(16), ForeignKey(Persona.CF), primary_key=True)
+
+    notifiche = relationship(Notifica, uselist=False)
+    persone = relationship(Persona, uselist=False)
+
+
+class CorsoSeguito(Base):
+    __tablename__ = 'corsiSeguiti'
+
+    IDCliente = Column(CHAR(16), ForeignKey(Cliente.IDCliente), primary_key=True)
+    Nome = Column(TEXT, primary_key=True)
+
+    clienti = relationship(Cliente, uselist = False)
+
+
 Session = sessionmaker(bind=engine)  # creazione della factory
 session = Session()
 
@@ -183,6 +209,7 @@ def get_corsi(mese, anno):
     ret = []
     for i in q:
         ret.append({property: str(value) for property, value in vars(i).items()})
+        ret[-1]["type"] = "corso"
         del ret[-1]['_sa_instance_state']
     return ret
 
@@ -352,6 +379,13 @@ def contact_tracing(zero, days):
     return [get_persona_by_cf(cf) for cf in (list(set(potential_infected)))]
 
 
-
-
+def get_prenotazioni_persona(cf, mese, anno):
+    q = db.session.query(Prenotazione).filter(Prenotazione.IDCliente == cf).filter(extract('year', Corso.Data) == anno).filter(
+        extract('month', Corso.Data) == mese).order_by(Corso.OraInizio).all()
+    ret = []
+    for i in q:
+        ret.append({property: str(value) for property, value in vars(i).items()})
+        ret[-1]["type"] = "prenotazione"
+        del ret[-1]['_sa_instance_state']
+    return ret
 
