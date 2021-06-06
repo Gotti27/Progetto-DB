@@ -62,7 +62,7 @@ function load() {
         if (c.Data[5] === '0'){c.Data = c.Data.slice(0,5) + c.Data.slice(6)}
     })
 
-    $('#monthDisplay').text(`${dt.toLocaleDateString('it', { month: 'long' })} ${year}`);
+    $('#monthDisplay').text(`${mesi[month]} ${year}`);
 
     calendar.empty();
 

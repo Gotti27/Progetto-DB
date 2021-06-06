@@ -58,33 +58,33 @@
     }
     function nextDate(){
         {% if mese == 12 %}
-            $.ajax("{{ url_for('calendar_view', anno = anno+1, mese = 1) }}").done(function (reply) {
+            $.ajax("{{ url_for('calendar_view', anno = anno+1, mese = 1, user=current_user.get_id()) }}").done(function (reply) {
                 $('#calendarContainer').html(reply);
             });
         {% else %}
-            $.ajax("{{ url_for('calendar_view', anno = anno, mese = mese+ 1) }}").done(function (reply) {
+            $.ajax("{{ url_for('calendar_view', anno = anno, mese = mese+ 1, user=current_user.get_id()) }}").done(function (reply) {
                 $('#calendarContainer').html(reply);
             });
         {% endif %}
     }
     function prevDate(){
         {% if mese == 1 %}
-            $.ajax("{{ url_for('calendar_view', anno = anno-1, mese = 12) }}").done(function (reply) {
+            $.ajax("{{ url_for('calendar_view', anno = anno-1, mese = 12, user=current_user.get_id()) }}").done(function (reply) {
                 $('#calendarContainer').html(reply);
             });
         {% else %}
-            $.ajax("{{ url_for('calendar_view', anno = anno, mese = mese-1) }}").done(function (reply) {
+            $.ajax("{{ url_for('calendar_view', anno = anno, mese = mese-1, user=current_user.get_id()) }}").done(function (reply) {
                 $('#calendarContainer').html(reply);
             });
         {% endif %}
     }
     function todayDate(){
-        $.ajax("{{ url_for('calendar_view_today') }}").done(function (reply) {
+        $.ajax("{{ url_for('calendar_view_today', user=current_user.get_id()) }}").done(function (reply) {
             $('#calendarContainer').html(reply);
         });
     }
     function reloadDate(){
-        $.ajax("{{ url_for('calendar_view', anno = anno, mese = mese) }}").done(function (reply) {
+        $.ajax("{{ url_for('calendar_view', anno = anno, mese = mese, user=current_user.get_id()) }}").done(function (reply) {
             $('#calendarContainer').html(reply);
         });
     }

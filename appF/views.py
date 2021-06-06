@@ -133,6 +133,7 @@ def calendar_view(anno, mese):
         corsi = get_corsi(mese, anno)
     else:
         corsi = get_prenotazioni_persona(user, mese, anno)
+        corsi += (get_corsi_seguiti(user))
     return render_template('calendar.html', corsi=corsi, anno=anno, mese=mese)
 
 
@@ -147,14 +148,15 @@ def view_corso(id):
     corso = db.session.query(Corso).filter(Corso.IDCorso == id).first()
     istruttore = db.session.query(Persona).filter(Persona.CF == corso.IDIstruttore).first()
 
-    if request.method == 'POST':
-        if current_user.is_authenticated:
+    if request.method == 'POST' and current_user.is_authenticated:
+        if request.form['tipo'] == "iscriviti":
             insert_prenotazione(current_user, corso.Data, corso.OraInizio, corso.OraFine, corso.IDSala, corso.IDCorso)
             # TODO: gestire eventuali messaggi per mancata disponibilità ecc..
-        # else:
-            # TODO: implemetare redirect to login e redirect back
+        elif request.form['tipo'] == "follow":
+            insert_corso_seguito(persona=current_user.get_id(), corso=corso.Nome)
+            print(str(current_user.get_id()) + "vuole iscriversi")
 
-    return render_template('corso.html', corso=corso, istruttore=istruttore, iscritti=numero_iscritti_corso(corso.IDCorso))
+    return render_template('corso.html', corso=corso, istruttore=istruttore, iscritti=numero_iscritti_corso(corso.IDCorso), seguito=is_seguito(current_user.get_id(), corso.Nome))
 
 
 # TODO: usare in production
@@ -179,13 +181,16 @@ def dashboard_view():
         reps = int(request.form['ripetizioni'])
         giorni_settimana = ['lun', 'mar', 'mer', 'gio', 'ven', 'sab', 'dom']
         weekdays = [i in request.form.keys() for i in giorni_settimana]
-        for i in range(reps):
+        for _ in range(reps):
             for j, v in enumerate(weekdays):
                 if v:
                     new_date = start + timedelta(days=j)
-                    print(new_date)
+                    insert_corso(nome=request.form['nome'], min_persone=request.form['minPersone'],
+                                 max_persone=request.form['maxPersone'], ora_inizio=request.form['oraInizio'],
+                                 ora_fine=request.form['oraFine'], id_sala=request.form['sala'].split(',')[0],
+                                 id_istruttore=request.form['istruttore'], data=new_date,
+                                 descrizione=request.form['descrizione'])
             start += timedelta(days=7)
-        # insert_corso(nome=request.form['nome'], min_persone=request.form['minPersone'], max_persone=request.form['maxPersone'], ora_inizio=request.form['oraInizio'], ora_fine=request.form['oraFine'], id_sala=request.form['sala'].split(',')[0], id_istruttore=request.form['istruttore'], data=request.form['dataInizio'], descrizione=request.form['descrizione'])
 
     # TODO: gestire messaggi
     if request.method == 'POST' and 'attivazione' in request.form:

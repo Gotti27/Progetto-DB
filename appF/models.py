@@ -158,6 +158,7 @@ class NotificaDestinatario(Base):
 
     IDNotifica = Column(INTEGER, ForeignKey(Notifica.IDNotifica), primary_key=True)
     CF = Column(CHAR(16), ForeignKey(Persona.CF), primary_key=True)
+    Timestamp = Column(TIMESTAMP, primary_key=True)
 
     notifiche = relationship(Notifica, uselist=False)
     persone = relationship(Persona, uselist=False)
@@ -380,8 +381,8 @@ def contact_tracing(zero, days):
 
 
 def get_prenotazioni_persona(cf, mese, anno):
-    q = db.session.query(Prenotazione).filter(Prenotazione.IDCliente == cf).filter(extract('year', Corso.Data) == anno).filter(
-        extract('month', Corso.Data) == mese).order_by(Corso.OraInizio).all()
+    q = db.session.query(Prenotazione).filter(Prenotazione.IDCliente == cf).filter(extract('year', Prenotazione.Data) == anno).filter(
+        extract('month', Prenotazione.Data) == mese).order_by(Prenotazione.OraInizio).all()
     ret = []
     for i in q:
         ret.append({property: str(value) for property, value in vars(i).items()})
@@ -389,3 +390,25 @@ def get_prenotazioni_persona(cf, mese, anno):
         del ret[-1]['_sa_instance_state']
     return ret
 
+
+def get_corsi_seguiti(persona):
+    sub = db.session.query(CorsoSeguito.Nome).filter(CorsoSeguito.IDCliente == persona)
+    q = db.session.query(Corso).filter(Corso.Nome.in_(sub)).all()
+    ret = []
+    for i in q:
+        ret.append({property: str(value) for property, value in vars(i).items()})
+        ret[-1]["type"] = "corso"
+        del ret[-1]['_sa_instance_state']
+    return ret
+
+
+def insert_corso_seguito(persona, corso):
+    to_add = CorsoSeguito(IDCliente=persona, Nome=corso)
+    session.add(to_add)
+    session.commit()
+
+
+def is_seguito(persona, corso):
+    if persona is not None and db.session.query(CorsoSeguito).filter(CorsoSeguito.Nome == corso, CorsoSeguito.IDCliente == persona).count() > 0:
+        return True
+    return False

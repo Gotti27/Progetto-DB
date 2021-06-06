@@ -40,11 +40,32 @@
                     {% endif %}
                 </div>
             </div>
+            {% if current_user.is_authenticated %}
             <form action="{{ url_for('view_corso', id=corso.IDCorso) }}" method="post" style="height:32px; margin:auto; line-height:100%; margin-left: 32px; border-radius:4px">
+                <input hidden name="tipo" value="iscriviti">
                 <button class="w3-button w3-black">
                     Iscriviti!
                 </button>
+
             </form>
+                {% if not seguito %}
+                <form action="{{ url_for('view_corso', id=corso.IDCorso) }}" method="post" style="height:32px; margin:auto; line-height:100%; margin-left: 32px; border-radius:4px">
+                    <input hidden name="tipo" value="follow">
+                    <button class="w3-button w3-black">
+                        Rimani aggiornato
+                    </button>
+                </form>
+                {% else %}
+                <form action="{{ url_for('view_corso', id=corso.IDCorso) }}" method="post" style="height:32px; margin:auto; line-height:100%; margin-left: 32px; border-radius:4px">
+                    <input hidden name="tipo" value="unfollow">
+                    <button class="w3-button w3-black">
+                        Smetti di seguire
+                    </button>
+                </form>
+                {% endif %}
+            {% else %}
+            <p> Accedi per poter continuare </p>
+            {% endif %}
         </div>
 
     </div>
