@@ -220,11 +220,11 @@ def report(zero, giorni):
     if request.method == 'POST':
         form = request.form['form-name']
         if form == 'esporta':
-            path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe' # path di mario, da modificare
-            pdf_config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
+            # path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe' # path di mario, da modificare
+            # pdf_config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
             rendered = render_template('printable_report.html', zero=get_persona_by_cf(zero), positivi=tracciati,
                                        giorni=giorni)
-            pdf = pdfkit.from_string(rendered, False, configuration=pdf_config)
+            pdf = pdfkit.from_string(rendered, False)# , configuration=pdf_config)
             response = make_response(pdf)
             response.headers['Content-Type'] = 'report'
             response.headers['Content-Disposition'] = 'attachment; filename=report.pdf'
