@@ -1,23 +1,22 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.3) (preloaded format=pdflatex 2021.3.23)  25 JUN 2021 09:14
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.3) (preloaded format=pdflatex 2021.3.23)  25 JUN 2021 15:07
 entering extended mode
 **./documentation.tex
 (documentation.tex
 LaTeX2e <2020-10-01> patch level 4
 L3 programming layer <2021-02-18>
-(D:\Users\Mario\AppData\Local\Programs\MiKTeX\tex/latex/base\book.cls
-Document Class: book 2020/04/10 v1.4m Standard LaTeX document class
-(D:\Users\Mario\AppData\Local\Programs\MiKTeX\tex/latex/base\bk11.clo
-File: bk11.clo 2020/04/10 v1.4m Standard LaTeX file (size option)
+(D:\Users\Mario\AppData\Local\Programs\MiKTeX\tex/latex/base\article.cls
+Document Class: article 2020/04/10 v1.4m Standard LaTeX document class
+(D:\Users\Mario\AppData\Local\Programs\MiKTeX\tex/latex/base\size11.clo
+File: size11.clo 2020/04/10 v1.4m Standard LaTeX file (size option)
 )
 \c@part=\count179
-\c@chapter=\count180
-\c@section=\count181
-\c@subsection=\count182
-\c@subsubsection=\count183
-\c@paragraph=\count184
-\c@subparagraph=\count185
-\c@figure=\count186
-\c@table=\count187
+\c@section=\count180
+\c@subsection=\count181
+\c@subsubsection=\count182
+\c@paragraph=\count183
+\c@subparagraph=\count184
+\c@figure=\count185
+\c@table=\count186
 \abovecaptionskip=\skip47
 \belowcaptionskip=\skip48
 \bibindent=\dimen138
@@ -27,14 +26,14 @@ Package: babel 2021/03/03 3.55 The Babel package
 
 (D:\Users\Mario\AppData\Local\Programs\MiKTeX\tex/generic/babel\babel.def
 File: babel.def 2021/03/03 3.55 Babel common definitions
-\babel@savecnt=\count188
+\babel@savecnt=\count187
 \U@D=\dimen139
 \l@babelnohyphens=\language79
 
 (D:\Users\Mario\AppData\Local\Programs\MiKTeX\tex/generic/babel\txtbabel.def)
 \bbl@readstream=\read2
 )
-\bbl@dirlevel=\count189
+\bbl@dirlevel=\count188
 
 *************************************
 * Local config file bblopts.cfg used
@@ -46,13 +45,13 @@ File: bblopts.cfg 2005/09/08 v0.1 add Arabic and Farsi to "declared" options of
 (D:\Users\Mario\AppData\Local\Programs\MiKTeX\tex/latex/babel-italian\italian.l
 df
 Language: italian 2020/05/21 v.1.4.04 Italian support for the babel system
-\it@lettering=\count190
-\it@doublequoteactive=\count191
-\it@ISOcompliance=\count192
+\it@lettering=\count189
+\it@doublequoteactive=\count190
+\it@ISOcompliance=\count191
 ))
 (D:\Users\Mario\AppData\Local\Programs\MiKTeX\tex/latex/etoolbox\etoolbox.sty
 Package: etoolbox 2020/10/05 v2.5k e-TeX tools for LaTeX (JAW)
-\etb@tempcnta=\count193
+\etb@tempcnta=\count192
 )
 (D:\Users\Mario\AppData\Local\Programs\MiKTeX\tex/latex/graphics\epsfig.sty
 Package: epsfig 2017/06/25 v1.7b (e)psfig emulation (SPQR)
@@ -118,13 +117,13 @@ Package: amsbsy 1999/11/29 v1.2d Bold Symbols
 (D:\Users\Mario\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsopn.sty
 Package: amsopn 2016/03/08 v2.02 operator names
 )
-\inf@bad=\count194
+\inf@bad=\count193
 LaTeX Info: Redefining \frac on input line 234.
-\uproot@=\count195
-\leftroot@=\count196
+\uproot@=\count194
+\leftroot@=\count195
 LaTeX Info: Redefining \overline on input line 399.
-\classnum@=\count197
-\DOTSCASE@=\count198
+\classnum@=\count196
+\DOTSCASE@=\count197
 LaTeX Info: Redefining \ldots on input line 496.
 LaTeX Info: Redefining \dots on input line 499.
 LaTeX Info: Redefining \cdots on input line 620.
@@ -133,15 +132,15 @@ LaTeX Info: Redefining \cdots on input line 620.
 \big@size=\dimen146
 LaTeX Font Info:    Redeclaring font encoding OML on input line 743.
 LaTeX Font Info:    Redeclaring font encoding OMS on input line 744.
-\macc@depth=\count199
-\c@MaxMatrixCols=\count266
+\macc@depth=\count198
+\c@MaxMatrixCols=\count199
 \dotsspace@=\muskip16
-\c@parentequation=\count267
-\dspbrk@lvl=\count268
+\c@parentequation=\count266
+\dspbrk@lvl=\count267
 \tag@help=\toks17
-\row@=\count269
-\column@=\count270
-\maxfields@=\count271
+\row@=\count268
+\column@=\count269
+\maxfields@=\count270
 \andhelp@=\toks18
 \eqnshift@=\dimen147
 \alignsep@=\dimen148
@@ -202,23 +201,23 @@ Package xcolor Info: Model `wave' substituted by `hsb' on input line 1371.
 File: dvipsnam.def 2016/06/17 v3.0m Driver-dependent file (DPC,SPQR)
 )) (D:\Users\Mario\AppData\Local\Programs\MiKTeX\tex/latex/listings\listings.st
 y
-\lst@mode=\count272
+\lst@mode=\count271
 \lst@gtempboxa=\box49
 \lst@token=\toks24
-\lst@length=\count273
+\lst@length=\count272
 \lst@currlwidth=\dimen156
-\lst@column=\count274
-\lst@pos=\count275
+\lst@column=\count273
+\lst@pos=\count274
 \lst@lostspace=\dimen157
 \lst@width=\dimen158
-\lst@newlines=\count276
-\lst@lineno=\count277
+\lst@newlines=\count275
+\lst@lineno=\count276
 \lst@maxwidth=\dimen159
 
 (D:\Users\Mario\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstmisc.sty
 File: lstmisc.sty 2020/03/24 1.8d (Carsten Heinz)
-\c@lstnumber=\count278
-\lst@skipnumbers=\count279
+\c@lstnumber=\count277
+\lst@skipnumbers=\count278
 \lst@framebox=\box50
 )
 (D:\Users\Mario\AppData\Local\Programs\MiKTeX\tex/latex/listings\listings.cfg
@@ -260,9 +259,9 @@ Package: geometry 2020/01/02 v5.9 Page Geometry
 (D:\Users\Mario\AppData\Local\Programs\MiKTeX\tex/generic/iftex\ifvtex.sty
 Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
 )
-\Gm@cnth=\count280
-\Gm@cntv=\count281
-\c@Gm@tempcnt=\count282
+\Gm@cnth=\count279
+\Gm@cntv=\count280
+\c@Gm@tempcnt=\count281
 \Gm@bindingoffset=\dimen160
 \Gm@wd@mp=\dimen161
 \Gm@odd@mp=\dimen162
@@ -280,7 +279,7 @@ Package: rotating 2016/08/11 v2.16d rotated objects in LaTeX
 (D:\Users\Mario\AppData\Local\Programs\MiKTeX\tex/latex/base\ifthen.sty
 Package: ifthen 2014/09/29 v1.1c Standard LaTeX ifthen package (DPC)
 )
-\c@r@tfl@t=\count283
+\c@r@tfl@t=\count282
 \rotFPtop=\skip61
 \rotFPbot=\skip62
 \rot@float@box=\box51
@@ -300,15 +299,15 @@ Package: caption3 2020/10/21 v2.2e caption3 kernel (AR)
 \caption@hangindent=\dimen174
 Package caption Info: Standard document class detected.
 )
-\c@caption@flags=\count284
-\c@continuedfloat=\count285
+\c@caption@flags=\count283
+\c@continuedfloat=\count284
 Package caption Info: listings package is loaded.
 Package caption Info: rotating package is loaded.
 )
 (D:\Users\Mario\AppData\Local\Programs\MiKTeX\tex/latex/multirow\multirow.sty
 Package: multirow 2021/03/15 v2.8 Span multiple rows of a table
 \multirow@colwidth=\skip63
-\multirow@cntb=\count286
+\multirow@cntb=\count285
 \multirow@dima=\skip64
 \bigstrutjot=\dimen175
 )
@@ -316,12 +315,12 @@ Package: multirow 2021/03/15 v2.8 Span multiple rows of a table
 Package: picture 2020-04-22 v1.6 Dimens for picture macros (HO)
 Package picture Info: Calculation method: etex.
 )
-\c@theorem=\count287
+\c@theorem=\count286
 
 (D:\Users\Mario\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdf
 tex.def
 File: l3backend-pdftex.def 2021-03-02 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count288
+\l__color_backend_stack_int=\count287
 \l__pdf_internal_box=\box52
 ) (documentation.aux)
 \openout1 = `documentation.aux'.
@@ -346,16 +345,16 @@ LaTeX Info: Redefining \it@ccap on input line 29.
 (D:\Users\Mario\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mk
 ii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count289
+\scratchcounter=\count288
 \scratchdimen=\dimen176
 \scratchbox=\box53
-\nofMPsegments=\count290
-\nofMParguments=\count291
+\nofMPsegments=\count289
+\nofMParguments=\count290
 \everyMPshowfont=\toks27
-\MPscratchCnt=\count292
+\MPscratchCnt=\count291
 \MPscratchDim=\dimen177
-\MPnumerator=\count293
-\makeMPintoPDFobject=\count294
+\MPnumerator=\count292
+\makeMPintoPDFobject=\count293
 \everyMPtoPDFconversion=\toks28
 )
 (D:\Users\Mario\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-b
@@ -368,7 +367,7 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 fg
 File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 ))
-\c@lstlisting=\count295
+\c@lstlisting=\count294
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -377,7 +376,7 @@ File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 * paper: a4paper
 * layout: <same size as paper>
 * layoutoffset:(h,v)=(0.0pt,0.0pt)
-* modes: twoside 
+* modes: 
 * h-part:(L,W,R)=(85.35826pt, 455.24411pt, 56.9055pt)
 * v-part:(T,H,B)=(85.35826pt, 674.33032pt, 85.35826pt)
 * \paperwidth=597.50787pt
@@ -390,17 +389,17 @@ File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 * \headheight=0.0pt
 * \headsep=17.07164pt
 * \topskip=11.0pt
-* \footskip=27.46295pt
-* \marginparwidth=106.0pt
-* \marginparsep=7.0pt
+* \footskip=30.0pt
+* \marginparwidth=50.0pt
+* \marginparsep=10.0pt
 * \columnsep=10.0pt
 * \skip\footins=10.0pt plus 4.0pt minus 2.0pt
 * \hoffset=0.0pt
 * \voffset=0.0pt
 * \mag=1000
 * \@twocolumnfalse
-* \@twosidetrue
-* \@mparswitchtrue
+* \@twosidefalse
+* \@mparswitchfalse
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
@@ -419,34 +418,29 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 [1
 
-
 {C:/Users/Mario/AppData/Local/MiKTeX/pdftex/config/pdftex.map}]
-Overfull \vbox (7.08139pt too high) has occurred while \output is active []
-
-
-[2
-
-] (documentation.toc)
+(documentation.toc)
 \tf@toc=\write3
 \openout3 = `documentation.toc'.
 
- [3] (documentation.aux) ) 
+ [1] [2] (documentation.aux) ) 
 Here is how much of TeX's memory you used:
- 8433 strings out of 479324
- 124021 string characters out of 2856815
- 452259 words of memory out of 3000000
- 25773 multiletter control sequences out of 15000+600000
- 413048 words of font info for 52 fonts, out of 8000000 for 9000
+ 8416 strings out of 479324
+ 123839 string characters out of 2856815
+ 451683 words of memory out of 3000000
+ 25756 multiletter control sequences out of 15000+600000
+ 413002 words of font info for 52 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  83i,6n,88p,274b,262s stack positions out of 5000i,500n,10000p,200000b,80000s
- <C:\Users\Mario\AppData\Local\MiKTeX\fonts/pk/ljfour
-/jknappen/ec/dpi600\ecbx2488.pk> <C:\Users\Mario\AppData\Local\MiKTeX\fonts/pk/
-ljfour/jknappen/ec/dpi600\ecrm1095.pk> <C:\Users\Mario\AppData\Local\MiKTeX\fon
-ts/pk/ljfour/jknappen/ec/dpi600\ecrm1200.pk> <C:\Users\Mario\AppData\Local\MiKT
-eX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1728.pk>
-Output written on documentation.pdf (3 pages, 25450 bytes).
+ <C:\Users\Mario\AppData\Local\MiKTeX\fonts/pk/lj
+four/jknappen/ec/dpi600\ecrm1095.pk> <C:\Users\Mario\AppData\Local\MiKTeX\fonts
+/pk/ljfour/jknappen/ec/dpi600\ecbx1095.pk> <C:\Users\Mario\AppData\Local\MiKTeX
+\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1440.pk> <C:\Users\Mario\AppData\Local\
+MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1200.pk> <C:\Users\Mario\AppData\
+Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1728.pk>
+Output written on documentation.pdf (3 pages, 41254 bytes).
 PDF statistics:
- 88 PDF objects out of 1000 (max. 8388607)
+ 136 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
