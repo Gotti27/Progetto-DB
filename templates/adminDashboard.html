@@ -26,6 +26,7 @@
         <form action="{{ url_for('dashboard_view') }}" method="post" class="w3-container w3-margin" id="nuovoCorso">
             <h2 class="">Inserisci nuovi corsi</h2>
             <p class="w3-pale-red" id="errMessage"></p>
+            <input type="hidden" name="form-name" value="inserisciCorso">
             <label for="nome">Nome</label><input id="nome" name="nome" type="text" placeholder="Nome corso" class="w3-input w3-margin-bottom"/>
             <label for="descrizione">Descrizione</label><textarea id="descrizione" name="descrizione" placeholder="Descrizione" rows="4" class="w3-input w3-margin-bottom" style="resize: vertical"></textarea>
             <label for="sala">Sala</label><select class="w3-select w3-margin-bottom" id="sala" name="sala">
@@ -72,15 +73,17 @@
     <div class="w3-container w3-third w3-light-gray">
         <h2>Opzioni su persona</h2>
         <form action="{{ url_for('dashboard_view') }}" method="post" class="w3-container w3-margin" id="modificaCliente">
-            <input name="codiceFiscale" type="text" placeholder="codice fiscale" class="w3-input" /><br>
-            <input type="radio" name="attivazione" id="attiva" value="attiva">
+            <input type="hidden" name="form-name" value="opzioniPersona">
+            <input name="codiceFiscale" type="text" placeholder="codice fiscale" class="w3-input" required/><br>
+            <input type="radio" name="attivazione" id="attiva" value="attiva" required>
             <label for="attiva">attiva</label>
-            <input type="radio" name="attivazione" id="disattiva" value="disattiva">
+            <input type="radio" name="attivazione" id="disattiva" value="disattiva" required>
             <label for="disattiva">disattiva</label><br><br>
             <input type="submit" class="w3-button w3-black" value="Conferma"><br>
         </form>
         <h2>Opzioni su cliente</h2>
         <form action="{{ url_for('dashboard_view') }}" method="post" class="w3-container w3-margin" id="modificaStaff">
+            <input type="hidden" name="form-name" value="opzioniClienti">
             <input name="codiceFiscale" type="text" placeholder="codice fiscale" class="w3-input" /><br>
             <input type="radio" name="pagante" id="pagante" value="pagante">
             <label for="pagante">pagante</label>
@@ -96,6 +99,7 @@
         </h2>
         <h2>Crea una sala</h2>
         <form action="{{ url_for('dashboard_view') }}" method="post" class="w3-container w3-margin" id="creaSala">
+            <input type="hidden" name="form-name" value="creaSala">
             <label for="tipoSala">Tipo di sala</label><input id="tipoSala" name="tipo" type="text" placeholder="tipo" class="w3-input w3-margin-bottom">
             <label for="maxPersoneNewSala">Numero massimo di persone</label><input id="maxPersoneNewSala" name="MaxPersone" type="number" placeholder="max persone" class="w3-input" min="0"><br>
             <input type="submit" class="w3-button w3-black" value="Crea sala"><br>
@@ -103,6 +107,7 @@
 
         <h2>Traccia i contatti di una persona</h2>
         <form action="{{ url_for('dashboard_view') }}" method="post" class="w3-container w3-margin" id="contact tracing">
+            <input type="hidden" name="form-name" value="tracciamento">
             <input name="da tracciare" type="text" placeholder="codice fiscale" class="w3-input w3-margin-bottom">
             <input name="giorni" type="number" placeholder="quanti giorni andare a ritroso" class="w3-input" min="0" max="7"><br>
             <input type="submit" class="w3-button w3-black" value="Traccia"><br>

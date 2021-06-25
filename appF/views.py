@@ -20,7 +20,7 @@ def home():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     msg = ''
-    if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+    if request.method == 'POST' and request.form['form-name'] == 'login':
         username = request.form['username']
         password = bytes(request.form['password'],
                          encoding="utf-8")  # todo: controllare se è possibile .encode() chiedere a Mario
@@ -51,19 +51,14 @@ def register():
         return redirect(url_for('profile_view', username=current_user.get_email))
     else:
         msg = ''
-        if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
+        if request.method == 'POST' and request.form['form-name'] == 'register':
             email = request.form['email']
             registration = db.session.query(Persona).filter(Persona.Email == email).first()
             cf = db.session.query(Persona).filter(Persona.CF == request.form['Codice fiscale']).first()
-            if not request.form['name'] or not request.form['surname'] or not request.form['DataNascita'] or not \
-                    request.form['Codice fiscale'] or not request.form['email'] or not request.form['sex'] or not \
-                    request.form['password']:
-                msg = 'Rimpire tutto il form'
-            elif registration is not None or cf is not None:
+            if registration is not None or cf is not None:
                 msg = 'Persona già registrata'
             elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
                 msg = 'Indirizzo email non valido'
-
             # elif not re.match(r'/^(?:[A-Z][AEIOU][AEIOUX]|[B-DF-HJ-NP-TV-Z]{2}[A-Z]){2}(?:[\dLMNP-V]{2}(?:[A-EHLMPR-T]
             # (?:[04LQ][1-9MNP-V]|[15MR][\dLMNP-V]|[26NS][0-8LMNP-U])|[DHPS][37PT][0L]|[ACELMRT][37PT][01LM]|[AC-EHLMPR-T]
             # [26NS][9V])|(?:[02468LNQSU][048LQU]|[13579MPRTV][26NS])B[26NS][9V])(?:[A-MZ][1-9MNP-V][\dLMNP-V]{2}|[A-M][0L]
@@ -71,7 +66,6 @@ def register():
             #    msg = 'Codice fiscale non valido'
             # (http://blog.marketto.it/2016/01/regex-validazione-codice-fiscale-con-omocodia/) REGEX PER CODICE FISCALE
             # TODO: testarlo
-
             else:
                 nuova_persona = insert_persona(nome=request.form['name'], cognome=request.form['surname'],
                                                data_nascita=request.form['DataNascita'], cf=request.form['Codice fiscale'],
@@ -88,7 +82,6 @@ def register():
                 return redirect(url_for('profile_view', username=nuova_persona.Email))
         elif request.method == 'POST':
             msg = 'Riempi tutti i campi del form'
-
         return render_template('register.html', msg=msg)
 
 
@@ -99,7 +92,7 @@ def profile_view(username):
     if not username == current_user.get_email:
         return redirect(url_for('profile_view', username=current_user.get_email, msg=msg))
 
-    if request.method == 'POST':
+    if request.method == 'POST' and request.form['form-name'] == 'prenotazione':
         is_active = db.session.query(Persona.Attivo).filter(Persona.Email == current_user.get_email).first()
         new_book = insert_prenotazione(persona=get_persona_by_email(username), data=request.form['Data'],
                                        ora_inizio=request.form['oraInizio'], ora_fine=request.form['oraFine'],
@@ -149,12 +142,13 @@ def view_corso(id):
     istruttore = db.session.query(Persona).filter(Persona.CF == corso.IDIstruttore).first()
 
     if request.method == 'POST' and current_user.is_authenticated:
-        if request.form['tipo'] == "iscriviti":
+        if request.form['form-name'] == "iscriviti":
             insert_prenotazione(current_user, corso.Data, corso.OraInizio, corso.OraFine, corso.IDSala, corso.IDCorso)
             # TODO: gestire eventuali messaggi per mancata disponibilità ecc..
-        elif request.form['tipo'] == "follow":
+        elif request.form['form-name'] == "follow":
             insert_corso_seguito(persona=current_user.get_id(), corso=corso.Nome)
             print(str(current_user.get_id()) + "vuole iscriversi")
+        # TODO: unfollow?
 
     return render_template('corso.html', corso=corso, istruttore=istruttore, iscritti=numero_iscritti_corso(corso.IDCorso), seguito=is_seguito(current_user.get_id(), corso.Nome))
 
@@ -176,7 +170,7 @@ def dashboard_view():
 
 @app.route("/dashboard", methods=['GET', 'POST'])
 def dashboard_view():
-    if request.method == 'POST' and 'nome' in request.form:
+    if request.method == 'POST' and request.form['form-name'] == 'inserisciCorso':
         start = datetime.strptime(request.form['settimanaInizio'] + '-1', "%Y-W%W-%w")
         reps = int(request.form['ripetizioni'])
         giorni_settimana = ['lun', 'mar', 'mer', 'gio', 'ven', 'sab', 'dom']
@@ -193,21 +187,21 @@ def dashboard_view():
             start += timedelta(days=7)
 
     # TODO: gestire messaggi
-    if request.method == 'POST' and 'attivazione' in request.form:
+    if request.method == 'POST' and request.form['form-name'] == 'opzioniPersona':
         if 'attivazione' in request.form and request.form['attivazione'] == 'attiva':
             attiva_persona(persona=request.form['codiceFiscale'])
         elif 'attivazione' in request.form and request.form['attivazione'] == 'disattiva':
             disattiva_persona(persona=request.form['codiceFiscale'])
 
-    if request.method == 'POST' and 'pagante' in request.form:
+    if request.method == 'POST' and request.form['form-name'] == 'opzioniClienti':
         if 'pagante' in request.form and request.form['pagante'] == 'pagante':
             setta_pagante(cliente=request.form['codiceFiscale'])
         elif 'pagante' in request.form and request.form['pagante'] == 'non pagante':
             setta_non_pagante(cliente=request.form['codiceFiscale'])
 
-    if request.method == 'POST' and 'tipo' in request.form:
+    if request.method == 'POST' and request.form['form-name'] == 'creaSala':
         insert_sala(max_persone=request.form['MaxPersone'], tipo=request.form['tipo'])
-    if request.method == 'POST' and 'da tracciare' in request.form:
+    if request.method == 'POST' and request.form['form-name'] == 'tracciamento':
         return redirect(url_for('report', zero=request.form['da tracciare'], giorni=request.form['giorni']))
 
     return render_template('adminDashboard.html', sale=get_sale())

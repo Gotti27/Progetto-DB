@@ -20,18 +20,19 @@
         <h4>
             <form action="{{ url_for('register') }}" method="post">
                 <div >{{ msg }}</div>
-                    <input id="name" name="name" type="text" placeholder="Nome" class="w3-input" style="width:500px"/><br>
-                    <input id="surname" name="surname" type="text" placeholder="Cognome"class="w3-input" style="width:500px"/></br>
-                    <input id="dataNascita" name="DataNascita" type="date" placeholder="data di nascita"class="w3-input" style="width:500px"/></br>
-                    <input id="CF" name="Codice fiscale" type="text" placeholder="Codice Fiscale" class="w3-input" style="width:500px"/></br>
-                    <input id="email" name="email" type="text" placeholder="e-mail" class="w3-input" style="width:500px"/></br>
-                    <input id="password" name="password" type="password" placeholder="Password" class="w3-input" style="width:500px"/></br>
-                    <input id="telefono" name="telefono" type="tel" placeholder="telefono" class="w3-input" style="width:500px" /></br>
+                    <input type="hidden" name="form-name" value="register">
+                    <input id="name" name="name" type="text" placeholder="Nome" class="w3-input" style="width:500px" required/><br>
+                    <input id="surname" name="surname" type="text" placeholder="Cognome"class="w3-input" style="width:500px" required/></br>
+                    <input id="dataNascita" name="DataNascita" type="date" placeholder="data di nascita"class="w3-input" style="width:500px" required/></br>
+                    <input id="CF" name="Codice fiscale" type="text" placeholder="Codice Fiscale" class="w3-input" style="width:500px" required/></br>
+                    <input id="email" name="email" type="text" placeholder="e-mail" class="w3-input" style="width:500px" required/></br>
+                    <input id="password" name="password" type="password" placeholder="Password" class="w3-input" style="width:500px" required/></br>
+                    <input id="telefono" name="telefono" type="tel" placeholder="telefono" class="w3-input" style="width:500px"/></br>
                     <legend>Sesso:</legend>
                     <div>
-                        <input type="radio" name="sex" id="sex-m" value="M">
+                        <input type="radio" name="sex" id="sex-m" value="M" required>
                         <label for="sex-m">Uomo</label>
-                        <input type="radio" name="sex" id="sex-f" value="F">
+                        <input type="radio" name="sex" id="sex-f" value="F" required>
                         <label for="sex-f">Donna</label>
                     </div>
                     <input type="submit" value="Registrati" class="w3-button w3-black"></br>
