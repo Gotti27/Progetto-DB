@@ -270,6 +270,6 @@ def notifications():
     if sender and request.method == 'POST' and request.form['form-name'] == 'inviaNotifica':
         testo = request.form['testo']
         mittente = current_user.CF
-        destinatari = request.form['destinatario']
+        destinatari = request.form['destinatario'].split(' ')
         invia_notifica(testo=testo, mittente=mittente, destinatari=destinatari)
     return render_template('notifiche.html', sender=sender, inbox=inbox)
