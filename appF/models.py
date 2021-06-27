@@ -79,6 +79,12 @@ class Notifica(Base):
 
     IDNotifica = Column(INTEGER, primary_key=True)
     Testo = Column(TEXT, nullable=False)
+    Mittente = Column(CHAR(16), ForeignKey(Persona.CF))
+
+    mittenti = relationship(Persona, uselist=False)
+
+    def __repr__(self):
+        return "<Notifica: ID:'%s', Mittente:'%s', Testo:'%s'>" % (self.IDNotifica, self.Mittente, self.Testo)
 
 
 class Cliente(Base):
@@ -157,11 +163,16 @@ class NotificaDestinatario(Base):
     __tablename__ = 'notificaDestinatario'
 
     IDNotifica = Column(INTEGER, ForeignKey(Notifica.IDNotifica), primary_key=True)
-    CF = Column(CHAR(16), ForeignKey(Persona.CF), primary_key=True)
+    Destinatario = Column(CHAR(16), ForeignKey(Persona.CF), primary_key=True)
     Timestamp = Column(TIMESTAMP, primary_key=True)
+    Letto = Column(BOOLEAN, nullable=False)
 
     notifiche = relationship(Notifica, uselist=False)
-    persone = relationship(Persona, uselist=False)
+    destinatari = relationship(Persona, uselist=False)
+
+    def __repr__(self):
+        return "<NotificaD: ID:'%s', Destinatario:'%s', timestamp:'%s', letto:'%s'>" % (
+            self.IDNotifica, self.Destinatario, self.Timestamp, self.Letto)
 
 
 class CorsoSeguito(Base):
@@ -170,7 +181,7 @@ class CorsoSeguito(Base):
     IDCliente = Column(CHAR(16), ForeignKey(Cliente.IDCliente), primary_key=True)
     Nome = Column(TEXT, primary_key=True)
 
-    clienti = relationship(Cliente, uselist = False)
+    clienti = relationship(Cliente, uselist=False)
 
 
 Session = sessionmaker(bind=engine)  # creazione della factory
@@ -216,8 +227,10 @@ def get_corsi(mese, anno):
 
 
 def get_corsi_futuri():
-    q = db.session.query(Corso).filter(Corso.Data >= date.today()).filter(Corso.OraInizio > time()).order_by(Corso.Data).all()
+    q = db.session.query(Corso).filter(Corso.Data >= date.today()).filter(Corso.OraInizio > time()).order_by(
+        Corso.Data).all()
     return q
+
 
 def numero_iscritti_corso(corso):
     iscr = db.session.query(Prenotazione).filter(Prenotazione.IDCorso == corso).filter(Prenotazione.Approvata).count()
@@ -381,7 +394,8 @@ def contact_tracing(zero, days):
 
 
 def get_prenotazioni_persona(cf, mese, anno):
-    q = db.session.query(Prenotazione).filter(Prenotazione.IDCliente == cf).filter(extract('year', Prenotazione.Data) == anno).filter(
+    q = db.session.query(Prenotazione).filter(Prenotazione.IDCliente == cf).filter(
+        extract('year', Prenotazione.Data) == anno).filter(
         extract('month', Prenotazione.Data) == mese).order_by(Prenotazione.OraInizio).all()
     ret = []
     for i in q:
@@ -409,6 +423,23 @@ def insert_corso_seguito(persona, corso):
 
 
 def is_seguito(persona, corso):
-    if persona is not None and db.session.query(CorsoSeguito).filter(CorsoSeguito.Nome == corso, CorsoSeguito.IDCliente == persona).count() > 0:
+    if persona is not None and db.session.query(CorsoSeguito).filter(CorsoSeguito.Nome == corso,
+                                                                     CorsoSeguito.IDCliente == persona).count() > 0:
         return True
     return False
+
+
+def crea_notifica(testo, mittente):
+    notifica = Notifica(Testo=testo, Mittente=mittente)
+    session.add(notifica)
+    session.commit()
+    return notifica
+
+
+def invia_notifica(testo, mittente, destinatari):
+    notifica = crea_notifica(testo=testo, mittente=mittente)
+    for person in destinatari:
+        to_add = NotificaDestinatario(IDNotifica=notifica.IDNotifica, Destinatario=person,
+                                      Timestamp=datetime.now(), Letto=False)
+        session.add(to_add)
+        session.commit()

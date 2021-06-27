@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Notifiche</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<body>
+<div class="w3-row w3-container w3-light-gray">
+    <a class="w3-button w3-black w3-margin-top" href="{{url_for('profile_view', username=current_user.Email)}}">area riservata</a>
+
+</div>
+<div class="w3-row w3-container w3-light-gray">
+    {% if sender == True %}
+    <div class="w3-column w3-container w3-half">
+        <form action="{{ url_for('notifications') }}" method="post" class="w3-container w3-margin" id="nuonaNotifica">
+            <input type="hidden" name="form-name" value="inviaNotifica">
+            <input id="testo" name="testo" type="text" placeholder="testo" class="w3-input w3-margin-bottom"/>
+            <input id="destinatario" name="destinatario" type="text" placeholder="destinatario" class="w3-input w3-margin-bottom"/>
+            <input type="submit" class="w3-button w3-black" value="Invia"><br>
+        </form>
+    </div>
+    {% endif %}
+    <div class="w3-column w3-container w3-half" align="center">
+        {% for message in inbox %}
+            <div>
+                Da: {{ message.Mittente }} <br>
+                ora: {{ message.Timestamp }} <br>
+                {% if not message.Letto %}
+                    da leggere <br>
+                {% endif %}
+                {{ message.Testo }}
+            </div>
+            <br><br>
+        {% endfor %}
+    </div>
+</div>
+</body>
+</html>

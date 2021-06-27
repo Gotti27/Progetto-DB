@@ -13,7 +13,8 @@ from appF.models import *
 @app.route('/')
 def home():
     get_time_step()
-    is_admin = (db.session.query(Staff).filter(Staff.IDStaff == current_user.get_id()).filter(Staff.Ruolo == 'Gestore')).count() > 0
+    is_admin = (db.session.query(Staff).filter(Staff.IDStaff == current_user.get_id()).filter(
+        Staff.Ruolo == 'Gestore')).count() > 0
     return render_template("home.html", admin=is_admin)
 
 
@@ -28,7 +29,8 @@ def login():
         if logging is not None and bcrypt.checkpw(password, logging.Password.encode("utf-8")):
             user = get_persona_by_email(request.form['username'])
             login_user(user)
-            if (db.session.query(Staff).filter(Staff.IDStaff == user.get_id()).filter(Staff.Ruolo == 'Gestore')).count():
+            if (
+            db.session.query(Staff).filter(Staff.IDStaff == user.get_id()).filter(Staff.Ruolo == 'Gestore')).count():
                 return redirect(url_for('dashboard_view'))
             else:
                 return redirect(url_for('profile_view', username=user.Email))
@@ -68,12 +70,14 @@ def register():
             # TODO: testarlo
             else:
                 nuova_persona = insert_persona(nome=request.form['name'], cognome=request.form['surname'],
-                                               data_nascita=request.form['DataNascita'], cf=request.form['Codice fiscale'],
+                                               data_nascita=request.form['DataNascita'],
+                                               cf=request.form['Codice fiscale'],
                                                email=request.form['email'], telefono=request.form['telefono'],
                                                sesso=request.form['sex'],
                                                password=bcrypt.hashpw(request.form['password'].encode("utf-8"),
                                                                       bcrypt.gensalt()).decode("utf-8"), attivo=False)
-                if (db.session.query(Staff).filter(Staff.IDStaff == current_user.get_id()).filter(Staff.Ruolo == 'Gestore')).count():
+                if (db.session.query(Staff).filter(Staff.IDStaff == current_user.get_id()).filter(
+                        Staff.Ruolo == 'Gestore')).count():
                     insert_istruttore(nuova_persona)
                 else:
                     insert_cliente(nuova_persona)
@@ -101,7 +105,7 @@ def profile_view(username):
         if new_book is None:
             msg = 'Errore fatale, la data scelta non è valida'
         elif not is_active:
-            #todo: messaggio provvisorio
+            # todo: messaggio provvisorio
             msg = 'Non sei ancora autorizzato ad accedere alla palestra,' \
                   'la tua prenotazione è registrata ma è in attesa di validazione, ' \
                   'contatta il gestore per essere abilitato'
@@ -150,7 +154,9 @@ def view_corso(id):
             print(str(current_user.get_id()) + "vuole iscriversi")
         # TODO: unfollow?
 
-    return render_template('corso.html', corso=corso, istruttore=istruttore, iscritti=numero_iscritti_corso(corso.IDCorso), seguito=is_seguito(current_user.get_id(), corso.Nome))
+    return render_template('corso.html', corso=corso, istruttore=istruttore,
+                           iscritti=numero_iscritti_corso(corso.IDCorso),
+                           seguito=is_seguito(current_user.get_id(), corso.Nome))
 
 
 # TODO: usare in production
@@ -218,7 +224,7 @@ def report(zero, giorni):
             # pdf_config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
             rendered = render_template('printable_report.html', zero=get_persona_by_cf(zero), positivi=tracciati,
                                        giorni=giorni)
-            pdf = pdfkit.from_string(rendered, False)# , configuration=pdf_config)
+            pdf = pdfkit.from_string(rendered, False)  # , configuration=pdf_config)
             response = make_response(pdf)
             response.headers['Content-Type'] = 'report'
             response.headers['Content-Disposition'] = 'attachment; filename=report.pdf'
@@ -239,3 +245,31 @@ def report(zero, giorni):
             messaggio = "operazione avvenuta con successo"
 
     return render_template('report.html', msg=messaggio, zero=zero, giorni=giorni, positivi=tracciati)
+
+
+@app.route("/notifiche", methods=['GET', 'POST'])
+@login_required
+def notifications():
+    sender = False
+    staff_ids = [member.IDStaff for member in db.session.query(Staff).all()]
+    if current_user.CF in staff_ids:
+        sender = True
+    notify_ids = [i.IDNotifica for i in db.session.query(NotificaDestinatario).filter(
+        NotificaDestinatario.Destinatario == current_user.CF).all()]
+    notifies = db.session.query(Notifica).filter(Notifica.IDNotifica.in_(notify_ids)).all()
+    inbox = []
+    for notify in notifies:
+        message = {'IDNotifica': notify.IDNotifica,
+                   'Mittente': get_persona_by_cf(notify.Mittente).Email,
+                   'Timestamp': db.session.query(NotificaDestinatario).filter(
+                       NotificaDestinatario.IDNotifica == notify.IDNotifica).first().Timestamp,
+                   'Letto': db.session.query(NotificaDestinatario).filter(
+                       NotificaDestinatario.IDNotifica == notify.IDNotifica).first().Letto,
+                   'Testo': notify.Testo}
+        inbox.append(message)
+    if sender and request.method == 'POST' and request.form['form-name'] == 'inviaNotifica':
+        testo = request.form['testo']
+        mittente = current_user.CF
+        destinatari = request.form['destinatario']
+        invia_notifica(testo=testo, mittente=mittente, destinatari=destinatari)
+    return render_template('notifiche.html', sender=sender, inbox=inbox)
