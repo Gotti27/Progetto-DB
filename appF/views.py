@@ -210,7 +210,7 @@ def dashboard_view():
     if request.method == 'POST' and request.form['form-name'] == 'tracciamento':
         return redirect(url_for('report', zero=request.form['da tracciare'], giorni=request.form['giorni']))
 
-    return render_template('adminDashboard.html', sale=get_sale())
+    return render_template('adminDashboard.html', sale=get_sale(), istruttori=get_istruttori())
 
 
 @app.route("/report/<zero>/<giorni>", methods=['GET', 'POST'])

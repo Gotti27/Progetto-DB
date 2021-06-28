@@ -70,6 +70,7 @@
     </div>
     -->
 
+    <!-- TODO: eliminare e spostare nella pagina dell'utente vista dall'admin -->
     <div class="w3-container w3-third w3-light-gray">
         <h2>Opzioni su persona</h2>
         <form action="{{ url_for('dashboard_view') }}" method="post" class="w3-container w3-margin" id="modificaCliente">
@@ -97,7 +98,7 @@
         <h2>
             <a href="{{url_for('register')}}">Registra un istruttore</a>
         </h2>
-        <h2>Crea una sala</h2>
+        <h2>Aggiungi una sala</h2>
         <form action="{{ url_for('dashboard_view') }}" method="post" class="w3-container w3-margin" id="creaSala">
             <input type="hidden" name="form-name" value="creaSala">
             <label for="tipoSala">Tipo di sala</label><input id="tipoSala" name="tipo" type="text" placeholder="tipo" class="w3-input w3-margin-bottom">
@@ -105,6 +106,7 @@
             <input type="submit" class="w3-button w3-black" value="Crea sala"><br>
         </form>
 
+        <!-- TODO: ? eliminare e spostare nella pagina dell'utente vista dall'admin -->
         <h2>Traccia i contatti di una persona</h2>
         <form action="{{ url_for('dashboard_view') }}" method="post" class="w3-container w3-margin" id="contact tracing">
             <input type="hidden" name="form-name" value="tracciamento">
