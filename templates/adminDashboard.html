@@ -35,7 +35,7 @@
             <label for="sala">Sala</label><select class="w3-select w3-margin-bottom" id="sala" name="sala">
                 <option value="" disabled selected hidden>Seleziona sala</option>
                 {%for i in sale%}
-                <option value="{{i.IDSala}},{{i.MaxPersone}}">{{ i.IDSala }}</option>
+                <option value="{{i.IDSala}},{{i.MaxPersone}}">{{ i.IDSala }} - {{i.Tipo}}</option>
                 {%endfor%}
             </select>
             <div class="w3-row-padding w3-stretch w3-margin-bottom">
