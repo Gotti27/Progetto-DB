@@ -32,7 +32,7 @@ engine_istruttore = create_engine(app.config['SQLALCHEMY_DATABASE_URI_ISTRUTTORE
 engine_gestore = create_engine(app.config['SQLALCHEMY_DATABASE_URI_GESTORE'], echo=True)
 """
 
-locale.setlocale(locale.LC_ALL, 'it_IT.utf8')
+locale.setlocale(locale.LC_ALL, 'it_IT')
 
 from appF.views import *  # Non importato all'inizio per evitare dipendenze circolari
 from appF.models import *

@@ -58,8 +58,10 @@ function load() {
     const paddingDays = weekdays.indexOf(dateString.split(', ')[0]);
 
     corsi = getCorsi();
+    console.log(corsi)
     corsi.forEach(c => {
-        if (c.Data[5] === '0'){c.Data = c.Data.slice(0,5) + c.Data.slice(6)}
+        c.Data = c.Data.split('-')
+        c.Data = c.Data[0] + '-' + parseInt(c.Data[1]) + '-' + parseInt(c.Data[2])
     })
 
     $('#monthDisplay').text(`${mesi[month]} ${year}`);
@@ -69,11 +71,13 @@ function load() {
     for(let i = 1; i <= paddingDays + daysInMonth; i++) {
         const daySquare = jQuery('<div/>',{
             "class": 'day'
-        }).on('click', () => openModal(dayString));
+        })
         const dayString = `${year}-${month + 1}-${i - paddingDays}`;
 
         if (i > paddingDays) {
+            daySquare.on('click', () => openModal(dayString));
             daySquare.text(i - paddingDays);
+            console.log(dayString)
             const eventsForDay = corsi.filter(e => e.Data == dayString).length;
 
             if (i - paddingDays === day && month == (new Date().getMonth()) && year == (new Date().getFullYear())) {

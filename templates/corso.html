@@ -25,6 +25,7 @@
         <div class="w3-container" style="display:flex">
             <div class="w3-card w3-section w3-container" id="info-card" style="width:400px; display:flex">
                 <div class="" id="info" style="width:325px">
+                    <h4> Data: <span class="w3-opacity">{{corso.Data}}</span></h4>
                     <h4> Orario: <span class="w3-opacity">{{corso.OraInizio.strftime('%H:%M')}}-{{corso.OraFine.strftime('%H:%M')}}</span></h4>
                     <h4> Sala: <span class="w3-opacity">{{ corso.IDSala }}</span></h4>
                     <h4> Istruttore: <span class="w3-opacity">{{ istruttore.Nome }} {{ istruttore.Cognome }} </span></h4>
