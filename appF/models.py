@@ -265,8 +265,10 @@ def attiva_persona(persona):
 
 def disattiva_persona(persona):
     db.session.query(Persona).filter(Persona.CF == persona).update({'Attivo': False})
-    db.session.query(Prenotazione).filter(Prenotazione.IDCliente == persona, Prenotazione.Data > datetime.today(), Prenotazione.OraInizio >= datetime.now())\
-        .update({'Approvata': False})
+    db.session.query(Prenotazione).filter(Prenotazione.IDCliente == persona,
+                                          Prenotazione.Data >= datetime.today()#,
+                                          #Prenotazione.OraInizio >= datetime.now())\
+                                          ).update({'Approvata': False})
     db.session.commit()
 
 

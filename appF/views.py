@@ -30,7 +30,8 @@ def login():
             user = get_persona_by_email(request.form['username'])
             login_user(user)
             if (
-            db.session.query(Staff).filter(Staff.IDStaff == user.get_id()).filter(Staff.Ruolo == 'Gestore')).count():
+                    db.session.query(Staff).filter(Staff.IDStaff == user.get_id()).filter(
+                        Staff.Ruolo == 'Gestore')).count():
                 return redirect(url_for('dashboard_view'))
             else:
                 return redirect(url_for('profile_view', username=user.Email))
@@ -93,6 +94,9 @@ def register():
 @login_required
 def profile_view(username):
     msg = ""
+    inbox_number = len(db.session.query(NotificaDestinatario)
+                       .filter(NotificaDestinatario.Destinatario == current_user.CF,
+                               NotificaDestinatario.Letto == False).all())
     if not username == current_user.get_email:
         return redirect(url_for('profile_view', username=current_user.get_email, msg=msg))
 
@@ -114,7 +118,8 @@ def profile_view(username):
         else:
             msg = 'Prenotazione effettuata con successo'
 
-    return render_template('user_page.html', persona=get_persona_by_email(username), username=username, msg=msg)
+    return render_template('user_page.html', persona=get_persona_by_email(username), username=username, msg=msg,
+                           inbox_number=inbox_number)
 
 
 @app.route('/calendar')
@@ -247,10 +252,12 @@ def report(zero, giorni):
             """
             for person in tracciati:
                 if form == 'disattiva':
-                    notifica = db.session.query(Notifica).filter(Notifica.IDNotifica == 0).first() #da creare con un codice particolare
+                    notifica = db.session.query(Notifica).filter(
+                        Notifica.IDNotifica == 0).first()  # da creare con un codice particolare
                     disattiva_persona(persona=person.CF)
                 else:
-                    notifica = db.session.query(Notifica).filter(Notifica.IDNotifica == 1).first() #da creare con un codice particolare
+                    notifica = db.session.query(Notifica).filter(
+                        Notifica.IDNotifica == 1).first()  # da creare con un codice particolare
                 invia_notifica(notifica=notifica, destinatari=[person.CF])
     return render_template('report.html', msg=messaggio, zero=zero, giorni=giorni, positivi=tracciati)
 
@@ -269,9 +276,11 @@ def notifications():
         message = {'IDNotifica': notify.IDNotifica,
                    'Mittente': get_persona_by_cf(notify.Mittente).Email,
                    'Timestamp': db.session.query(NotificaDestinatario).filter(
-                       NotificaDestinatario.IDNotifica == notify.IDNotifica).first().Timestamp,
+                       NotificaDestinatario.IDNotifica == notify.IDNotifica,
+                       NotificaDestinatario.Destinatario == current_user.CF).first().Timestamp,
                    'Letto': db.session.query(NotificaDestinatario).filter(
-                       NotificaDestinatario.IDNotifica == notify.IDNotifica).first().Letto,
+                       NotificaDestinatario.IDNotifica == notify.IDNotifica,
+                       NotificaDestinatario.Destinatario == current_user.CF).first().Letto,
                    'Testo': notify.Testo}
         inbox.append(message)
     if sender and request.method == 'POST' and request.form['form-name'] == 'inviaNotifica':
@@ -280,4 +289,7 @@ def notifications():
         destinatari = request.form['destinatario'].split(' ')
         notifica = crea_notifica(testo=testo, mittente=mittente)
         invia_notifica(notifica=notifica, destinatari=destinatari)
+    db.session.query(NotificaDestinatario) \
+        .filter(NotificaDestinatario.Destinatario == current_user.CF).update({'Letto': True})
+    db.session.commit()
     return render_template('notifiche.html', sender=sender, inbox=inbox)
