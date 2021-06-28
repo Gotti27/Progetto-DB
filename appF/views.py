@@ -231,6 +231,7 @@ def report(zero, giorni):
             return response
         if form == 'notifica' or form == 'disattiva':
             # TODO: email non funzionante, da configurare
+            """
             subject = "Segnalazione possibile contagio"
             sender = (db.session.query(Persona).filter(Persona.CF == 'ADMINADMIN').first()).Email
             # msg.html = render_template('', ...)
@@ -243,7 +244,14 @@ def report(zero, giorni):
                     msg.body = "potresti essere stato contagiato, caro" + person.Nome
                 mail.send(msg)
             messaggio = "operazione avvenuta con successo"
-
+            """
+            for person in tracciati:
+                if form == 'disattiva':
+                    notifica = db.session.query(Notifica).filter(Notifica.IDNotifica == 0).first() #da creare con un codice particolare
+                    disattiva_persona(persona=person.CF)
+                else:
+                    notifica = db.session.query(Notifica).filter(Notifica.IDNotifica == 1).first() #da creare con un codice particolare
+                invia_notifica(notifica=notifica, destinatari=[person.CF])
     return render_template('report.html', msg=messaggio, zero=zero, giorni=giorni, positivi=tracciati)
 
 
@@ -251,8 +259,7 @@ def report(zero, giorni):
 @login_required
 def notifications():
     sender = False
-    staff_ids = [member.IDStaff for member in db.session.query(Staff).all()]
-    if current_user.CF in staff_ids:
+    if current_user.CF in [member.IDStaff for member in db.session.query(Staff).all()]:
         sender = True
     notify_ids = [i.IDNotifica for i in db.session.query(NotificaDestinatario).filter(
         NotificaDestinatario.Destinatario == current_user.CF).all()]
@@ -271,5 +278,6 @@ def notifications():
         testo = request.form['testo']
         mittente = current_user.CF
         destinatari = request.form['destinatario'].split(' ')
-        invia_notifica(testo=testo, mittente=mittente, destinatari=destinatari)
+        notifica = crea_notifica(testo=testo, mittente=mittente)
+        invia_notifica(notifica=notifica, destinatari=destinatari)
     return render_template('notifiche.html', sender=sender, inbox=inbox)

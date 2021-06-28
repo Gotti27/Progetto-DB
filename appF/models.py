@@ -265,6 +265,8 @@ def attiva_persona(persona):
 
 def disattiva_persona(persona):
     db.session.query(Persona).filter(Persona.CF == persona).update({'Attivo': False})
+    db.session.query(Prenotazione).filter(Prenotazione.IDCliente == persona, Prenotazione.Data > datetime.today(), Prenotazione.OraInizio >= datetime.now())\
+        .update({'Approvata': False})
     db.session.commit()
 
 
@@ -436,8 +438,8 @@ def crea_notifica(testo, mittente):
     return notifica
 
 
-def invia_notifica(testo, mittente, destinatari):
-    notifica = crea_notifica(testo=testo, mittente=mittente)
+def invia_notifica(notifica, destinatari):
+    #notifica = crea_notifica(testo=testo, mittente=mittente)
     for person in destinatari:
         to_add = NotificaDestinatario(IDNotifica=notifica.IDNotifica, Destinatario=person,
                                       Timestamp=datetime.now(), Letto=False)
