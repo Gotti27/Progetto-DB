@@ -156,7 +156,9 @@ def view_corso(id):
         elif request.form['form-name'] == "follow":
             insert_corso_seguito(persona=current_user.get_id(), corso=corso.Nome)
             print(str(current_user.get_id()) + "vuole iscriversi")
-        # TODO: unfollow?
+        elif request.form['form-name'] == "unfollow":
+            delete_corso_seguito(persona=current_user.get_id(), corso=corso.Nome)
+
 
     return render_template('corso.html', corso=corso, istruttore=istruttore,
                            iscritti=numero_iscritti_corso(corso.IDCorso),

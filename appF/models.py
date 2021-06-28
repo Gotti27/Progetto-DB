@@ -429,6 +429,12 @@ def insert_corso_seguito(persona, corso):
     session.commit()
 
 
+def delete_corso_seguito(persona, corso):
+    q = delete(CorsoSeguito).where(CorsoSeguito.IDCliente == persona, CorsoSeguito.Nome == corso)
+    session.execute(q)
+    session.commit()
+
+
 def is_seguito(persona, corso):
     if persona is not None and db.session.query(CorsoSeguito).filter(CorsoSeguito.Nome == corso,
                                                                      CorsoSeguito.IDCliente == persona).count() > 0:
