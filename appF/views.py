@@ -128,7 +128,9 @@ def calendar_view(anno, mese):
     user = request.args.get('user')
     if user is None:
         corsi = get_corsi(mese, anno)
+        for c in corsi: print(c)
     else:
+        print(user.Email)
         corsi = get_prenotazioni_persona(user, mese, anno)
         corsi += (get_corsi_seguiti(user))
     return render_template('calendar.html', corsi=corsi, anno=anno, mese=mese)
