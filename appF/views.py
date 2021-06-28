@@ -60,13 +60,8 @@ def register():
                 msg = 'Persona già registrata'
             elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
                 msg = 'Indirizzo email non valido'
-            # elif not re.match(r'/^(?:[A-Z][AEIOU][AEIOUX]|[B-DF-HJ-NP-TV-Z]{2}[A-Z]){2}(?:[\dLMNP-V]{2}(?:[A-EHLMPR-T]
-            # (?:[04LQ][1-9MNP-V]|[15MR][\dLMNP-V]|[26NS][0-8LMNP-U])|[DHPS][37PT][0L]|[ACELMRT][37PT][01LM]|[AC-EHLMPR-T]
-            # [26NS][9V])|(?:[02468LNQSU][048LQU]|[13579MPRTV][26NS])B[26NS][9V])(?:[A-MZ][1-9MNP-V][\dLMNP-V]{2}|[A-M][0L]
-            # (?:[1-9MNP-V][\dLMNP-V]|[0L][1-9MNP-V]))[A-Z]$/i', CF):
-            #    msg = 'Codice fiscale non valido'
-            # (http://blog.marketto.it/2016/01/regex-validazione-codice-fiscale-con-omocodia/) REGEX PER CODICE FISCALE
-            # TODO: testarlo
+            elif len(request.form['Codice fiscale']) != 16:
+               msg = 'Codice fiscale non valido'
             else:
                 nuova_persona = insert_persona(nome=request.form['name'], cognome=request.form['surname'],
                                                data_nascita=request.form['DataNascita'],
@@ -80,7 +75,6 @@ def register():
                     insert_istruttore(nuova_persona)
                 else:
                     insert_cliente(nuova_persona)
-                # msg = 'Ti sei registrato con successo!' non visualizzato a causa del redirect
                 login_user(nuova_persona)
                 return redirect(url_for('profile_view', username=nuova_persona.Email))
         elif request.method == 'POST':
@@ -158,8 +152,6 @@ def view_corso(id):
             print(str(current_user.get_id()) + "vuole iscriversi")
         elif request.form['form-name'] == "unfollow":
             delete_corso_seguito(persona=current_user.get_id(), corso=corso.Nome)
-
-
     return render_template('corso.html', corso=corso, istruttore=istruttore,
                            iscritti=numero_iscritti_corso(corso.IDCorso),
                            seguito=is_seguito(current_user.get_id(), corso.Nome))
@@ -237,29 +229,22 @@ def report(zero, giorni):
             return response
         if form == 'notifica' or form == 'disattiva':
             # TODO: email non funzionante, da configurare
-            """
-            subject = "Segnalazione possibile contagio"
-            sender = (db.session.query(Persona).filter(Persona.CF == 'ADMINADMIN').first()).Email
-            # msg.html = render_template('', ...)
+            # subject = "Segnalazione possibile contagio"
+            # sender = (db.session.query(Persona).filter(Persona.CF == 'ADMINADMIN').first()).Email
             for person in tracciati:
-                msg = Message(subject=subject, sender=sender, recipients=person.Email)
+                # msg = Message(subject=subject, sender=sender, recipients=person.Email)
                 if form == 'disattiva':
-                    msg.body = "potresti essere stato contagiato e sei disattivato, caro" + person.Nome
-                    disattiva_persona(persona=person.CF)
-                else:
-                    msg.body = "potresti essere stato contagiato, caro" + person.Nome
-                mail.send(msg)
-            messaggio = "operazione avvenuta con successo"
-            """
-            for person in tracciati:
-                if form == 'disattiva':
+                    # msg.body = "potresti essere stato contagiato e sei disattivato, caro" + person.Nome
                     notifica = db.session.query(Notifica).filter(
                         Notifica.IDNotifica == 0).first()  # da creare con un codice particolare
                     disattiva_persona(persona=person.CF)
                 else:
+                    # msg.body = "potresti essere stato contagiato, caro" + person.Nome
                     notifica = db.session.query(Notifica).filter(
                         Notifica.IDNotifica == 1).first()  # da creare con un codice particolare
                 invia_notifica(notifica=notifica, destinatari=[person.CF])
+                # mail.send(msg)
+            messaggio = 'operazione avvenuta con successo'
     return render_template('report.html', msg=messaggio, zero=zero, giorni=giorni, positivi=tracciati)
 
 

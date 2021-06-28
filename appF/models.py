@@ -387,16 +387,6 @@ def contact_tracing(zero, days):
 
         for p in prenotazioni:
             potential_infected.append(p.IDCliente)
-
-    """
-    potential_infected_distinct = set(potential_infected)
-    potential_infected = []
-    for person in potential_infected_distinct:
-        potential_infected.append(get_persona_by_cf(person))
-
-    (list(set(potential_infected)))
-    return potential_infected
-    """
     return [get_persona_by_cf(cf) for cf in (list(set(potential_infected)))]
 
 
