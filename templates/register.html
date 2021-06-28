@@ -7,15 +7,18 @@
 </head>
 <body>
     <div class="w3-container" align="center">
-        <button class="w3-button w3-black w3-margin">
-            <a href="{{url_for('home')}}">Home</a>
-        </button>
+        <a class="w3-button w3-black w3-margin-top" href="{{url_for('home')}}">Home</a>
     </div>
 
     <div align="center" class="w3-container">
         <div align="center">
              <div>
-                <h1>Register</h1>
+                 {% if not current_user.is_authenticated %}
+                    <h1>Registrati</h1>
+                 {% else %}
+                    <h1>Registra un nuovo istruttore</h1>
+                 {% endif %}
+
              </div></br></br></br>
         <h4>
             <form action="{{ url_for('register') }}" method="post">

@@ -43,6 +43,9 @@ class Persona(UserMixin, Base):
     def get_email(self):
         return str(self.Email)
 
+    def is_admin(self):
+        return (db.session.query(Staff).filter(Staff.IDStaff == self.CF).filter(Staff.Ruolo == 'Gestore')).count() > 0
+
     def __repr__(self):
         return "<Persona: CF='%s', N='%s', C='%s', S='%s', DN='%s', Email='%s', PW='%s', Tel='%s', Act='%s'>" % (
             self.CF, self.Nome, self.Cognome, self.Sesso, self.DataNascita, self.Email, self.Password, self.Telefono,

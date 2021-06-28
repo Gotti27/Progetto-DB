@@ -12,9 +12,7 @@ from appF.models import *
 
 @app.route('/')
 def home():
-    get_time_step()
-    is_admin = (db.session.query(Staff).filter(Staff.IDStaff == current_user.get_id()).filter(
-        Staff.Ruolo == 'Gestore')).count() > 0
+    is_admin = current_user.is_authenticated and current_user.is_admin()
     return render_template("home.html", admin=is_admin)
 
 
@@ -50,7 +48,7 @@ def logout():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    if current_user.is_authenticated:
+    if current_user.is_authenticated and not current_user.is_admin():
         return redirect(url_for('profile_view', username=current_user.get_email))
     else:
         msg = ''
@@ -135,7 +133,6 @@ def calendar_view(anno, mese):
         corsi = get_corsi(mese, anno)
         for c in corsi: print(c)
     else:
-        print(user.Email)
         corsi = get_prenotazioni_persona(user, mese, anno)
         corsi += (get_corsi_seguiti(user))
     return render_template('calendar.html', corsi=corsi, anno=anno, mese=mese)
