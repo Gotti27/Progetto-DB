@@ -97,7 +97,7 @@ function load() {
         if (i > paddingDays) {
             daySquare.on('click', () => openModal(dayString));
             daySquare.text(i - paddingDays);
-            const eventsForDay = corsi.filter(e => e.Data == dayString).length;
+            const eventsForDay = corsi.filter(e => e.Data === dayString && (e.type === "prenotazione" || (e.type === "corso" && isPrenotato(e)))).length;
 
             if (i - paddingDays === day && month == (new Date().getMonth()) && year == (new Date().getFullYear())) {
                 daySquare.attr('id','currentDay');

@@ -2,6 +2,7 @@ import re
 import time
 import bcrypt
 import pdfkit
+from functools import wraps
 from flask import *
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_mail import Message
@@ -9,6 +10,13 @@ from flask_mail import Message
 from run import app, db, mail
 from appF.models import *
 
+def auth_admin(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not current_user.is_admin():
+            abort(403)
+        return f(*args, **kwargs)
+    return decorated_function
 
 @app.route('/')
 def home():
@@ -161,22 +169,9 @@ def view_corso(id):
                            is_iscritto=is_iscritto(current_user.get_id(), corso.IDCorso) )
 
 
-# TODO: usare in production
-"""" 
-@app.route("/dashboard", methods=['GET', 'POST']) 
-@login_required
-def dashboard_view():
-    if (db.session.query(Staff).filter(Staff.IDStaff == current_user.get_id()).filter(Staff.Ruolo == 'Gestore')).count():
-        if request.method == 'POST':
-            insert_corso(nome=request.form['nome'], min_persone=request.form['minPersone'], max_persone=request.form['maxPersone'], ora_inizio=request.form['oraInizio'], ora_fine=request.form['oraFine'], id_sala=request.form['sala'], id_istruttore=request.form['istruttore'], data=request.form['dataInizio'])
-
-        return render_template('adminDashboard.html', sale=get_sale())
-    else:
-        abort(401)
-"""
-
-
 @app.route("/dashboard", methods=['GET', 'POST'])
+@login_required
+@auth_admin
 def dashboard_view():
     if request.method == 'POST' and request.form['form-name'] == 'inserisciCorso':
         start = datetime.strptime(request.form['settimanaInizio'] + '-1', "%Y-W%W-%w")
@@ -301,9 +296,9 @@ def prenotazione_view(id_prenotazione):
     if p is None or not current_user.is_authenticated or current_user.get_id() != p['IDCliente']:
         return redirect(url_for('home'))
     if p['IDCorso']:
-        c = get_corso_by_id(p['IDCorso'])['Nome']
+        c = get_corso_by_id(p['IDCorso'])
 
-    return render_template('prenotazione.html', prenotazione=p, nome_corso=c)
+    return render_template('prenotazione.html', prenotazione=p, corso=c)
 
 
 @app.route("/users", methods=['GET', 'POST'])
@@ -323,4 +318,10 @@ def view_users():
 
 
 
+@app.errorhandler(403)
+def page_not_found(e):
+    return render_template('403.html'), 403
 
+@app.errorhandler(401)
+def page_not_found(e):
+    return render_template('401.html'), 401
