@@ -14,6 +14,15 @@ function openCoursePage(x){
     window.location.href = "http://" + url[2] +"/corso/"+x;
 }
 
+function isNotPrenotato(id){
+    corsi.forEach(c => {
+        if (c.type === "corso" && c.IDCorso === id){
+            return true
+        }
+    })
+    return false
+}
+
 function openModal(date) {
     clicked = date;
     date = date.split('-')
@@ -21,20 +30,28 @@ function openModal(date) {
     $('#eventText').empty();
     $('#modalHeader').html(date[2].toString() + ' ' + mesi[date[1]-1] + ' ' + date[0]);
 
+    isNotPrenotato(1);
     corsi.forEach(c => {
         if (c.Data === clicked)
             if (c.type == "corso"){
-                $('#eventText').append(jQuery('<div/>',{
-                    "class": 'courseInfo'
-                }).html(c.Nome).on('click', () => openCoursePage(c.IDCorso)));
+                if(isNotPrenotato(c.IDCorso)){
+                    $('#eventText').append(jQuery('<div/>',{
+                        "class": 'courseInfo'
+                    }).html(c.Nome).on('click', () => openCoursePage(c.IDCorso)));
+                }
             }
             else {
                 $('#eventText').append(jQuery('<div/>',{
                     "class": 'prenotazioneInfo'
                 }).html( () => {
+                    let out = "Allenamento libero"
                     if (c.IDCorso != "None")
-                        return c.IDCorso;
-                    return "Allenamento libero"
+                        corsi.forEach(corso => {
+                            console.log(corso.IDCorso)
+                            if(corso.type === "corso" &&  corso.IDCorso === c.IDCorso)
+                                out = corso.Nome;
+                        })
+                    return out
                 } ));
             }
 
@@ -58,7 +75,6 @@ function load() {
     const paddingDays = weekdays.indexOf(dateString.split(', ')[0]);
 
     corsi = getCorsi();
-    console.log(corsi)
     corsi.forEach(c => {
         c.Data = c.Data.split('-')
         c.Data = c.Data[0] + '-' + parseInt(c.Data[1]) + '-' + parseInt(c.Data[2])
@@ -77,7 +93,6 @@ function load() {
         if (i > paddingDays) {
             daySquare.on('click', () => openModal(dayString));
             daySquare.text(i - paddingDays);
-            console.log(dayString)
             const eventsForDay = corsi.filter(e => e.Data == dayString).length;
 
             if (i - paddingDays === day && month == (new Date().getMonth()) && year == (new Date().getFullYear())) {

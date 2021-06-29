@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prenotazione</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<body>
+
+
+<div class="w3-quarter">
+  <p></p>
+</div>
+
+<div class="w3-card w3-center w3-half w3-margin">
+    <h1 align="center"> Prenotazione numero: {{ prenotazione.IDPrenotazione }} </h1>
+    <h3> Data: {{ prenotazione.Data }}, dalle {{ prenotazione.OraInizio.strftime('%H:%M')}} alle {{ prenotazione.OraFine.strftime('%H:%M') }}</h3>
+    {% if nome_corso %}
+    <h3> Corso: {{ nome_corso }} </h3>
+    {% else %}
+    <h3> Allenamento libero</h3>
+    {% endif %}
+
+    <a class="w3-button w3-black w3-margin-bottom" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+        Cancella prenotazione
+    </a>
+</div>
+
+
+
+</body>
+</html>

@@ -235,6 +235,11 @@ def get_corsi_futuri():
     return q
 
 
+def get_corso_by_id(id):
+    q = db.session.query(Corso).filter(Corso.IDCorso == id).first()
+    return q.__dict__
+
+
 def numero_iscritti_corso(corso):
     iscr = db.session.query(Prenotazione).filter(Prenotazione.IDCorso == corso).filter(Prenotazione.Approvata).count()
     return iscr
@@ -294,6 +299,11 @@ def insert_sala(max_persone, tipo):
 def get_time_step():
     q = db.session.query(Generali).one().MinutiScaglioni
     return q
+
+
+def get_prenotazione_by_id(id):
+    q = db.session.query(Prenotazione).filter(Prenotazione.IDPrenotazione == id).first()
+    return q.__dict__
 
 
 def insert_prenotazione(persona, data, ora_inizio, ora_fine, sala, corso=None):

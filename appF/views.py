@@ -290,3 +290,18 @@ def notifications():
         .filter(NotificaDestinatario.Destinatario == current_user.CF).update({'Letto': True})
     db.session.commit()
     return render_template('notifiche.html', sender=sender, inbox=inbox)
+
+
+@app.route("/prenotazione/<id_prenotazione>", methods=['GET', 'POST'])
+def view_prenotazione(id_prenotazione):
+    p = get_prenotazione_by_id(id_prenotazione)
+    c = None
+    if p is None or not current_user.is_authenticated or current_user.get_id() != p['IDCliente']:
+        return redirect(url_for('home'))
+    if p['IDCorso']:
+        c = get_corso_by_id(p['IDCorso'])['Nome']
+
+    return render_template('prenotazione.html', prenotazione=p, nome_corso=c)
+
+
+

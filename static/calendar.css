@@ -137,7 +137,7 @@ button {
 .prenotazioneInfo{
   width: 90%;
   border-radius: 5px;
-  background-color: red;
+  background-color: lime;
   margin: 5px auto 5px auto;
   padding: 5px;
 }
