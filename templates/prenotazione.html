@@ -14,7 +14,8 @@
 
 <div class="w3-card w3-center w3-half w3-margin">
     <h1 align="center"> Prenotazione numero: {{ prenotazione.IDPrenotazione }} </h1>
-    <h3> Data: {{ prenotazione.Data }}, dalle {{ prenotazione.OraInizio.strftime('%H:%M')}} alle {{ prenotazione.OraFine.strftime('%H:%M') }}</h3>
+    <h3> Data: {{ prenotazione.Data }}</h3>
+    <h3> Orario: {{ prenotazione.OraInizio.strftime('%H:%M')}} - {{ prenotazione.OraFine.strftime('%H:%M') }}</h3>
     {% if nome_corso %}
     <h3> Corso: {{ nome_corso }} </h3>
     {% else %}

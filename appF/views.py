@@ -96,7 +96,7 @@ def profile_view(username):
     if request.method == 'POST' and request.form['form-name'] == 'prenotazione':
         is_active = db.session.query(Persona.Attivo).filter(Persona.Email == current_user.get_email).first()
         new_book = insert_prenotazione(persona=get_persona_by_email(username), data=request.form['Data'],
-                                       ora_inizio=request.form['oraInizio'], ora_fine=request.form['oraFine'],
+                                       ora_inizio=request.form['oraInizio']+':00', ora_fine=request.form['oraFine']+':00',
                                        sala=request.form['IDSala'], corso=request.form['IDCorso'])
 
         if new_book is None:

@@ -127,6 +127,7 @@ button {
 }
 
 .courseInfo{
+  cursor: pointer;
   width: 90%;
   border-radius: 5px;
   background-color: #58bae4;
@@ -135,6 +136,7 @@ button {
 }
 
 .prenotazioneInfo{
+  cursor: pointer;
   width: 90%;
   border-radius: 5px;
   background-color: lime;

@@ -11,16 +11,22 @@ const month = getMese() -1;
 const year = getAnno();
 
 function openCoursePage(x){
-    window.location.href = "http://" + url[2] +"/corso/"+x;
+    window.location.href = "http://" + url[2] + "/corso/" + x;
 }
 
-function isNotPrenotato(id){
-    corsi.forEach(c => {
-        if (c.type === "corso" && c.IDCorso === id){
-            return true
+function openPrenotazionePage(x){
+    window.location.href = "http://" + url[2] + "/prenotazione/" + x;
+}
+
+function isPrenotato(corso){
+    let out = true;
+    corsi.forEach(p => {
+        if (p.type === "prenotazione" && p.IDCorso === corso.IDCorso && p.Data === corso.Data){
+            console.log("True")
+            out =  false
         }
     })
-    return false
+    return out;
 }
 
 function openModal(date) {
@@ -30,11 +36,10 @@ function openModal(date) {
     $('#eventText').empty();
     $('#modalHeader').html(date[2].toString() + ' ' + mesi[date[1]-1] + ' ' + date[0]);
 
-    isNotPrenotato(1);
     corsi.forEach(c => {
         if (c.Data === clicked)
             if (c.type == "corso"){
-                if(isNotPrenotato(c.IDCorso)){
+                if(isPrenotato(c)){
                     $('#eventText').append(jQuery('<div/>',{
                         "class": 'courseInfo'
                     }).html(c.Nome).on('click', () => openCoursePage(c.IDCorso)));
@@ -47,12 +52,11 @@ function openModal(date) {
                     let out = "Allenamento libero"
                     if (c.IDCorso != "None")
                         corsi.forEach(corso => {
-                            console.log(corso.IDCorso)
                             if(corso.type === "corso" &&  corso.IDCorso === c.IDCorso)
                                 out = corso.Nome;
                         })
                     return out
-                } ));
+                } ).on('click', () => openPrenotazionePage(c.IDPrenotazione)));
             }
 
     });
