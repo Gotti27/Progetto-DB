@@ -75,6 +75,7 @@
 
     <!-- TODO: eliminare e spostare nella pagina dell'utente vista dall'admin -->
     <div class="w3-container w3-third w3-light-gray">
+        <h2><a href="{{url_for('view_users')}}">Visualizza utenti</a></h2>
         <h2>Opzioni su persona</h2>
         <form action="{{ url_for('dashboard_view') }}" method="post" class="w3-container w3-margin" id="modificaCliente">
             <input type="hidden" name="form-name" value="opzioniPersona">
@@ -95,27 +96,6 @@
             <label for="non pagante">non pagante</label><br><br>
             <input type="submit" class="w3-button w3-black" value="Conferma"><br>
         </form>
-        <!--
-        <div class="w3-container w3-light-gray">
-            <h2>Lista clienti</h2>
-            <table class="w3-table">
-                <tr>
-                    <th>Nome</th>
-                    <th>Cognome</th>
-                    <th>Codice fiscale</th>
-                    <th>Email</th>
-                </tr>
-                {% for c in clienti %}
-                <tr>
-                    <th>{{c.Nome}}</th>
-                    <th>{{c.Cognome}}</th>
-                    <th>{{c.CF}}</th>
-                    <th>{{c.Email}}</th>
-                </tr>
-                {% endfor %}
-            </table>
-        </div>
-        -->
     </div>
 
     <div class="w3-container w3-third w3-light-gray">
@@ -138,88 +118,7 @@
             <input name="giorni" type="number" placeholder="quanti giorni andare a ritroso" class="w3-input" min="0" max="7"><br>
             <input type="submit" class="w3-button w3-black" value="Traccia"><br>
         </form>
-        <!--
-        <div class="w3-container w3-light-gray">
-            <h2>Lista staff</h2>
-            <table class="w3-table">
-                <tr>
-                    <th>Nome</th>
-                    <th>Cognome</th>
-                    <th>Codice fiscale</th>
-                    <th>Email</th>
-                </tr>
-                {% for s in staff %}
-                <tr>
-                    <th>{{s.Nome}}</th>
-                    <th>{{s.Cognome}}</th>
-                    <th>{{s.CF}}</th>
-                    <th>{{s.Email}}</th>
-                </tr>
-                {% endfor %}
-            </table>
-        </div>
-        -->
-    </div>
-</div>
-<div class="w3-row w3-light-gray">
-    <div class="w3-container w3-half w3-light-gray">
-        <h2>Lista clienti</h2>
-            <table class="w3-table">
-                <tr>
-                    <th>Nome</th>
-                    <th>Cognome</th>
-                    <th>Codice fiscale</th>
-                    <th>Email</th>
-                </tr>
-                {% for c in clienti %}
-                <tr>
-                    <th>{{c.Nome}}</th>
-                    <th>{{c.Cognome}}</th>
-                    <th>{{c.CF}}</th>
-                    <th>{{c.Email}}</th>
-                    <th>
-                        {% if c.Attivo %}
-                            Attivo
-                        {% else %}
-                            Non attivo
-                        {% endif %}
-                    </th>
-                    <th>
-                        {% if c.Pagante %}
-                            Pagante
-                        {% else %}
-                            Non pagante
-                        {% endif %}
-                    </th>
-                </tr>
-                {% endfor %}
-            </table>
-    </div>
-    <div class="w3-container w3-half w3-light-gray">
-        <h2>Lista staff</h2>
-            <table class="w3-table">
-                <tr>
-                    <th>Nome</th>
-                    <th>Cognome</th>
-                    <th>Codice fiscale</th>
-                    <th>Email</th>
-                </tr>
-                {% for s in staff %}
-                <tr>
-                    <th>{{s.Nome}}</th>
-                    <th>{{s.Cognome}}</th>
-                    <th>{{s.CF}}</th>
-                    <th>{{s.Email}}</th>
-                    <th>
-                        {% if s.Attivo %}
-                            Attivo
-                        {% else %}
-                            Non attivo
-                        {% endif %}
-                    </th>
-                </tr>
-                {% endfor %}
-            </table>
+
     </div>
 </div>
 

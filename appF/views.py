@@ -10,13 +10,16 @@ from flask_mail import Message
 from run import app, db, mail
 from appF.models import *
 
+
 def auth_admin(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not current_user.is_admin():
             abort(403)
         return f(*args, **kwargs)
+
     return decorated_function
+
 
 @app.route('/')
 def home():
@@ -69,7 +72,7 @@ def register():
             elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
                 msg = 'Indirizzo email non valido'
             elif len(request.form['Codice fiscale']) != 16:
-               msg = 'Codice fiscale non valido'
+                msg = 'Codice fiscale non valido'
             else:
                 nuova_persona = insert_persona(nome=request.form['name'], cognome=request.form['surname'],
                                                data_nascita=request.form['DataNascita'],
@@ -104,7 +107,8 @@ def profile_view(username):
     if request.method == 'POST' and request.form['form-name'] == 'prenotazione':
         is_active = db.session.query(Persona.Attivo).filter(Persona.Email == current_user.get_email).first()
         new_book = insert_prenotazione(persona=get_persona_by_email(username), data=request.form['Data'],
-                                       ora_inizio=request.form['oraInizio']+':00', ora_fine=request.form['oraFine']+':00',
+                                       ora_inizio=request.form['oraInizio'] + ':00',
+                                       ora_fine=request.form['oraFine'] + ':00',
                                        sala=request.form['IDSala'], corso=request.form['IDCorso'])
 
         if new_book is None:
@@ -166,7 +170,7 @@ def view_corso(id):
     return render_template('corso.html', corso=corso, istruttore=istruttore,
                            iscritti=numero_iscritti_corso(corso.IDCorso),
                            is_seguito=is_seguito(current_user.get_id(), corso.Nome),
-                           is_iscritto=is_iscritto(current_user.get_id(), corso.IDCorso) )
+                           is_iscritto=is_iscritto(current_user.get_id(), corso.IDCorso))
 
 
 @app.route("/dashboard", methods=['GET', 'POST'])
@@ -302,25 +306,56 @@ def prenotazione_view(id_prenotazione):
 
 
 @app.route("/users", methods=['GET', 'POST'])
-#@login_required
+@login_required
+@auth_admin
 def view_users():
+    persone = db.session.query(Persona).filter(Persona.CF.in_(db.session.query(Cliente.IDCliente))).all()
+    if request.method == 'POST' and request.form['form-name'] == 'modifica':
+        '''
+        for p in persone:
+            if 'attivazione-'+p.CF in request.form:
+                print("on")
+            if 'disattivazione-'+p.CF in request.form:
+                print("off")
 
-    #if not current_user.is_admin():
-        #return redirect(url_for('home'))
 
-    # TODO: lavori in corso
-    clienti = db.session.query(Persona).filter(Persona.CF.in_(db.session.query(Cliente.IDCliente))).all()
-    staff = db.session.query(Persona).filter(Persona.CF.in_(db.session.query(Staff.IDStaff))).all()
-    paganti = db.session.query(Cliente).all()
+            #if request.form['attivazione-'+p.CF] == 'on':
+             #   print("belandi")
+            #else:
+             #   print("besughi")
+        '''
+        pass
 
-
+    clienti = []
+    for p in persone:
+        c = {
+            'Nome': p.Nome,
+            'Cognome': p.Cognome,
+            'CF': p.CF,
+            'Email': p.Email,
+            'Attivo': p.Attivo,
+            'Pagante': db.session.query(Cliente).filter(Cliente.IDCliente == p.CF).first().PagamentoMese
+        }
+        clienti.append(c)
+    persone = db.session.query(Persona).filter(Persona.CF.in_(db.session.query(Staff.IDStaff))).all()
+    staff = []
+    for p in persone:
+        s = {
+            'Nome': p.Nome,
+            'Cognome': p.Cognome,
+            'CF': p.CF,
+            'Email': p.Email,
+            'Ruolo': db.session.query(Staff).filter(Staff.IDStaff == p.CF).first().Ruolo,
+            'Attivo':  p.Attivo
+        }
+        staff.append(s)
     return render_template('users.html', clienti=clienti, staff=staff)
-
 
 
 @app.errorhandler(403)
 def page_not_found(e):
     return render_template('403.html'), 403
+
 
 @app.errorhandler(401)
 def page_not_found(e):
