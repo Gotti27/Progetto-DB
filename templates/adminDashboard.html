@@ -177,6 +177,20 @@
                     <th>{{c.Cognome}}</th>
                     <th>{{c.CF}}</th>
                     <th>{{c.Email}}</th>
+                    <th>
+                        {% if c.Attivo %}
+                            Attivo
+                        {% else %}
+                            Non attivo
+                        {% endif %}
+                    </th>
+                    <th>
+                        {% if c.Pagante %}
+                            Pagante
+                        {% else %}
+                            Non pagante
+                        {% endif %}
+                    </th>
                 </tr>
                 {% endfor %}
             </table>
@@ -196,6 +210,13 @@
                     <th>{{s.Cognome}}</th>
                     <th>{{s.CF}}</th>
                     <th>{{s.Email}}</th>
+                    <th>
+                        {% if s.Attivo %}
+                            Attivo
+                        {% else %}
+                            Non attivo
+                        {% endif %}
+                    </th>
                 </tr>
                 {% endfor %}
             </table>

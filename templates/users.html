@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Report</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<body class="w3-light-gray">
+<div class="w3-row w3-light-gray">
+
+</div>
+
+<div class="w3-row w3-light-gray">
+    <div class="w3-container w3-half w3-light-gray">
+        <h2>Lista clienti</h2>
+            <table class="w3-table">
+                <tr>
+                    <th>Nome</th>
+                    <th>Cognome</th>
+                    <th>Codice fiscale</th>
+                    <th>Email</th>
+                    <th>Attivo</th>
+                    <th>Pagante</th>
+                </tr>
+                {% for c in clienti %}
+                <tr>
+                    <th>{{c.Nome}}</th>
+                    <th>{{c.Cognome}}</th>
+                    <th>{{c.CF}}</th>
+                    <th>{{c.Email}}</th>
+                    <th>
+                        {% if c.Attivo %}
+                            Attivo
+                        {% else %}
+                            Non attivo
+                        {% endif %}
+                    </th>
+                    <th>
+                        {% if c.Pagante %}
+                            Pagante
+                        {% else %}
+                            Non pagante
+                        {% endif %}
+                    </th>
+                </tr>
+                {% endfor %}
+            </table>
+    </div>
+    <div class="w3-container w3-half w3-light-gray">
+        <h2>Lista staff</h2>
+            <table class="w3-table">
+                <tr>
+                    <th>Nome</th>
+                    <th>Cognome</th>
+                    <th>Codice fiscale</th>
+                    <th>Email</th>
+                    <th>Ruolo</th>
+                    <th>Attivo</th>
+                </tr>
+                {% for s in staff %}
+                <tr>
+                    <th>{{s.Nome}}</th>
+                    <th>{{s.Cognome}}</th>
+                    <th>{{s.CF}}</th>
+                    <th>{{s.Email}}</th>
+                    <th>
+
+                    </th>
+                    <th>
+                        {% if s.Attivo %}
+                            Attivo
+                        {% else %}
+                            Non attivo
+                        {% endif %}
+                    </th>
+                </tr>
+                {% endfor %}
+            </table>
+    </div>
+</div>
+</body>
+</html>

@@ -178,8 +178,6 @@ def dashboard_view():
 
 @app.route("/dashboard", methods=['GET', 'POST'])
 def dashboard_view():
-    clienti = db.session.query(Persona).filter(Persona.CF.in_(db.session.query(Cliente.IDCliente))).all()
-    staff = db.session.query(Persona).filter(Persona.CF.in_(db.session.query(Staff.IDStaff))).all()
     if request.method == 'POST' and request.form['form-name'] == 'inserisciCorso':
         start = datetime.strptime(request.form['settimanaInizio'] + '-1', "%Y-W%W-%w")
         reps = int(request.form['ripetizioni'])
@@ -214,8 +212,7 @@ def dashboard_view():
     if request.method == 'POST' and request.form['form-name'] == 'tracciamento':
         return redirect(url_for('report', zero=request.form['da tracciare'], giorni=request.form['giorni']))
 
-    return render_template('adminDashboard.html', sale=get_sale(), istruttori=get_istruttori(), clienti=clienti,
-                           staff=staff)
+    return render_template('adminDashboard.html', sale=get_sale(), istruttori=get_istruttori())
 
 
 @app.route("/report/<zero>/<giorni>", methods=['GET', 'POST'])
@@ -293,6 +290,7 @@ def notifications():
 
 
 @app.route("/prenotazione/<id_prenotazione>", methods=['GET', 'POST'])
+@login_required
 def view_prenotazione(id_prenotazione):
     p = get_prenotazione_by_id(id_prenotazione)
     c = None
@@ -302,6 +300,23 @@ def view_prenotazione(id_prenotazione):
         c = get_corso_by_id(p['IDCorso'])['Nome']
 
     return render_template('prenotazione.html', prenotazione=p, nome_corso=c)
+
+
+@app.route("/users", methods=['GET', 'POST'])
+#@login_required
+def view_users():
+
+    #if not current_user.is_admin():
+        #return redirect(url_for('home'))
+
+    # TODO: lavori in corso
+    clienti = db.session.query(Persona).filter(Persona.CF.in_(db.session.query(Cliente.IDCliente))).all()
+    staff = db.session.query(Persona).filter(Persona.CF.in_(db.session.query(Staff.IDStaff))).all()
+    paganti = db.session.query(Cliente).all()
+
+
+    return render_template('users.html', clienti=clienti, staff=staff)
+
 
 
 
