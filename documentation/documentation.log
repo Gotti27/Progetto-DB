@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.3) (preloaded format=pdflatex 2021.3.23)  25 JUN 2021 15:07
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.3) (preloaded format=pdflatex 2021.3.23)  29 JUN 2021 11:18
 entering extended mode
 **./documentation.tex
 (documentation.tex
@@ -423,24 +423,73 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 \tf@toc=\write3
 \openout3 = `documentation.toc'.
 
- [1] [2] (documentation.aux) ) 
+ [1]
+(D:\Users\Mario\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstlang1.sty
+File: lstlang1.sty 2020/03/24 1.8d listings language file
+)
+Overfull \hbox (34.71526pt too wide) in paragraph at lines 50--52
+[][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (54.31363pt too wide) in paragraph at lines 55--57
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (8.58409pt too wide) in paragraph at lines 57--58
+[][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (28.18246pt too wide) in paragraph at lines 60--62
+[][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (41.24805pt too wide) in paragraph at lines 63--65
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (41.24805pt too wide) in paragraph at lines 71--72
+[][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (28.18246pt too wide) in paragraph at lines 72--73
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+(D:\Users\Mario\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstlang1.sty
+File: lstlang1.sty 2020/03/24 1.8d listings language file
+)
+[2]
+Overfull \hbox (15.11688pt too wide) in paragraph at lines 79--80
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+[3] (documentation.aux) ) 
 Here is how much of TeX's memory you used:
- 8416 strings out of 479324
- 123839 string characters out of 2856815
- 451683 words of memory out of 3000000
- 25756 multiletter control sequences out of 15000+600000
- 413002 words of font info for 52 fonts, out of 8000000 for 9000
+ 9098 strings out of 479324
+ 130763 string characters out of 2856815
+ 675009 words of memory out of 3000000
+ 26429 multiletter control sequences out of 15000+600000
+ 416056 words of font info for 60 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 83i,6n,88p,274b,262s stack positions out of 5000i,500n,10000p,200000b,80000s
- <C:\Users\Mario\AppData\Local\MiKTeX\fonts/pk/lj
-four/jknappen/ec/dpi600\ecrm1095.pk> <C:\Users\Mario\AppData\Local\MiKTeX\fonts
-/pk/ljfour/jknappen/ec/dpi600\ecbx1095.pk> <C:\Users\Mario\AppData\Local\MiKTeX
-\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1440.pk> <C:\Users\Mario\AppData\Local\
-MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1200.pk> <C:\Users\Mario\AppData\
-Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1728.pk>
-Output written on documentation.pdf (3 pages, 41254 bytes).
+ 83i,6n,88p,467b,1252s stack positions out of 5000i,500n,10000p,200000b,80000s
+ <C:\Users\Mario\AppData\Local\MiKTeX\fonts/pk/ljfour/
+jknappen/ec/dpi600\tcrm1095.pk> <C:\Users\Mario\AppData\Local\MiKTeX\fonts/pk/l
+jfour/jknappen/ec/dpi600\ecti1095.pk> <C:\Users\Mario\AppData\Local\MiKTeX\font
+s/pk/ljfour/jknappen/ec/dpi600\ecbx1200.pk> <C:\Users\Mario\AppData\Local\MiKTe
+X\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1095.pk> <C:\Users\Mario\AppData\Local
+\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1095.pk> <C:\Users\Mario\AppData
+\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1440.pk> <C:\Users\Mario\A
+ppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1200.pk> <C:\Users\M
+ario\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1728.pk>
+Output written on documentation.pdf (4 pages, 82495 bytes).
 PDF statistics:
- 136 PDF objects out of 1000 (max. 8388607)
+ 260 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

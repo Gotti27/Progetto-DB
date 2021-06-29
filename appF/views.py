@@ -76,6 +76,7 @@ def register():
                 else:
                     insert_cliente(nuova_persona)
                 login_user(nuova_persona)
+                invia_notifica(db.session.query(Notifica).filter(Notifica.IDNotifica == 3).first(), [nuova_persona.CF])
                 return redirect(url_for('profile_view', username=nuova_persona.Email))
         elif request.method == 'POST':
             msg = 'Riempi tutti i campi del form'
@@ -174,6 +175,8 @@ def dashboard_view():
 
 @app.route("/dashboard", methods=['GET', 'POST'])
 def dashboard_view():
+    clienti = db.session.query(Persona).filter(Persona.CF.in_(db.session.query(Cliente.IDCliente))).all()
+    staff = db.session.query(Persona).filter(Persona.CF.in_(db.session.query(Staff.IDStaff))).all()
     if request.method == 'POST' and request.form['form-name'] == 'inserisciCorso':
         start = datetime.strptime(request.form['settimanaInizio'] + '-1', "%Y-W%W-%w")
         reps = int(request.form['ripetizioni'])
@@ -208,7 +211,8 @@ def dashboard_view():
     if request.method == 'POST' and request.form['form-name'] == 'tracciamento':
         return redirect(url_for('report', zero=request.form['da tracciare'], giorni=request.form['giorni']))
 
-    return render_template('adminDashboard.html', sale=get_sale(), istruttori=get_istruttori())
+    return render_template('adminDashboard.html', sale=get_sale(), istruttori=get_istruttori(), clienti=clienti,
+                           staff=staff)
 
 
 @app.route("/report/<zero>/<giorni>", methods=['GET', 'POST'])
@@ -254,6 +258,10 @@ def notifications():
     sender = False
     if current_user.CF in [member.IDStaff for member in db.session.query(Staff).all()]:
         sender = True
+    if request.method == 'POST' and request.form['form-name'] == 'cancellaNotifiche':
+        q = delete(NotificaDestinatario).where(NotificaDestinatario.Destinatario == current_user.CF)
+        db.session.execute(q)
+        db.session.commit()
     notify_ids = [i.IDNotifica for i in db.session.query(NotificaDestinatario).filter(
         NotificaDestinatario.Destinatario == current_user.CF).all()]
     notifies = db.session.query(Notifica).filter(Notifica.IDNotifica.in_(notify_ids)).all()

@@ -36,6 +36,51 @@
 
 \section{Query principali}
 
+\subsection{Contact Tracing}
+L'algoritmo di contact tracing prende in ingresso un istanza di Persona che sappiamo essere positiva (da qui in poi "positivo") e un numero di giorni da analizzare (al più 7 per evitare calcoli troppo pesanti), al termine dell'esecuzione, l'algoritmo ritorna una lista di potenziali positivi. L'algoritmo cerca l'ultima data in cui il positivo è entrato nella struttura, determina allora il range usando il numero di giorni in input.\\
+Trova tutte le volte in cui il positivo è entrato, per ogni ingresso trova tutte le prenotazioni che intersecano quella in esame e salva il cliente e l'eventuale istruttore nel caso la prenotazione sia riferita ad un corso.
+\subsubsection{pseudocodice}
+\begin{lstlisting}[language=Python]
+def contact_tracing(zero, days):
+    potential_infected = [zero.CF]
+    days = int(days)
+    if days > 7:
+        days = 7
+
+    last_zero_appearance_date = ultimo ingresso di positivo nella struttura
+    
+    if last_zero_appearance_date is not None:
+        last_zero_appearance_date = last_zero_appearance_date.Data
+    else:
+        return [] # Se non e' mai entrato non ci saranno contatti da tracciare
+        
+    lower_limit_date = last_zero_appearance_date - timedelta(days=days)
+    # definiamo il range usando il numero di giorni in input
+    
+    last_zero_appearances = tutti gli ingressi di positivo nell'intervallo
+
+    for appearance in last_zero_appearances:
+        prenotazioni = tutte le prenotazioni che intersecano quella in esame
+
+        if appearance.IDCorso is not None:
+            istruttore = istruttore del corso
+            potential_infected.append(istruttore)
+
+        for p in prenotazioni:
+            potential_infected.append(p.IDCliente)
+    return [get_persona_by_cf(cf) for cf in (list(set(potential_infected)))]
+    # Ritorniamo l'istanza delle persone il cui codice fiscale risulta tra
+    # i potenziali positivi, rimuovendo prima i duplicati
+\end{lstlisting}
+\subsubsection{Query di contact tracing}
+\begin{lstlisting}[language=SQL]
+SELECT *
+FROM prenotazioni p
+WHERE p.IDCliente = zero.CF AND p.Data <= TODAY() AND p.Approvata = TRUE
+ORDER BY p.DATA DESC
+LIMIT 1
+\end{lstlisting}
+
 \section{Scelte progettuali}
 
 \end{document}
