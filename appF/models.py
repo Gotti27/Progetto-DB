@@ -309,7 +309,7 @@ def insert_prenotazione(persona, data, ora_inizio, ora_fine, sala, corso=None):
     if orari_giorno is None:
         orari_giorno = db.session.query(OrarioPalestra).filter(OrarioPalestra.GiornoSettimana == day).first()
 
-    if orari_giorno is None or ora_inizio < orari_giorno.Apertura or ora_fine > orari_giorno.Chiusura:
+    if orari_giorno is None or datetime.strptime(str(ora_inizio)[0:-3], '%H:%M').time() < orari_giorno.Apertura or datetime.strptime(str(ora_fine)[0:-3], '%H:%M').time() > orari_giorno.Chiusura:
         return None
 
     if corso == '':
@@ -346,6 +346,19 @@ def insert_prenotazione(persona, data, ora_inizio, ora_fine, sala, corso=None):
     session.add(new_book)
     session.commit()
     return new_book
+
+
+def delete_prenotazione(persona, corso):
+    q = delete(Prenotazione).where(Prenotazione.IDCliente == persona, Prenotazione.IDCorso == corso)
+    session.execute(q)
+    session.commit()
+
+
+def is_iscritto(persona, corso):
+    if persona is not None and db.session.query(Prenotazione).filter(Prenotazione.IDCliente == persona,
+                                                                     Prenotazione.IDCorso == corso).count() > 0:
+        return True
+    return False
 
 
 def contact_tracing(zero, days):

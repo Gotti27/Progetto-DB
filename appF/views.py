@@ -145,7 +145,7 @@ def view_corso(id):
     istruttore = db.session.query(Persona).filter(Persona.CF == corso.IDIstruttore).first()
 
     if request.method == 'POST' and current_user.is_authenticated:
-        if request.form['form-name'] == "iscriviti":
+        if request.form['form-name'] == "subscribe":
             insert_prenotazione(current_user, corso.Data, corso.OraInizio, corso.OraFine, corso.IDSala, corso.IDCorso)
             # TODO: gestire eventuali messaggi per mancata disponibilità ecc..
         elif request.form['form-name'] == "follow":
@@ -153,9 +153,12 @@ def view_corso(id):
             print(str(current_user.get_id()) + "vuole iscriversi")
         elif request.form['form-name'] == "unfollow":
             delete_corso_seguito(persona=current_user.get_id(), corso=corso.Nome)
+        elif request.form['form-name'] == "unsubscribe":
+            delete_prenotazione(persona=current_user.get_id(), corso=corso.IDCorso)
     return render_template('corso.html', corso=corso, istruttore=istruttore,
                            iscritti=numero_iscritti_corso(corso.IDCorso),
-                           seguito=is_seguito(current_user.get_id(), corso.Nome))
+                           is_seguito=is_seguito(current_user.get_id(), corso.Nome),
+                           is_iscritto=is_iscritto(current_user.get_id(), corso.IDCorso) )
 
 
 # TODO: usare in production
