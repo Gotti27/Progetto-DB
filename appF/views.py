@@ -154,7 +154,7 @@ def view_corso(id):
         elif request.form['form-name'] == "unfollow":
             delete_corso_seguito(persona=current_user.get_id(), corso=corso.Nome)
         elif request.form['form-name'] == "unsubscribe":
-            delete_prenotazione(persona=current_user.get_id(), corso=corso.IDCorso)
+            delete_prenotazione_corso(persona=current_user.get_id(), corso=corso.IDCorso)
     return render_template('corso.html', corso=corso, istruttore=istruttore,
                            iscritti=numero_iscritti_corso(corso.IDCorso),
                            is_seguito=is_seguito(current_user.get_id(), corso.Nome),
@@ -291,7 +291,11 @@ def notifications():
 
 @app.route("/prenotazione/<id_prenotazione>", methods=['GET', 'POST'])
 @login_required
-def view_prenotazione(id_prenotazione):
+def prenotazione_view(id_prenotazione):
+    if request.method == 'POST' and request.form['form-name'] == 'delete':
+        delete_prenotazione_by_id(id_prenotazione)
+        return redirect(url_for('profile_view', username=current_user.get_email))
+
     p = get_prenotazione_by_id(id_prenotazione)
     c = None
     if p is None or not current_user.is_authenticated or current_user.get_id() != p['IDCliente']:

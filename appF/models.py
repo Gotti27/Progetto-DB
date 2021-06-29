@@ -358,8 +358,14 @@ def insert_prenotazione(persona, data, ora_inizio, ora_fine, sala, corso=None):
     return new_book
 
 
-def delete_prenotazione(persona, corso):
+def delete_prenotazione_corso(persona, corso):
     q = delete(Prenotazione).where(Prenotazione.IDCliente == persona, Prenotazione.IDCorso == corso)
+    session.execute(q)
+    session.commit()
+
+
+def delete_prenotazione_by_id(id):
+    q = delete(Prenotazione).where(Prenotazione.IDPrenotazione == id)
     session.execute(q)
     session.commit()
 

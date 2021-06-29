@@ -22,9 +22,14 @@
     <h3> Allenamento libero</h3>
     {% endif %}
 
-    <a class="w3-button w3-black w3-margin-bottom" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
-        Cancella prenotazione
-    </a>
+
+    <form action="{{ url_for('prenotazione_view', id_prenotazione=prenotazione.IDPrenotazione) }}" method="post" class="w3-center w3-margin-bottom">
+        <input type="hidden" name="form-name" value="delete">
+        <button class="w3-button w3-black">
+            Cancella prenotazione
+        </button>
+    </form>
+
 </div>
 
 
