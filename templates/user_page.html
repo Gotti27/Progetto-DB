@@ -12,7 +12,7 @@
         <a class="w3-button w3-black w3-margin-top" href="{{url_for('notifications')}}">Notifiche ({{ inbox_number }})</a>
     </div>
     <div align="center" class="w3-container">
-        <h2>Bentornato, {{persona.Nome}} {{persona.Cognome}}!</h2>
+        <h2>Bentornato, {{current_user.Nome}} {{current_user.Cognome}}!</h2>
     </div>
 
     <div style="height: 800px">
@@ -22,7 +22,7 @@
 
     <script>
         $(document).ready( function() {
-            $.ajax("{{ url_for('calendar_view_today', user=persona.CF ) }}").done(function (reply) {
+            $.ajax("{{ url_for('calendar_view_today', user=current_user.CF ) }}").done(function (reply) {
                 $('#calendarContainer').html(reply);
             });
         });
@@ -32,10 +32,10 @@
         <div class="w3-container w3-quarter"><p></p></div>
         <div class="w3-container w3-half w3-light-gray w3-margin-bottom">
             <div class="w3-container w3-light-gray">
-                <h3>Prenota una sessione di allenamento</h3>
+                <h2 class="w3-center">Prenota una sessione di allenamento</h2>
+                <h4 class="w3-center"> {{ msg }} </h4>
                 <form action="{{ url_for('profile_view', username=username) }}" method="post"
                       class="w3-container w3-margin" id="nuovaPrenotazione">
-                    <p>{{msg}}</p>
                     <input type="hidden" name="form-name" value="prenotazione">
                     <input id="inputDate" name="Data" type="date" placeholder="Data" class="w3-input w3-margin-bottom" required>
                     <div class="w3-row">

@@ -78,6 +78,16 @@
         </div>
 
     </div>
+
+    {% if current_user.is_admin() %}
+    <form class="w3-center w3-margin" action="{{ url_for('view_corso', id=corso.IDCorso) }}" method="post" style="height:32px; margin:auto; line-height:100%; margin-left: 32px; border-radius:4px">
+        <input type="hidden" name="form-name" value="delete">
+        <button class="w3-button w3-black">
+            Cancella corso
+        </button>
+    </form>
+    {% endif %}
+
     <hr>
 
 </body>
