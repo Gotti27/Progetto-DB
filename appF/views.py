@@ -113,16 +113,9 @@ def profile_view(username):
                                        sala=request.form['sala'])
 
         if new_book is None:
-            msg = 'Errore fatale, la data scelta non è valida'
-        elif not is_active:
-            # todo: messaggio provvisorio
-            msg = 'Non sei ancora autorizzato ad accedere alla palestra,' \
-                  'la tua prenotazione è registrata ma è in attesa di validazione, ' \
-                  'contatta il gestore per essere abilitato'
-        elif not new_book.Approvata:
-            msg = 'Tutto pieno, riprova più avanti'
+            msg = "Non è stato possibile inserire la tua prenotazione, controlla di non superare le ore o i giorni limite e che non si sovrapponga con un'altra prenotazione"
         else:
-            msg = 'Prenotazione effettuata con successo'
+            msg = "Prenotazione effettuata con successo!"
 
     return render_template('user_page.html', persona=get_persona_by_email(username), username=username, msg=msg,
                            inbox_number=inbox_number, step=get_time_step(), sale=get_sale())
@@ -169,6 +162,9 @@ def view_corso(id):
             delete_corso_seguito(persona=current_user.get_id(), corso=corso.Nome)
         elif request.form['form-name'] == "unsubscribe":
             delete_prenotazione_corso(persona=current_user.get_id(), corso=corso.IDCorso)
+        elif request.form['form-name'] == "delete":
+            delete_corso(corso=corso.IDCorso)
+            return redirect(url_for("dashboard_view"))
     return render_template('corso.html', corso=corso, istruttore=istruttore,
                            iscritti=numero_iscritti_corso(corso.IDCorso),
                            is_seguito=is_seguito(current_user.get_id(), corso.Nome),
@@ -367,10 +363,10 @@ def page_not_found(e):
 
 
 @app.errorhandler(403)
-def page_not_found(e):
+def forbidden(e):
     return render_template('403.html'), 403
 
 
 @app.errorhandler(401)
-def page_not_found(e):
+def unauthorized(e):
     return render_template('401.html'), 401

@@ -218,6 +218,12 @@ def insert_corso(max_persone, min_persone, id_sala, ora_inizio, ora_fine, data, 
     session.commit()
 
 
+def delete_corso(corso):
+    q = delete(Corso).where(Corso.IDCorso == corso)
+    session.execute(q)
+    session.commit()
+
+
 def get_corsi(mese, anno):
     q = db.session.query(Corso).filter(extract('year', Corso.Data) == anno).filter(
         extract('month', Corso.Data) == mese).order_by(Corso.OraInizio).all()
@@ -349,11 +355,12 @@ def insert_prenotazione(persona, data, ora_inizio, ora_fine, sala, corso=None):
         disponibilita_corso = db.session.query(Corso).filter(Corso.IDCorso == corso).first().MaxPersone
         if disponibilita_corso - numero_iscritti_corso(corso) < 1:
             approved = False
+        print("sono qui")
         new_book = Prenotazione(Data=data, OraInizio=ora_inizio, OraFine=ora_fine, IDCliente=persona.CF,
                                 IDCorso=corso, IDSala=sala, Approvata=approved)
     session.add(new_book)
     session.commit()
-    return new_book
+    return new_book is None
 
 
 def delete_prenotazione_corso(persona, corso):
