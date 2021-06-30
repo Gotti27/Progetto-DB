@@ -36,6 +36,9 @@ class Persona(UserMixin, Base):
     def is_active(self):
         return self.Attivo
 
+    def can_book(self):
+        return self.Attivo and get_cliente_by_id(self.CF).PagamentoMese
+
     def get_id(self):
         return self.CF
 
@@ -205,6 +208,10 @@ def insert_cliente(persona):
     session.commit()
 
 
+def get_cliente_by_id(cliente):
+    return db.session.query(Cliente).filter(Cliente.IDCliente == cliente).first()
+
+
 def insert_istruttore(persona):
     to_add = Staff(IDStaff=persona.CF, Ruolo='Istruttore')
     session.add(to_add)
@@ -351,16 +358,15 @@ def insert_prenotazione(persona, data, ora_inizio, ora_fine, sala, corso=None):
                 break
         new_book = Prenotazione(Data=data, OraInizio=ora_inizio, OraFine=ora_fine, IDCliente=persona.CF,
                                 IDCorso=None, IDSala=sala, Approvata=approved)
+
     else:
         disponibilita_corso = db.session.query(Corso).filter(Corso.IDCorso == corso).first().MaxPersone
         if disponibilita_corso - numero_iscritti_corso(corso) < 1:
             approved = False
-        print("sono qui")
         new_book = Prenotazione(Data=data, OraInizio=ora_inizio, OraFine=ora_fine, IDCliente=persona.CF,
                                 IDCorso=corso, IDSala=sala, Approvata=approved)
     session.add(new_book)
     session.commit()
-    return new_book is None
 
 
 def delete_prenotazione_corso(persona, corso):
