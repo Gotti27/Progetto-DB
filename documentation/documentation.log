@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.3) (preloaded format=pdflatex 2021.3.23)  29 JUN 2021 11:18
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.3) (preloaded format=pdflatex 2021.3.23)  30 JUN 2021 10:42
 entering extended mode
 **./documentation.tex
 (documentation.tex
@@ -465,19 +465,19 @@ Overfull \hbox (28.18246pt too wide) in paragraph at lines 72--73
 File: lstlang1.sty 2020/03/24 1.8d listings language file
 )
 [2]
-Overfull \hbox (15.11688pt too wide) in paragraph at lines 79--80
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+Overfull \hbox (8.58409pt too wide) in paragraph at lines 110--111
+[][][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
 [3] (documentation.aux) ) 
 Here is how much of TeX's memory you used:
- 9098 strings out of 479324
- 130763 string characters out of 2856815
- 675009 words of memory out of 3000000
- 26429 multiletter control sequences out of 15000+600000
+ 9102 strings out of 479324
+ 130826 string characters out of 2856815
+ 675056 words of memory out of 3000000
+ 26433 multiletter control sequences out of 15000+600000
  416056 words of font info for 60 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 83i,6n,88p,467b,1252s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 83i,6n,88p,467b,1254s stack positions out of 5000i,500n,10000p,200000b,80000s
  <C:\Users\Mario\AppData\Local\MiKTeX\fonts/pk/ljfour/
 jknappen/ec/dpi600\tcrm1095.pk> <C:\Users\Mario\AppData\Local\MiKTeX\fonts/pk/l
 jfour/jknappen/ec/dpi600\ecti1095.pk> <C:\Users\Mario\AppData\Local\MiKTeX\font
@@ -487,9 +487,9 @@ X\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1095.pk> <C:\Users\Mario\AppData\Local
 \Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1440.pk> <C:\Users\Mario\A
 ppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1200.pk> <C:\Users\M
 ario\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1728.pk>
-Output written on documentation.pdf (4 pages, 82495 bytes).
+Output written on documentation.pdf (4 pages, 83309 bytes).
 PDF statistics:
- 260 PDF objects out of 1000 (max. 8388607)
+ 261 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -73,12 +73,42 @@ def contact_tracing(zero, days):
     # i potenziali positivi, rimuovendo prima i duplicati
 \end{lstlisting}
 \subsubsection{Query di contact tracing}
+Query per trovare l'ultimo ingresso del paziente zero
 \begin{lstlisting}[language=SQL]
 SELECT *
 FROM prenotazioni p
-WHERE p.IDCliente = zero.CF AND p.Data <= TODAY() AND p.Approvata = TRUE
+WHERE p.IDCliente = zero.CF AND p.Data <= CURRENT_DATE AND
+ p.Approvata = TRUE
 ORDER BY p.DATA DESC
 LIMIT 1
+\end{lstlisting}
+
+Query per trovare gli ingressi da analizzare del paziente zero
+\begin{lstlisting}[language=SQL]
+SELECT *
+FROM prenotazioni p
+WHERE p.IDCliente = zero.CF AND p.Approvata = TRUE AND
+	p.Data BETWEEN lower_limit_date AND CURRENT_DATE
+ORDER BY p.DATA DESC
+\end{lstlisting}
+
+Query per trovare gli ingressi da analizzare del paziente zero
+\begin{lstlisting}[language=SQL]
+SELECT *
+FROM prenotazioni p
+WHERE p.IDCliente = zero.CF AND p.Approvata = TRUE AND
+	p.Data BETWEEN lower_limit_date AND CURRENT_DATE
+ORDER BY p.DATA DESC
+\end{lstlisting}
+
+
+Query per trovare gli ingressi che si sovrappongono a quelli del paziente zero
+\begin{lstlisting}[language=SQL]
+SELECT *
+FROM prenotazioni p
+WHERE p.Data  = appearance.Data AND p.IDSala = appearance.IDSala AND
+ (p.OraFine >= appearance.OraInizio OR p.OraFine <= appearance.OraFine) 
+ AND p.Approvata = TRUE
 \end{lstlisting}
 
 \section{Scelte progettuali}

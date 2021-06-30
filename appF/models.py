@@ -400,6 +400,7 @@ def contact_tracing(zero, days):
     lower_limit_date = last_zero_appearance_date - timedelta(days=days)
     last_zero_appearances = db.session.query(Prenotazione) \
         .filter(Prenotazione.IDCliente == zero.CF, Prenotazione.Data >= lower_limit_date,
+                Prenotazione.Data <= datetime.today(), # da testare
                 Prenotazione.Approvata == true()).order_by(Prenotazione.Data.desc()).all()
 
     for appearance in last_zero_appearances:
