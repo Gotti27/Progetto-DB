@@ -78,6 +78,9 @@ class Generali(Base):
     __tablename__ = 'generali'
 
     MinutiScaglioni = Column(INTEGER, primary_key=True)
+    MassimoGiorniSettimana = Column(INTEGER)
+    MassimoOreGiorno = Column(INTEGER)
+    GiorniTracciamento = Column(INTEGER)
 
 
 class Notifica(Base):
@@ -488,4 +491,6 @@ def invia_notifica(notifica, destinatari):
         session.commit()
 
 
+def get_giorni_tracciamento():
+    return db.session.query(Generali).one().GiorniTracciamento
 

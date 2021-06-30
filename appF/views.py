@@ -202,8 +202,6 @@ def dashboard_view():
 
     if request.method == 'POST' and request.form['form-name'] == 'creaSala':
         insert_sala(max_persone=request.form['MaxPersone'], tipo=request.form['tipo'])
-    if request.method == 'POST' and request.form['form-name'] == 'tracciamento':
-        return redirect(url_for('report', zero=request.form['da tracciare'], giorni=request.form['giorni']))
 
     return render_template('adminDashboard.html', sale=get_sale(), istruttori=get_istruttori(), step=get_time_step())
 
@@ -307,6 +305,9 @@ def prenotazione_view(id_prenotazione):
 @auth_admin
 def view_users():
     persone = db.session.query(Persona).filter(Persona.CF.in_(db.session.query(Cliente.IDCliente))).all()
+    if request.method == 'POST' and request.form['form-name'] == 'tracciamento':
+        return redirect(url_for('report', zero=request.form['da tracciare'], giorni=get_giorni_tracciamento()))
+
     if request.method == 'POST' and request.form['form-name'] == 'modifica':
         for p in persone:
             if 'attivazione-' + p.CF in request.form:

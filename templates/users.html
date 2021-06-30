@@ -4,90 +4,29 @@
     <meta charset="UTF-8">
     <title>Users</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <style>
-        .switch {
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
-}
-
-/* Hide default HTML checkbox */
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-/* The slider */
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-input:checked + .slider {
-  background-color: #2196F3;
-}
-
-input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
-}
-
-input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
-}
-
-/* Rounded sliders */
-.slider.round {
-  border-radius: 34px;
-}
-
-.slider.round:before {
-  border-radius: 50%;
-}
-    </style>
+    <link rel="stylesheet" href="/static/switch.css">
 </head>
-<body class="w3-light-gray">
+<body>
 <form action="{{ url_for('view_users') }}" method="post" id="modifiche">
-<input type="hidden" name="form-name" value="modifica">
-<div class="w3-row w3-light-gray w3-margin-left">
-    <a class="w3-button w3-black w3-margin-top" href="{{url_for('home')}}">Home</a>
-    <a class="w3-button w3-black w3-margin-top" href="{{url_for('dashboard_view')}}">Dashboard</a>
-    <input type="submit" class="w3-button w3-black w3-margin-top" value="Salva">
-    Probabilmente la lista staff sarà spostata sotto
-</div>
-<div class="w3-row w3-light-gray">
-        <div class="w3-container w3-half w3-light-gray">
-            <h2>Lista clienti</h2>
+    <input type="hidden" name="form-name" value="modifica">
+    <div class="w3-row w3-light-gray w3-margin-left">
+        <a class="w3-button w3-black w3-margin-top" href="{{url_for('home')}}">Home</a>
+        <a class="w3-button w3-black w3-margin-top" href="{{url_for('dashboard_view')}}">Dashboard</a>
+        <input type="submit" class="w3-button w3-black w3-margin-top" value="Salva">
+    </div>
+
+    <div class="w3-row">
+        <div class="w3-container w3-margin w3-light-gray">
+            <h1>Lista clienti</h1>
             <table class="w3-table">
-                <tr>
+                <tr class="w3-gray">
                     <th>Nome</th>
                     <th>Cognome</th>
                     <th>Codice fiscale</th>
                     <th>Email</th>
                     <th>Attivo</th>
                     <th>Pagante</th>
+                    <th></th>
                 </tr>
                 {% for c in clienti %}
                 <tr>
@@ -116,14 +55,25 @@ input:checked + .slider:before {
                             <span class="slider round"></span>
                         </label>
                     </th>
+
+                    <th>
+                        <form action="{{ url_for('view_users') }}" method="post" class="w3-container" id="contact tracing">
+                            <input hidden name="form-name" value="tracciamento">
+                            <input hidden name="da tracciare" value="{{ c.IDCliente }}">
+                            <input type="submit" class="w3-button w3-black" value="Traccia">
+                        </form>
+                    </th>
                 </tr>
                 {% endfor %}
             </table>
         </div>
-        <div class="w3-container w3-half w3-light-gray">
-            <h2>Lista staff</h2>
+
+        <hr>
+
+        <div class="w3-container w3-light-gray w3-margin">
+            <h1>Lista staff</h1>
             <table class="w3-table">
-                <tr>
+                <tr class="w3-gray">
                     <th>Nome</th>
                     <th>Cognome</th>
                     <th>Codice fiscale</th>
