@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.3) (preloaded format=pdflatex 2021.3.23)  30 JUN 2021 10:42
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.3) (preloaded format=pdflatex 2021.3.23)  30 JUN 2021 15:58
 entering extended mode
 **./documentation.tex
 (documentation.tex
@@ -315,32 +315,47 @@ Package: multirow 2021/03/15 v2.8 Span multiple rows of a table
 Package: picture 2020-04-22 v1.6 Dimens for picture macros (HO)
 Package picture Info: Calculation method: etex.
 )
-\c@theorem=\count286
+(D:\Users\Mario\AppData\Local\Programs\MiKTeX\tex/latex/lipsum\lipsum.sty
+(D:\Users\Mario\AppData\Local\Programs\MiKTeX\tex/latex/l3kernel\expl3.sty
+Package: expl3 2021-02-18 L3 programming layer (loader) 
 
 (D:\Users\Mario\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdf
 tex.def
 File: l3backend-pdftex.def 2021-03-02 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count287
+\l__color_backend_stack_int=\count286
 \l__pdf_internal_box=\box52
-) (documentation.aux)
+))
+(D:\Users\Mario\AppData\Local\Programs\MiKTeX\tex/latex/l3packages/xparse\xpars
+e.sty
+(D:\Users\Mario\AppData\Local\Programs\MiKTeX\tex/latex/l3packages/xparse\xpars
+e-2020-10-01.sty
+(D:\Users\Mario\AppData\Local\Programs\MiKTeX\tex/latex/l3packages/xparse\xpars
+e-generic.tex)))
+Package: lipsum 2021-03-03 v2.3 150 paragraphs of Lorem Ipsum dummy text
+
+(D:\Users\Mario\AppData\Local\Programs\MiKTeX\tex/latex/lipsum\lipsum.ltd.tex
+File: lipsum.ltd.tex 2021-03-03 v2.3 The Lorem ipsum dummy text
+))
+\c@theorem=\count287
+(documentation.aux)
 \openout1 = `documentation.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 29.
-LaTeX Font Info:    ... okay on input line 29.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 29.
-LaTeX Font Info:    ... okay on input line 29.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 29.
-LaTeX Font Info:    ... okay on input line 29.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 29.
-LaTeX Font Info:    ... okay on input line 29.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 29.
-LaTeX Font Info:    ... okay on input line 29.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 29.
-LaTeX Font Info:    ... okay on input line 29.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 29.
-LaTeX Font Info:    ... okay on input line 29.
-LaTeX Info: Redefining \it@ocap on input line 29.
-LaTeX Info: Redefining \it@ccap on input line 29.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Info: Redefining \it@ocap on input line 32.
+LaTeX Info: Redefining \it@ccap on input line 32.
 
 (D:\Users\Mario\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mk
 ii
@@ -405,12 +420,12 @@ File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 30.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 33.
 
 (D:\Users\Mario\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 30.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 33.
 
 
 (D:\Users\Mario\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
@@ -424,72 +439,87 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 \openout3 = `documentation.toc'.
 
  [1]
+LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 3
+9.
+
+(D:\Users\Mario\AppData\Local\Programs\MiKTeX\tex/latex/base\t1cmtt.fd
+File: t1cmtt.fd 2019/12/16 v2.5j Standard LaTeX font definitions
+)
+<./images//schema.png, id=13, 866.23625pt x 855.195pt>
+File: ./images//schema.png Graphic file (type png)
+<use ./images//schema.png>
+Package pdftex.def Info: ./images//schema.png  used on input line 45.
+(pdftex.def)             Requested size: 455.24408pt x 449.44083pt.
+
+[2 <./images//schema.png (PNG copy)>]
 (D:\Users\Mario\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstlang1.sty
 File: lstlang1.sty 2020/03/24 1.8d listings language file
 )
-Overfull \hbox (34.71526pt too wide) in paragraph at lines 50--52
+Overfull \hbox (34.71526pt too wide) in paragraph at lines 60--62
 [][][][][][][][][][][][][][][][][][] 
  []
 
 
-Overfull \hbox (54.31363pt too wide) in paragraph at lines 55--57
+Overfull \hbox (54.31363pt too wide) in paragraph at lines 65--67
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
 
-Overfull \hbox (8.58409pt too wide) in paragraph at lines 57--58
+Overfull \hbox (8.58409pt too wide) in paragraph at lines 67--68
 [][][][][][][][][][][][][][][][][] 
  []
 
 
-Overfull \hbox (28.18246pt too wide) in paragraph at lines 60--62
+Overfull \hbox (28.18246pt too wide) in paragraph at lines 70--72
 [][][][][][][][][][][][][][][][][][][][] 
  []
 
 
-Overfull \hbox (41.24805pt too wide) in paragraph at lines 63--65
+Overfull \hbox (41.24805pt too wide) in paragraph at lines 73--75
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
 
-Overfull \hbox (41.24805pt too wide) in paragraph at lines 71--72
+Overfull \hbox (41.24805pt too wide) in paragraph at lines 81--82
 [][][][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
 
-Overfull \hbox (28.18246pt too wide) in paragraph at lines 72--73
+Overfull \hbox (28.18246pt too wide) in paragraph at lines 82--83
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
 (D:\Users\Mario\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstlang1.sty
 File: lstlang1.sty 2020/03/24 1.8d listings language file
 )
-[2]
-Overfull \hbox (8.58409pt too wide) in paragraph at lines 110--111
+[3]
+Overfull \hbox (8.58409pt too wide) in paragraph at lines 120--121
 [][][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
-[3] (documentation.aux) ) 
+[4] (documentation.aux) ) 
 Here is how much of TeX's memory you used:
- 9102 strings out of 479324
- 130826 string characters out of 2856815
- 675056 words of memory out of 3000000
- 26433 multiletter control sequences out of 15000+600000
- 416056 words of font info for 60 fonts, out of 8000000 for 9000
+ 9350 strings out of 479324
+ 137895 string characters out of 2856815
+ 771800 words of memory out of 3000000
+ 26657 multiletter control sequences out of 15000+600000
+ 416370 words of font info for 61 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 83i,6n,88p,467b,1254s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 83i,6n,88p,467b,1799s stack positions out of 5000i,500n,10000p,200000b,80000s
  <C:\Users\Mario\AppData\Local\MiKTeX\fonts/pk/ljfour/
 jknappen/ec/dpi600\tcrm1095.pk> <C:\Users\Mario\AppData\Local\MiKTeX\fonts/pk/l
 jfour/jknappen/ec/dpi600\ecti1095.pk> <C:\Users\Mario\AppData\Local\MiKTeX\font
-s/pk/ljfour/jknappen/ec/dpi600\ecbx1200.pk> <C:\Users\Mario\AppData\Local\MiKTe
-X\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1095.pk> <C:\Users\Mario\AppData\Local
-\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1095.pk> <C:\Users\Mario\AppData
-\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1440.pk> <C:\Users\Mario\A
-ppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1200.pk> <C:\Users\M
-ario\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1728.pk>
-Output written on documentation.pdf (4 pages, 83309 bytes).
+s/pk/ljfour/jknappen/ec/dpi600\ectt1095.pk> <C:\Users\Mario\AppData\Local\MiKTe
+X\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1200.pk> <C:\Users\Mario\AppData\Local
+\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1095.pk> <C:\Users\Mario\AppData
+\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1095.pk> <C:\Users\Mario\A
+ppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1440.pk> <C:\Users\M
+ario\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1200.pk> <C:\U
+sers\Mario\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1728.pk>
+
+Output written on documentation.pdf (5 pages, 150934 bytes).
 PDF statistics:
- 261 PDF objects out of 1000 (max. 8388607)
+ 303 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 6 words of extra memory for PDF output out of 10000 (max. 10000000)
 

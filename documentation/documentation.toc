@@ -1,9 +1,10 @@
 \babel@toc {italian}{}
 \babel@toc {italian}{}
 \contentsline {section}{\numberline {1}Introduzione}{2}{}%
+\contentsline {subsection}{\numberline {1.1}Credenziali di accesso alla rete Hamachi}{2}{}%
 \contentsline {section}{\numberline {2}Database}{2}{}%
-\contentsline {section}{\numberline {3}Query principali}{2}{}%
-\contentsline {subsection}{\numberline {3.1}Contact Tracing}{2}{}%
-\contentsline {subsubsection}{\numberline {3.1.1}pseudocodice}{2}{}%
+\contentsline {section}{\numberline {3}Query principali}{3}{}%
+\contentsline {subsection}{\numberline {3.1}Contact Tracing}{3}{}%
+\contentsline {subsubsection}{\numberline {3.1.1}pseudocodice}{3}{}%
 \contentsline {subsubsection}{\numberline {3.1.2}Query di contact tracing}{3}{}%
-\contentsline {section}{\numberline {4}Scelte progettuali}{3}{}%
+\contentsline {section}{\numberline {4}Scelte progettuali}{4}{}%
