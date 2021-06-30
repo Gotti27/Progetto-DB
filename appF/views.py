@@ -107,9 +107,9 @@ def profile_view(username):
     if request.method == 'POST' and request.form['form-name'] == 'prenotazione':
         is_active = db.session.query(Persona.Attivo).filter(Persona.Email == current_user.get_email).first()
         new_book = insert_prenotazione(persona=get_persona_by_email(username), data=request.form['Data'],
-                                       ora_inizio=request.form['oraInizio'],
-                                       ora_fine=request.form['oraFine'],
-                                       sala=request.form['IDSala'], corso=request.form['IDCorso'])
+                                       ora_inizio=(request.form['oraOraInizio'] + ":" + request.form['minutiOraInizio']),
+                                       ora_fine=(request.form['oraOraFine'] + ":" + request.form['minutiOraFine']),
+                                       sala=request.form['sala'])
 
         if new_book is None:
             msg = 'Errore fatale, la data scelta non è valida'
@@ -119,12 +119,12 @@ def profile_view(username):
                   'la tua prenotazione è registrata ma è in attesa di validazione, ' \
                   'contatta il gestore per essere abilitato'
         elif not new_book.Approvata:
-            msg = 'Tutto pieno, sei stato messo in coda'
+            msg = 'Tutto pieno, riprova più avanti'
         else:
             msg = 'Prenotazione effettuata con successo'
 
     return render_template('user_page.html', persona=get_persona_by_email(username), username=username, msg=msg,
-                           inbox_number=inbox_number)
+                           inbox_number=inbox_number, step=get_time_step(), sale=get_sale())
 
 
 @app.route('/calendar')
@@ -153,6 +153,8 @@ def lista_corsi():
 @app.route("/corso/<id>", methods=['GET', 'POST'])
 def view_corso(id):
     corso = db.session.query(Corso).filter(Corso.IDCorso == id).first()
+    if corso is None:
+        abort(404)
     istruttore = db.session.query(Persona).filter(Persona.CF == corso.IDIstruttore).first()
 
     if request.method == 'POST' and current_user.is_authenticated:
@@ -186,8 +188,8 @@ def dashboard_view():
                 if v:
                     new_date = start + timedelta(days=j)
                     insert_corso(nome=request.form['nome'], min_persone=request.form['minPersone'],
-                                 max_persone=request.form['maxPersone'], ora_inizio=(request.form['minutiOraInizio'] + ":" + request.form['minutiOraInizio']),
-                                 ora_fine=(request.form['minutiOraFine'] + ":" + request.form['minutiOraFine']), id_sala=request.form['sala'].split(',')[0],
+                                 max_persone=request.form['maxPersone'], ora_inizio=(request.form['oraOraInizio'] + ":" + request.form['minutiOraInizio']),
+                                 ora_fine=(request.form['oraOraFine'] + ":" + request.form['minutiOraFine']), id_sala=request.form['sala'].split(',')[0],
                                  id_istruttore=request.form['istruttore'], data=new_date,
                                  descrizione=request.form['descrizione'])
             start += timedelta(days=7)
@@ -351,6 +353,11 @@ def view_users():
         }
         staff.append(s)
     return render_template('users.html', clienti=clienti, staff=staff)
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
 
 
 @app.errorhandler(403)

@@ -29,20 +29,65 @@
     </script>
 
     <div class="w3-row">
-        <div class="w3-container w3-quarter w3-light-gray">
+        <div class="w3-container w3-quarter"><p></p></div>
+        <div class="w3-container w3-half w3-light-gray w3-margin-bottom">
             <div class="w3-container w3-light-gray">
-                <h3>Form prenotazione da eliminare</h3>
+                <h3>Prenota una sessione di allenamento</h3>
                 <form action="{{ url_for('profile_view', username=username) }}" method="post"
                       class="w3-container w3-margin" id="nuovaPrenotazione">
                     <p>{{msg}}</p>
                     <input type="hidden" name="form-name" value="prenotazione">
                     <input id="inputDate" name="Data" type="date" placeholder="Data" class="w3-input w3-margin-bottom" required>
-                    <input type="time" id="oraInizio" name="oraInizio" min="06:00" max="23:00" placeholder="ora inizio" class="w3-input w3-margin-bottom" required>
-                    <input type="time" id="oraFine" name="oraFine" min="06:00" max="23:00" placeholder="ora fine" class="w3-input w3-margin-bottom" required>
-                    <input id="IDCorso" name="IDCorso" type="text" placeholder="idcorso" class="w3-input w3-margin-bottom" >
-                    <input id="IDSala" name="IDSala" type="text" placeholder="idsala" class="w3-input w3-margin-bottom" required>
+                    <div class="w3-row">
+                        <div class="w3-half">
+                            <label>Ora di inizio</label>
+                        </div>
+                        <div class="w3-half">
+                            <div class="w3-col w3-center l2"> <p></p> </div>
+                            <label>Ora di fine</label>
+                        </div>
+                    </div>
+
+                    <div class="w3-row">
+                        <select class="w3-select w3-col l2" id="OraOraInizio" name="oraOraInizio">
+                            <option value="" disabled selected hidden> Ora </option>
+                            {% for i in range(6, 24) %}
+                            <option value="{{i}}">{{ i }}</option>
+                            {% endfor %}
+                        </select>
+                        <h4 class="w3-center w3-col w3-margin-bottom l1"> : </h4>
+                        <select class="w3-select w3-col l2" id="MinutiOraInizio" name="minutiOraInizio">
+                            <option value="" disabled selected hidden> Minuti </option>
+                            {% for i in range(60//step) %}
+                            <option value="{{i * step}}">{{ i * step }}</option>
+                            {% endfor %}
+                        </select>
+
+                        <div class="w3-col w3-center l2"> <p></p> </div>
+
+                        <select class="w3-select w3-col l2" id="OraOraFine" name="oraOraFine">
+                            <option value="" disabled selected hidden> Ora </option>
+                            {% for i in range(6, 24) %}
+                            <option value="{{i}}">{{ i }}</option>
+                            {% endfor %}
+                        </select>
+                        <h4 class=" w3-center w3-col l1"> : </h4>
+                        <select class="w3-select w3-col l2" id="MinutiOraFine" name="minutiOraFine">
+                            <option value="" disabled selected hidden> Minuti </option>
+                            {% for i in range(60//step) %}
+                            <option value="{{i * step}}">{{ i * step }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <label for="sala">Sala</label><select class="w3-select w3-margin-bottom" id="sala" name="sala">
+                    <option value="" disabled selected hidden>Seleziona sala</option>
+                    {%for i in sale%}
+                    <option value="{{i.IDSala}}">{{ i.IDSala }} - {{i.Tipo}}</option>
+                    {%endfor%}
+                </select>
                     <input class="w3-button w3-black" type="submit" value="Prenota">
                 </form>
+
             </div>
 
         </div>

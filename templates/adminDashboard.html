@@ -74,7 +74,7 @@
                 <select class="w3-select w3-col l2" id="MinutiOraInizio" name="minutiOraInizio">
                     <option value="" disabled selected hidden> Minuti </option>
                     {% for i in range(60//step) %}
-                    <option value="{{i}}">{{ i * step }}</option>
+                    <option value="{{i * step }}">{{ i * step }}</option>
                     {% endfor %}
                 </select>
 
@@ -82,16 +82,16 @@
 
                 <select class="w3-select w3-col l2" id="OraOraFine" name="oraOraFine">
                     <option value="" disabled selected hidden> Ora </option>
-                    {%for i in range(6, 24)%}
+                    {% for i in range(6, 24) %}
                     <option value="{{i}}">{{ i }}</option>
-                    {%endfor%}
+                    {% endfor %}
                 </select>
                 <h4 class=" w3-center w3-col l1"> : </h4>
                 <select class="w3-select w3-col l2" id="MinutiOraFine" name="minutiOraFine">
                     <option value="" disabled selected hidden> Minuti </option>
-                    {%for i in range(60//step)%}
-                    <option value="{{i}}">{{ i * step }}</option>
-                    {%endfor%}
+                    {% for i in range(60//step) %}
+                    <option value="{{i * step }}">{{ i * step }}</option>
+                    {% endfor %}
                 </select>
             </div>
 
@@ -107,12 +107,6 @@
             <input type="submit" value="Aggiungi" class="w3-button w3-black">
         </form>
     </div>
-
-    <!--
-    <div class="w3-container w3-third w3-pink">
-        HIII
-    </div>
-    -->
 
     <!-- TODO: eliminare e spostare nella pagina dell'utente vista dall'admin -->
     <div class="w3-container w3-third w3-light-gray">

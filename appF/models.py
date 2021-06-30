@@ -312,6 +312,7 @@ def insert_prenotazione(persona, data, ora_inizio, ora_fine, sala, corso=None):
     time_step = get_time_step()
     # TODO: segnalo mie bestemmie da elminare
     if int(str(ora_inizio).split(':')[1]) % time_step != 0 or int(str(ora_fine).split(':')[1]) % time_step != 0:
+        print(ora_inizio, ora_fine)
         print("Porcodio ci stanno hackerando")
         return None
 
@@ -322,7 +323,7 @@ def insert_prenotazione(persona, data, ora_inizio, ora_fine, sala, corso=None):
     if orari_giorno is None or datetime.strptime(str(ora_inizio)[0:5], '%H:%M').time() < orari_giorno.Apertura or datetime.strptime(str(ora_fine)[0:5], '%H:%M').time() > orari_giorno.Chiusura:
         return None
 
-    if corso == '':
+    if corso is None:
         max_number = db.session.query(Sala).filter(Sala.IDSala == sala).first().MaxPersone
         available = db.session.query(Prenotazione).filter(Prenotazione.Data == data, Prenotazione.OraFine > ora_inizio,
                                                           Prenotazione.OraInizio < ora_fine,
