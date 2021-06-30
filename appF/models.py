@@ -310,10 +310,7 @@ def insert_prenotazione(persona, data, ora_inizio, ora_fine, sala, corso=None):
     approved = True
     day = int(datetime.date(datetime.strptime(str(data), '%Y-%m-%d')).weekday())
     time_step = get_time_step()
-    # TODO: segnalo mie bestemmie da elminare
     if int(str(ora_inizio).split(':')[1]) % time_step != 0 or int(str(ora_fine).split(':')[1]) % time_step != 0:
-        print(ora_inizio, ora_fine)
-        print("Porcodio ci stanno hackerando")
         return None
 
     orari_giorno = db.session.query(GiornoFestivo).filter(GiornoFestivo.Giorno == data).first()
