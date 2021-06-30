@@ -319,7 +319,7 @@ def insert_prenotazione(persona, data, ora_inizio, ora_fine, sala, corso=None):
     if orari_giorno is None:
         orari_giorno = db.session.query(OrarioPalestra).filter(OrarioPalestra.GiornoSettimana == day).first()
 
-    if orari_giorno is None or datetime.strptime(str(ora_inizio)[0:-3], '%H:%M').time() < orari_giorno.Apertura or datetime.strptime(str(ora_fine)[0:-3], '%H:%M').time() > orari_giorno.Chiusura:
+    if orari_giorno is None or datetime.strptime(str(ora_inizio)[0:5], '%H:%M').time() < orari_giorno.Apertura or datetime.strptime(str(ora_fine)[0:5], '%H:%M').time() > orari_giorno.Chiusura:
         return None
 
     if corso == '':
@@ -475,3 +475,6 @@ def invia_notifica(notifica, destinatari):
                                       Timestamp=datetime.now(), Letto=False)
         session.add(to_add)
         session.commit()
+
+
+

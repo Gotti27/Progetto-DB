@@ -52,16 +52,57 @@
                 <div class="w3-margin-right w3-col s1 m1 l1"><label for="sab">sab</label><input id="sab" name="sab" type="checkbox" class="w3-check"></div>
                 <div class="w3-margin-right w3-col s1 m1 l1"><label for="dom">dom</label><input id="dom" name="dom" type="checkbox" class="w3-check"></div>
             </div>
-            <div class="w3-row-padding w3-stretch w3-margin-bottom">
-                <div class="w3-half"><label for="oraInizio">Ora di inizio</label><input id="oraInizio" name="oraInizio" type="time" placeholder="Orario di inizio" class="w3-input w3-margin-right" /></div>
-                <div class="w3-half"><label for="oraFine">Ora di fine</label><input id="oraFine" name="oraFine" type="time" placeholder="Orario di fine" class="w3-input w3 s3" /></div>
+
+            <div class="w3-row">
+                <div class="w3-half">
+                    <label>Ora di inizio</label>
+                </div>
+                <div class="w3-half">
+                    <div class="w3-col w3-center l2"> <p></p> </div>
+                    <label>Ora di fine</label>
+                </div>
             </div>
-            <label for="istruttore">Istruttore</label><select class="w3-select w3-margin-bottom" id="istruttore" name="istruttore">
+
+            <div class="w3-row">
+                <select class="w3-select w3-col l2" id="OraOraInizio" name="oraOraInizio">
+                    <option value="" disabled selected hidden> Ora </option>
+                    {% for i in range(6, 24) %}
+                    <option value="{{i}}">{{ i }}</option>
+                    {% endfor %}
+                </select>
+                <h4 class="w3-center w3-col w3-margin-bottom l1"> : </h4>
+                <select class="w3-select w3-col l2" id="MinutiOraInizio" name="minutiOraInizio">
+                    <option value="" disabled selected hidden> Minuti </option>
+                    {% for i in range(60//step) %}
+                    <option value="{{i}}">{{ i * step }}</option>
+                    {% endfor %}
+                </select>
+
+                <div class="w3-col w3-center l2"> <p></p> </div>
+
+                <select class="w3-select w3-col l2" id="OraOraFine" name="oraOraFine">
+                    <option value="" disabled selected hidden> Ora </option>
+                    {%for i in range(6, 24)%}
+                    <option value="{{i}}">{{ i }}</option>
+                    {%endfor%}
+                </select>
+                <h4 class=" w3-center w3-col l1"> : </h4>
+                <select class="w3-select w3-col l2" id="MinutiOraFine" name="minutiOraFine">
+                    <option value="" disabled selected hidden> Minuti </option>
+                    {%for i in range(60//step)%}
+                    <option value="{{i}}">{{ i * step }}</option>
+                    {%endfor%}
+                </select>
+            </div>
+
+            <label for="istruttore">Istruttore</label>
+            <select class="w3-select w3-margin-bottom" id="istruttore" name="istruttore">
                 <option value="" disabled selected hidden> Seleziona istruttore </option>
                 {%for i in istruttori%}
                 <option value="{{i.IDStaff}}">{{ i.Nome }} {{ i.Cognome }}</option>
                 {%endfor%}
             </select>
+
             <label for="ripetizioni">Numero di ripetizioni</label><input id="ripetizioni" name="ripetizioni" type="number" placeholder="Numero ripetizioni" class="w3-input w3-margin-bottom" min="1" value="1"/>
             <input type="submit" value="Aggiungi" class="w3-button w3-black">
         </form>
@@ -80,9 +121,9 @@
     </div>
 
     <div class="w3-container w3-third w3-light-gray">
-        <h2>
-            <a href="{{url_for('register')}}">Registra un istruttore</a>
-        </h2>
+        <h3>
+            <a class="w3-button w3-black" href="{{url_for('register')}}">Registra un istruttore</a>
+        </h3>
         <h2>Aggiungi una sala</h2>
         <form action="{{ url_for('dashboard_view') }}" method="post" class="w3-container w3-margin" id="creaSala">
             <input type="hidden" name="form-name" value="creaSala">

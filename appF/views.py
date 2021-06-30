@@ -107,8 +107,8 @@ def profile_view(username):
     if request.method == 'POST' and request.form['form-name'] == 'prenotazione':
         is_active = db.session.query(Persona.Attivo).filter(Persona.Email == current_user.get_email).first()
         new_book = insert_prenotazione(persona=get_persona_by_email(username), data=request.form['Data'],
-                                       ora_inizio=request.form['oraInizio'] + ':00',
-                                       ora_fine=request.form['oraFine'] + ':00',
+                                       ora_inizio=request.form['oraInizio'],
+                                       ora_fine=request.form['oraFine'],
                                        sala=request.form['IDSala'], corso=request.form['IDCorso'])
 
         if new_book is None:
@@ -136,9 +136,8 @@ def calendar_view_today():
 @app.route('/calendar/<int:anno>/<int:mese>', methods=['GET', 'POST'])
 def calendar_view(anno, mese):
     user = request.args.get('user')
-    if user is None:
+    if current_user.is_admin():
         corsi = get_corsi(mese, anno)
-        for c in corsi: print(c)
     else:
         corsi = get_prenotazioni_persona(user, mese, anno)
         corsi += (get_corsi_seguiti(user))
@@ -187,8 +186,8 @@ def dashboard_view():
                 if v:
                     new_date = start + timedelta(days=j)
                     insert_corso(nome=request.form['nome'], min_persone=request.form['minPersone'],
-                                 max_persone=request.form['maxPersone'], ora_inizio=request.form['oraInizio'],
-                                 ora_fine=request.form['oraFine'], id_sala=request.form['sala'].split(',')[0],
+                                 max_persone=request.form['maxPersone'], ora_inizio=(request.form['minutiOraInizio'] + ":" + request.form['minutiOraInizio']),
+                                 ora_fine=(request.form['minutiOraFine'] + ":" + request.form['minutiOraFine']), id_sala=request.form['sala'].split(',')[0],
                                  id_istruttore=request.form['istruttore'], data=new_date,
                                  descrizione=request.form['descrizione'])
             start += timedelta(days=7)
@@ -211,7 +210,7 @@ def dashboard_view():
     if request.method == 'POST' and request.form['form-name'] == 'tracciamento':
         return redirect(url_for('report', zero=request.form['da tracciare'], giorni=request.form['giorni']))
 
-    return render_template('adminDashboard.html', sale=get_sale(), istruttori=get_istruttori())
+    return render_template('adminDashboard.html', sale=get_sale(), istruttori=get_istruttori(), step=get_time_step())
 
 
 @app.route("/report/<zero>/<giorni>", methods=['GET', 'POST'])

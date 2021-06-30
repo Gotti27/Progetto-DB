@@ -31,10 +31,10 @@
             <div class="w3-dropdown-content w3-bar-block w3-card-4" style="right:0">
                 <a href="{{url_for('profile_view', username=current_user.Email)}}" class="w3-bar-item w3-button">Profilo</a>
                 <a href="{{url_for('notifications')}}" class="w3-bar-item w3-button">Notifiche</a>
-                <a href="{{url_for('logout')}}" class="w3-bar-item w3-button">Logout</a>
-                {% if current_user.is_admin %}
+                {% if current_user.is_admin() %}
                 <a href="{{url_for('dashboard_view')}}" class="w3-bar-item w3-button">Dashboard</a>
                 {% endif %}
+                <a href="{{url_for('logout')}}" class="w3-bar-item w3-button">Logout</a>
             </div>
             {% endif %}
         </div>
@@ -42,9 +42,6 @@
     <div class="w3-container" align="center">
         <h1 class="w3-text-white">Nome Palestra</h1>
     </div>
-    <div class="w3-container", align="center">
-         <!-- TODO: DA ELIMINARE IN PRODUCTION -->
-         <a href="{{url_for('dashboard_view')}}" class="w3-text-white">clicca qui per vedere la dashboard dell'admin</a></p>
-    </div>
+
 </body>
 </html>
