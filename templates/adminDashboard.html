@@ -76,26 +76,7 @@
     <!-- TODO: eliminare e spostare nella pagina dell'utente vista dall'admin -->
     <div class="w3-container w3-third w3-light-gray">
         <h2><a href="{{url_for('view_users')}}">Visualizza utenti</a></h2>
-        <h2>Opzioni su persona</h2>
-        <form action="{{ url_for('dashboard_view') }}" method="post" class="w3-container w3-margin" id="modificaCliente">
-            <input type="hidden" name="form-name" value="opzioniPersona">
-            <input name="codiceFiscale" type="text" placeholder="codice fiscale" class="w3-input" required/><br>
-            <input type="radio" name="attivazione" id="attiva" value="attiva" required>
-            <label for="attiva">attiva</label>
-            <input type="radio" name="attivazione" id="disattiva" value="disattiva" required>
-            <label for="disattiva">disattiva</label><br><br>
-            <input type="submit" class="w3-button w3-black" value="Conferma"><br>
-        </form>
-        <h2>Opzioni su cliente</h2>
-        <form action="{{ url_for('dashboard_view') }}" method="post" class="w3-container w3-margin" id="modificaStaff">
-            <input type="hidden" name="form-name" value="opzioniClienti">
-            <input name="codiceFiscale" type="text" placeholder="codice fiscale" class="w3-input" /><br>
-            <input type="radio" name="pagante" id="pagante" value="pagante">
-            <label for="pagante">pagante</label>
-            <input type="radio" name="pagante" id="non pagante" value="non pagante">
-            <label for="non pagante">non pagante</label><br><br>
-            <input type="submit" class="w3-button w3-black" value="Conferma"><br>
-        </form>
+        Qua mettiamo un form per settare le info generali
     </div>
 
     <div class="w3-container w3-third w3-light-gray">

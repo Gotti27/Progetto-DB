@@ -74,7 +74,8 @@ input:checked + .slider:before {
 <div class="w3-row w3-light-gray w3-margin-left">
     <a class="w3-button w3-black w3-margin-top" href="{{url_for('home')}}">Home</a>
     <a class="w3-button w3-black w3-margin-top" href="{{url_for('dashboard_view')}}">Dashboard</a>
-    <input type="submit" class="w3-button w3-black w3-margin-top" value="Salva"><br>
+    <input type="submit" class="w3-button w3-black w3-margin-top" value="Salva">
+    Probabilmente la lista staff sarà spostata sotto
 </div>
 <div class="w3-row w3-light-gray">
         <div class="w3-container w3-half w3-light-gray">
@@ -95,44 +96,25 @@ input:checked + .slider:before {
                     <th>{{c.CF}}</th>
                     <th>{{c.Email}}</th>
                     <th>
-                        <!--
-                        <input type="hidden" name="form-name" value="modifica">
-                        <input type="hidden" name="cliente" value={{c.CF}}>
-
+                        <label class="switch">
                         {% if c.Attivo %}
-                        <label class="switch">
                             <input type="checkbox" checked name="attivazione-{{c.CF}}">
-                            <span class="slider round"></span>
-                        </label>
                         {% else %}
-                        <label class="switch">
                             <input type="checkbox" name="attivazione-{{c.CF}}">
+                        {% endif %}
                             <span class="slider round"></span>
                         </label>
-                        {% endif %}
-                        -->
 
-                        <label class="switch">
-                        {% if c.Attivo %}
-                            <input type="checkbox" checked name="attivazione-{{c.CF}}">
-                        {% else %}
-                            <input type="checkbox" name="disattivazione-{{c.CF}}">
-                        {% endif %}
-                            <span class="slider round"></span>
-                        </label>
                     </th>
                     <th>
+                        <label class="switch">
                         {% if c.Pagante %}
-                        <label class="switch">
                             <input type="checkbox" checked name=pagamento-{{c.CF}}>
-                            <span class="slider round"></span>
-                        </label>
                         {% else %}
-                        <label class="switch">
                             <input type="checkbox" name=pagamento-{{c.CF}}>
+                        {% endif %}
                             <span class="slider round"></span>
                         </label>
-                        {% endif %}
                     </th>
                 </tr>
                 {% endfor %}
@@ -159,12 +141,12 @@ input:checked + .slider:before {
                     <th>
                         {% if s.Attivo %}
                         <label class="switch">
-                            <input type="checkbox" checked name={{s.CF}}>
+                            <input type="checkbox" checked name="attivazione-{{s.CF}}">
                             <span class="slider round"></span>
                         </label>
                         {% else %}
                         <label class="switch">
-                            <input type="checkbox" name={{s.CF}}>
+                            <input type="checkbox" name="attivazione-{{s.CF}}">
                             <span class="slider round"></span>
                         </label>
                         {% endif %}

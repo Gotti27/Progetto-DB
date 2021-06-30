@@ -266,8 +266,8 @@ def get_persona_by_cf(cf):
     return q.first()
 
 
-def attiva_persona(persona):
-    db.session.query(Persona).filter(Persona.CF == persona).update({'Attivo': True})
+def attiva_persona(cf):
+    db.session.query(Persona).filter(Persona.CF == cf).update({'Attivo': True})
     db.session.commit()
 
 

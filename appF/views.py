@@ -311,20 +311,16 @@ def prenotazione_view(id_prenotazione):
 def view_users():
     persone = db.session.query(Persona).filter(Persona.CF.in_(db.session.query(Cliente.IDCliente))).all()
     if request.method == 'POST' and request.form['form-name'] == 'modifica':
-        '''
         for p in persone:
             if 'attivazione-'+p.CF in request.form:
-                print("on")
-            if 'disattivazione-'+p.CF in request.form:
-                print("off")
+                attiva_persona(p.CF)
+            else:
+                disattiva_persona(p.CF)
 
-
-            #if request.form['attivazione-'+p.CF] == 'on':
-             #   print("belandi")
-            #else:
-             #   print("besughi")
-        '''
-        pass
+            if 'pagamento-'+p.CF in request.form:
+                setta_pagante(p.CF)
+            else:
+                setta_non_pagante(p.CF)
 
     clienti = []
     for p in persone:
@@ -338,6 +334,12 @@ def view_users():
         }
         clienti.append(c)
     persone = db.session.query(Persona).filter(Persona.CF.in_(db.session.query(Staff.IDStaff))).all()
+    if request.method == 'POST' and request.form['form-name'] == 'modifica':
+        for p in persone:
+            if 'attivazione-' + p.CF in request.form:
+                attiva_persona(p.CF)
+            else:
+                disattiva_persona(p.CF)
     staff = []
     for p in persone:
         s = {
