@@ -105,17 +105,11 @@ def profile_view(username):
         return redirect(url_for('profile_view', username=current_user.get_email, msg=msg))
 
     if request.method == 'POST' and request.form['form-name'] == 'prenotazione':
-        is_active = db.session.query(Persona.Attivo).filter(Persona.Email == current_user.get_email).first()
-        new_book = insert_prenotazione(persona=get_persona_by_email(username), data=request.form['Data'],
-                                       ora_inizio=(request.form['oraOraInizio'] + ":" + request.form[
-                                           'minutiOraInizio']),
-                                       ora_fine=(request.form['oraOraFine'] + ":" + request.form['minutiOraFine']),
-                                       sala=request.form['sala'])
+        insert_prenotazione(persona=get_persona_by_email(username), data=request.form['Data'],
+                            ora_inizio=(request.form['oraOraInizio'] + ":" + request.form['minutiOraInizio']),
+                            ora_fine=(request.form['oraOraFine'] + ":" + request.form['minutiOraFine']),
+                            sala=request.form['sala'])
 
-        if new_book is None:
-            msg = "Non è stato possibile inserire la tua prenotazione, controlla di non superare le ore o i giorni limite e che non si sovrapponga con un'altra prenotazione"
-        else:
-            msg = "Prenotazione effettuata con successo!"
 
     return render_template('user_page.html', persona=get_persona_by_email(username), username=username, msg=msg,
                            inbox_number=inbox_number, step=get_time_step(), sale=get_sale())
