@@ -3,6 +3,7 @@ from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from sqlalchemy import create_engine
+from flask_qrcode import QRcode
 import locale
 
 app = Flask(__name__, instance_relative_config=True)
@@ -16,6 +17,7 @@ db = SQLAlchemy(app)
 engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'], echo=True)
 
 mail = Mail(app)
+QRcode(app)
 
 app.config['MAIL_SERVER'] = 'smtp.gmail.com' # TODO: da configurare
 app.config['MAIL_PORT'] = 465 # da configurare

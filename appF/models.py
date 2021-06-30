@@ -468,7 +468,6 @@ def crea_notifica(testo, mittente):
 
 
 def invia_notifica(notifica, destinatari):
-    #notifica = crea_notifica(testo=testo, mittente=mittente)
     for person in destinatari:
         to_add = NotificaDestinatario(IDNotifica=notifica.IDNotifica, Destinatario=person,
                                       Timestamp=datetime.now(), Letto=False)

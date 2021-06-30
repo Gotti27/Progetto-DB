@@ -107,7 +107,8 @@ def profile_view(username):
     if request.method == 'POST' and request.form['form-name'] == 'prenotazione':
         is_active = db.session.query(Persona.Attivo).filter(Persona.Email == current_user.get_email).first()
         new_book = insert_prenotazione(persona=get_persona_by_email(username), data=request.form['Data'],
-                                       ora_inizio=(request.form['oraOraInizio'] + ":" + request.form['minutiOraInizio']),
+                                       ora_inizio=(request.form['oraOraInizio'] + ":" + request.form[
+                                           'minutiOraInizio']),
                                        ora_fine=(request.form['oraOraFine'] + ":" + request.form['minutiOraFine']),
                                        sala=request.form['sala'])
 
@@ -188,8 +189,10 @@ def dashboard_view():
                 if v:
                     new_date = start + timedelta(days=j)
                     insert_corso(nome=request.form['nome'], min_persone=request.form['minPersone'],
-                                 max_persone=request.form['maxPersone'], ora_inizio=(request.form['oraOraInizio'] + ":" + request.form['minutiOraInizio']),
-                                 ora_fine=(request.form['oraOraFine'] + ":" + request.form['minutiOraFine']), id_sala=request.form['sala'].split(',')[0],
+                                 max_persone=request.form['maxPersone'],
+                                 ora_inizio=(request.form['oraOraInizio'] + ":" + request.form['minutiOraInizio']),
+                                 ora_fine=(request.form['oraOraFine'] + ":" + request.form['minutiOraFine']),
+                                 id_sala=request.form['sala'].split(',')[0],
                                  id_istruttore=request.form['istruttore'], data=new_date,
                                  descrizione=request.form['descrizione'])
             start += timedelta(days=7)
@@ -300,10 +303,13 @@ def prenotazione_view(id_prenotazione):
     c = None
     if p is None or not current_user.is_authenticated or current_user.get_id() != p['IDCliente']:
         return redirect(url_for('home'))
+    stringa_qr = 'IDPrenotazione: ' + str(p['IDPrenotazione']) + \
+                 '\nData: ' + str(p['Data']) + '\nOra inizio: ' + str(p['OraInizio']) + \
+                 '\nOra fine: ' + str(p['OraFine']) + '\nSala: ' + str(p['IDSala'])
     if p['IDCorso']:
         c = get_corso_by_id(p['IDCorso'])
 
-    return render_template('prenotazione.html', prenotazione=p, corso=c)
+    return render_template('prenotazione.html', prenotazione=p, corso=c, stringaQR=stringa_qr)
 
 
 @app.route("/users", methods=['GET', 'POST'])
@@ -313,12 +319,12 @@ def view_users():
     persone = db.session.query(Persona).filter(Persona.CF.in_(db.session.query(Cliente.IDCliente))).all()
     if request.method == 'POST' and request.form['form-name'] == 'modifica':
         for p in persone:
-            if 'attivazione-'+p.CF in request.form:
+            if 'attivazione-' + p.CF in request.form:
                 attiva_persona(p.CF)
             else:
                 disattiva_persona(p.CF)
 
-            if 'pagamento-'+p.CF in request.form:
+            if 'pagamento-' + p.CF in request.form:
                 setta_pagante(p.CF)
             else:
                 setta_non_pagante(p.CF)
@@ -349,7 +355,7 @@ def view_users():
             'CF': p.CF,
             'Email': p.Email,
             'Ruolo': db.session.query(Staff).filter(Staff.IDStaff == p.CF).first().Ruolo,
-            'Attivo':  p.Attivo
+            'Attivo': p.Attivo
         }
         staff.append(s)
     return render_template('users.html', clienti=clienti, staff=staff)
