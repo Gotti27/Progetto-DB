@@ -47,7 +47,11 @@ function openModal(date) {
             }
             else {
                 $('#eventText').append(jQuery('<div/>',{
-                    "class": 'prenotazioneInfo'
+                    "class": (() =>{
+                        console.log(c.Approvata)
+                        if (c.Approvata) return 'prenotazioneInfo'
+                        else return 'prenotazioneNonApprovataInfo'
+                    })
                 }).html( () => {
                     let out = "Allenamento libero"
                     if (c.IDCorso != "None")
