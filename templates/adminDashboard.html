@@ -111,6 +111,33 @@
     <div class="w3-container w3-third w3-light-gray">
         <h2 class="w3-center"><a href="{{url_for('view_users')}}">Visualizza utenti</a></h2>
         <h2 class="w3-center"><a href="{{url_for('register')}}">Registra un istruttore</a></h2>
+
+        <h2>Modifica la grandezza di ogni slot</h2>
+        <form action="{{ url_for('dashboard_view') }}" method="post" class="w3-container w3-margin">
+            <input type="hidden" name="form-name" value="modificaScaglione">
+            <div>
+                <input type="radio" name="slot" id="15" value="15" required>
+                <label for="15">15 minuti</label><br>
+                <input type="radio" name="slot" id="30" value="30" required>
+                <label for="30">30 minuti</label><br>
+                <input type="radio" name="slot" id="60" value="60" required>
+                <label for="60">60 minuti</label><br>
+            </div><input type="submit" class="w3-button w3-black" value="Modifica"><br>
+        </form>
+
+        <h2>Modifica il numero massimo di giorni in cui un cliente può allenarsi</h2>
+        <form action="{{ url_for('dashboard_view') }}" method="post" class="w3-container w3-margin">
+            <input type="hidden" name="form-name" value="massimoGiorni">
+            <input name="maxGiorni" type="number" placeholder="numero di giorni" class="w3-input" min="0" max="7"required><br>
+            <input type="submit" class="w3-button w3-black" value="Modifica"><br>
+        </form>
+
+        <h2>Modifica il numero massimo di ore in un giorno in cui un cliente può allenarsi</h2>
+        <form action="{{ url_for('dashboard_view') }}" method="post" class="w3-container w3-margin">
+            <input type="hidden" name="form-name" value="massimoOre">
+            <input name="maxOre" type="number" placeholder="numero di giorni" class="w3-input" min="0" max="24"required><br>
+            <input type="submit" class="w3-button w3-black" value="Modifica"><br>
+        </form>
     </div>
 
     <div class="w3-container w3-third w3-light-gray">
