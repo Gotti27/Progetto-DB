@@ -20,7 +20,11 @@
 <div class="w3-card w3-center w3-half w3-margin">
     <div class="w3-row">
         <div class="w3-third w3-margin">
+            {% if prenotazione.Approvata %}
             <img src="{{ qrcode(stringaQR) }}">
+            {% else %}
+            <h1 class="w3-red"> Prenotazione non approvata</h1>
+            {% endif %}
         </div>
         <div class="w3-rest w3- center">
             <h1 align="center"> Prenotazione numero: {{ prenotazione.IDPrenotazione }} </h1>
