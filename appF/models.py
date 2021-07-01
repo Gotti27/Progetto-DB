@@ -322,6 +322,7 @@ def get_time_step():
 
 def get_prenotazione_by_id(id):
     q = db.session.query(Prenotazione).filter(Prenotazione.IDPrenotazione == id).first()
+    if q is None: return None
     return q.__dict__
 
 
@@ -492,6 +493,24 @@ def invia_notifica(notifica, destinatari):
                                       Timestamp=datetime.now(), Letto=False)
         session.add(to_add)
         session.commit()
+
+
+def get_notifiche_persona(cf):
+    notify_ids = [i.IDNotifica for i in db.session.query(NotificaDestinatario).filter(
+        NotificaDestinatario.Destinatario == cf).all()]
+    notifies = db.session.query(Notifica).filter(Notifica.IDNotifica.in_(notify_ids)).all()
+    inbox = []
+    for notify in notifies:
+        q = db.session.query(NotificaDestinatario).filter(
+                       NotificaDestinatario.IDNotifica == notify.IDNotifica,
+                       NotificaDestinatario.Destinatario == cf).first()
+        message = {'IDNotifica': notify.IDNotifica,
+                   'Mittente': get_persona_by_cf(notify.Mittente).Email,
+                   'Timestamp': q.Timestamp,
+                   'Letto': q.Letto,
+                   'Testo': notify.Testo}
+        inbox.append(message)
+    return inbox
 
 
 def get_giorni_tracciamento():

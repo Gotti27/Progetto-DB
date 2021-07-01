@@ -35,7 +35,7 @@
             <div class="w3-container w3-light-gray w3-card">
                 <h2 class="w3-center">Prenota una sessione di allenamento</h2>
                 <h4 class="w3-center"> {{ msg }} </h4>
-                <form action="{{ url_for('profile_view', username=username) }}" method="post"
+                <form action="{{ url_for('profile_view') }}" method="post"
                       class="w3-container w3-margin" id="nuovaPrenotazione">
                     <input type="hidden" name="form-name" value="prenotazione">
                     <input id="inputDate" name="Data" type="date" placeholder="Data" class="w3-input w3-margin-bottom" required>

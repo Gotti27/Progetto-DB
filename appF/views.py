@@ -23,8 +23,7 @@ def auth_admin(f):
 
 @app.route('/')
 def home():
-    is_admin = current_user.is_authenticated and current_user.is_admin()
-    return render_template("home.html", admin=is_admin)
+    return render_template("home.html")
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -33,17 +32,15 @@ def login():
     if request.method == 'POST' and request.form['form-name'] == 'login':
         username = request.form['username']
         password = bytes(request.form['password'],
-                         encoding="utf-8")  # todo: controllare se è possibile .encode() chiedere a Mario
+                         encoding="utf-8")
         logging = db.session.query(Persona).filter(Persona.Email == username).first()
         if logging is not None and bcrypt.checkpw(password, logging.Password.encode("utf-8")):
             user = get_persona_by_email(request.form['username'])
             login_user(user)
-            if (
-                    db.session.query(Staff).filter(Staff.IDStaff == user.get_id()).filter(
-                        Staff.Ruolo == 'Gestore')).count():
+            if current_user.is_admin():
                 return redirect(url_for('dashboard_view'))
             else:
-                return redirect(url_for('profile_view', username=user.Email))
+                return redirect(url_for('profile_view'))
         else:
             msg = 'Username o password non corretti'
 
@@ -60,13 +57,13 @@ def logout():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated and not current_user.is_admin():
-        return redirect(url_for('profile_view', username=current_user.get_email))
+        return redirect(url_for('profile_view'))
     else:
         msg = ''
         if request.method == 'POST' and request.form['form-name'] == 'register':
             email = request.form['email']
             registration = db.session.query(Persona).filter(Persona.Email == email).first()
-            cf = db.session.query(Persona).filter(Persona.CF == request.form['Codice fiscale']).first()
+            cf = get_persona_by_cf(request.form['Codice fiscale'])
             if registration is not None or cf is not None:
                 msg = 'Persona già registrata'
             elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
@@ -75,43 +72,37 @@ def register():
                 msg = 'Codice fiscale non valido'
             else:
                 nuova_persona = insert_persona(nome=request.form['name'], cognome=request.form['surname'],
-                                               data_nascita=request.form['DataNascita'],
-                                               cf=request.form['Codice fiscale'],
-                                               email=request.form['email'], telefono=request.form['telefono'],
-                                               sesso=request.form['sex'],
-                                               password=bcrypt.hashpw(request.form['password'].encode("utf-8"),
-                                                                      bcrypt.gensalt()).decode("utf-8"), attivo=False)
-                if (db.session.query(Staff).filter(Staff.IDStaff == current_user.get_id()).filter(
-                        Staff.Ruolo == 'Gestore')).count():
+                                               data_nascita=request.form['DataNascita'], cf=request.form['Codice fiscale'],
+                                               email=request.form['email'], telefono=request.form['telefono'], sesso=request.form['sex'],
+                                               password=bcrypt.hashpw(request.form['password'].encode("utf-8"), bcrypt.gensalt()).decode("utf-8"), attivo=False)
+                if current_user.is_admin():
                     insert_istruttore(nuova_persona)
+                    return redirect(url_for('dashboard_view', username=nuova_persona.Email))
                 else:
                     insert_cliente(nuova_persona)
-                login_user(nuova_persona)
+                    login_user(nuova_persona)
                 invia_notifica(db.session.query(Notifica).filter(Notifica.IDNotifica == 3).first(), [nuova_persona.CF])
-                return redirect(url_for('profile_view', username=nuova_persona.Email))
+                return redirect(url_for('profile_view'))
         elif request.method == 'POST':
             msg = 'Riempi tutti i campi del form'
         return render_template('register.html', msg=msg)
 
 
-@app.route('/user/<username>', methods=['GET', 'POST'])
+@app.route('/user', methods=['GET', 'POST'])
 @login_required
-def profile_view(username):
-    msg = ""
-    inbox_number = len(db.session.query(NotificaDestinatario)
-                       .filter(NotificaDestinatario.Destinatario == current_user.CF,
-                               NotificaDestinatario.Letto == False).all())
-    if not username == current_user.get_email:
-        return redirect(url_for('profile_view', username=current_user.get_email, msg=msg))
-
+def profile_view():
     if request.method == 'POST' and request.form['form-name'] == 'prenotazione':
         insert_prenotazione(persona=get_persona_by_email(username), data=request.form['Data'],
                             ora_inizio=(request.form['oraOraInizio'] + ":" + request.form['minutiOraInizio']),
                             ora_fine=(request.form['oraOraFine'] + ":" + request.form['minutiOraFine']),
                             sala=request.form['sala'])
 
+    inbox_number = len(db.session.query(NotificaDestinatario)
+                       .filter(NotificaDestinatario.Destinatario == current_user.CF,
+                               NotificaDestinatario.Letto == False).all())
 
-    return render_template('user_page.html', persona=get_persona_by_email(username), username=username, msg=msg,
+
+    return render_template('user_page.html', persona=current_user.get_id(),
                            inbox_number=inbox_number, step=get_time_step(), sale=get_sale())
 
 
@@ -242,6 +233,7 @@ def report():
                 invia_notifica(notifica=notifica, destinatari=[person.CF])
                 # mail.send(msg)
             messaggio = 'operazione avvenuta con successo'
+
     return render_template('report.html', msg=messaggio, zero=zero, giorni=giorni, positivi=tracciati)
 
 
@@ -252,30 +244,18 @@ def notifications():
         q = delete(NotificaDestinatario).where(NotificaDestinatario.Destinatario == current_user.CF)
         db.session.execute(q)
         db.session.commit()
-    notify_ids = [i.IDNotifica for i in db.session.query(NotificaDestinatario).filter(
-        NotificaDestinatario.Destinatario == current_user.CF).all()]
-    notifies = db.session.query(Notifica).filter(Notifica.IDNotifica.in_(notify_ids)).all()
-    inbox = []
-    for notify in notifies:
-        message = {'IDNotifica': notify.IDNotifica,
-                   'Mittente': get_persona_by_cf(notify.Mittente).Email,
-                   'Timestamp': db.session.query(NotificaDestinatario).filter(
-                       NotificaDestinatario.IDNotifica == notify.IDNotifica,
-                       NotificaDestinatario.Destinatario == current_user.CF).first().Timestamp,
-                   'Letto': db.session.query(NotificaDestinatario).filter(
-                       NotificaDestinatario.IDNotifica == notify.IDNotifica,
-                       NotificaDestinatario.Destinatario == current_user.CF).first().Letto,
-                   'Testo': notify.Testo}
-        inbox.append(message)
     if current_user.is_staff() and request.method == 'POST' and request.form['form-name'] == 'inviaNotifica':
         testo = request.form['testo']
         mittente = current_user.CF
         destinatari = request.form['destinatario'].split(' ')
         notifica = crea_notifica(testo=testo, mittente=mittente)
         invia_notifica(notifica=notifica, destinatari=destinatari)
-    db.session.query(NotificaDestinatario) \
-        .filter(NotificaDestinatario.Destinatario == current_user.CF).update({'Letto': True})
+
+    inbox = get_notifiche_persona(current_user.get_id())
+
+    db.session.query(NotificaDestinatario).filter(NotificaDestinatario.Destinatario == current_user.CF).update({'Letto': True})
     db.session.commit()
+
     return render_template('notifiche.html', inbox=inbox)
 
 
@@ -284,15 +264,19 @@ def notifications():
 def prenotazione_view(id_prenotazione):
     if request.method == 'POST' and request.form['form-name'] == 'delete':
         delete_prenotazione_by_id(id_prenotazione)
-        return redirect(url_for('profile_view', username=current_user.get_email))
+        return redirect(url_for('profile_view'))
 
     p = get_prenotazione_by_id(id_prenotazione)
-    c = None
-    if p is None or not current_user.is_authenticated or current_user.get_id() != p['IDCliente']:
-        return redirect(url_for('home'))
+    if p is None:
+        return abort(404)
+    if current_user.get_id() != p['IDCliente']:
+        return abort(403)
+
     stringa_qr = 'IDPrenotazione: ' + str(p['IDPrenotazione']) + \
                  '\nData: ' + str(p['Data']) + '\nOra inizio: ' + str(p['OraInizio']) + \
                  '\nOra fine: ' + str(p['OraFine']) + '\nSala: ' + str(p['IDSala'])
+
+    c = None
     if p['IDCorso']:
         c = get_corso_by_id(p['IDCorso'])
 
@@ -303,8 +287,7 @@ def prenotazione_view(id_prenotazione):
 @login_required
 @auth_admin
 def view_users():
-    persone = db.session.query(Persona).filter(Persona.CF.in_(db.session.query(Cliente.IDCliente)))\
-        .order_by(Persona.Cognome, Persona.Nome).all()
+    persone = db.session.query(Persona).filter(Persona.CF.in_(db.session.query(Cliente.IDCliente))).order_by(Persona.Cognome, Persona.Nome).all()
     if request.method == 'POST' and request.form['form-name'] == 'modifica':
         for p in persone:
             if 'attivazione-' + p.CF in request.form:
@@ -328,6 +311,7 @@ def view_users():
             'Pagante': db.session.query(Cliente).filter(Cliente.IDCliente == p.CF).first().PagamentoMese
         }
         clienti.append(c)
+
     persone = db.session.query(Persona).filter(Persona.CF.in_(db.session.query(Staff.IDStaff)))\
         .order_by(Persona.Cognome, Persona.Nome).all()
     if request.method == 'POST' and request.form['form-name'] == 'modifica':
