@@ -449,7 +449,13 @@ def contact_tracing(zero, days):
     for appearance in last_zero_appearances:
         prenotazioni = session_ospite.query(Prenotazione).filter(
             Prenotazione.Data == appearance.Data, Prenotazione.IDSala == appearance.IDSala,
-            or_(Prenotazione.OraFine >= appearance.OraInizio, Prenotazione.OraInizio <= appearance.OraFine),
+            or_(
+                or_(
+                    and_(Prenotazione.OraInizio <= appearance.OraInizio, appearance.OraInizio <= Prenotazione.OraFine),
+                    and_(Prenotazione.OraInizio <= appearance.OraFine, appearance.OraFine <= Prenotazione.OraFine)),
+                or_(
+                    and_(appearance.OraInizio <= Prenotazione.OraInizio, Prenotazione.OraInizio <= appearance.OraFine),
+                    and_(appearance.OraInizio <= Prenotazione.OraFine, Prenotazione.OraFine <= appearance.OraFine))),
             Prenotazione.Approvata == true()).all()
 
         if appearance.IDCorso is not None:
