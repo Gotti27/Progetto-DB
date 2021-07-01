@@ -1,6 +1,6 @@
 import datetime
 
-from run import db, engine_ospite, engine_utente, engine_istruttore, engine_gestore, engine
+from run import engine_ospite, engine_utente, engine_istruttore, engine_gestore#, engine
 from sqlalchemy import *
 from sqlalchemy.orm import *
 from datetime import *
@@ -196,8 +196,8 @@ class CorsoSeguito(Base):
     clienti = relationship(Cliente, uselist=False)
 
 
-Session = sessionmaker(bind=engine)
-session = Session()
+#Session = sessionmaker(bind=engine)
+#session = Session()
 Session_ospite = sessionmaker(bind=engine_ospite)  # creazione delle factory
 session_ospite = Session_ospite()
 Session_utente = sessionmaker(bind=engine_utente)
