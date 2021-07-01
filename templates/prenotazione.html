@@ -18,25 +18,23 @@
 </div>
 <div class="w3-card w3-center w3-half w3-margin w3-padding">
     <div class="w3-row">
-        <div class="w3-third w3-margin">
+        <div class="w3-third">
             {% if prenotazione.Approvata %}
-            <img src="{{ qrcode(stringaQR) }}">
+            <img src="{{ qrcode(stringaQR) }}" style="width: 100%">
             {% else %}
             <h1 class="w3-red"> Prenotazione non approvata</h1>
             {% endif %}
-        <div class="w3-third">
-            <img src="{{ qrcode(stringaQR) }}" style="width: 100%;">
-        </div>
-        <div class="w3-twothird w3-center">
-            <h1 align="center"> Prenotazione numero: {{ prenotazione.IDPrenotazione }} </h1>
-            <h3> Data: {{ prenotazione.Data }}</h3>
-            <h3> Orario: {{ prenotazione.OraInizio.strftime('%H:%M')}} - {{ prenotazione.OraFine.strftime('%H:%M') }}</h3>
-            {% if corso %}
-            <h3> Corso: <a href="{{ url_for('view_corso', id=corso.IDCorso) }}">{{ corso.Nome }}</a> </h3>
-            {% else %}
-            <h3> Allenamento libero</h3>
-            {% endif %}
-        </div>
+    </div>
+    <div class="w3-twothird w3-center">
+        <h1 align="center"> Prenotazione numero: {{ prenotazione.IDPrenotazione }} </h1>
+        <h3> Data: {{ prenotazione.Data }}</h3>
+        <h3> Orario: {{ prenotazione.OraInizio.strftime('%H:%M')}} - {{ prenotazione.OraFine.strftime('%H:%M') }}</h3>
+        {% if corso %}
+        <h3> Corso: <a href="{{ url_for('view_corso', id=corso.IDCorso) }}">{{ corso.Nome }}</a> </h3>
+        {% else %}
+        <h3> Allenamento libero</h3>
+        {% endif %}
+    </div>
     </div>
     <form action="{{ url_for('prenotazione_view', id_prenotazione=prenotazione.IDPrenotazione) }}" method="post" class="w3-center w3-margin-bottom">
         <input type="hidden" name="form-name" value="delete">
@@ -45,8 +43,6 @@
         </button>
     </form>
 </div>
-
-
 
 </body>
 {% endblock %}
