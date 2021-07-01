@@ -134,7 +134,7 @@ def view_corso(id):
 
     if corso is None:
         abort(404)
-    istruttore = get_persona_by_cf(corso.IDIstruttore)
+    istruttore = get_persona_by_cf(corso['IDIstruttore'])
 
     if request.method == 'POST' and current_user.is_authenticated:
         if request.form['form-name'] == "subscribe":
@@ -158,9 +158,9 @@ def view_corso(id):
             invia_notifica(nuova_notifica, destinatari)
 
     return render_template('corso.html', corso=corso, istruttore=istruttore,
-                           iscritti=numero_iscritti_corso(corso.IDCorso),
-                           is_seguito=is_seguito(current_user.get_id(), corso.Nome),
-                           is_iscritto=is_iscritto(current_user.get_id(), corso.IDCorso))
+                           iscritti=numero_iscritti_corso(corso['IDCorso']),
+                           is_seguito=is_seguito(current_user.get_id(), corso['Nome']),
+                           is_iscritto=is_iscritto(current_user.get_id(), corso['IDCorso']))
 
 
 @app.route("/dashboard", methods=['GET', 'POST'])
