@@ -29,6 +29,7 @@
         <h1 align="center"> Prenotazione numero: {{ prenotazione.IDPrenotazione }} </h1>
         <h3> Data: {{ prenotazione.Data }}</h3>
         <h3> Orario: {{ prenotazione.OraInizio.strftime('%H:%M')}} - {{ prenotazione.OraFine.strftime('%H:%M') }}</h3>
+        <h3> Sala: {{ prenotazione.IDSala }}</h3>
         {% if corso %}
         <h3> Corso: <a href="{{ url_for('view_corso', id=corso.IDCorso) }}">{{ corso.Nome }}</a> </h3>
         {% else %}

@@ -11,111 +11,134 @@
 
 {% block content %}
 <body>
-    <div align="center" class="w3-container">
-        <h2>Bentornato, {{current_user.Nome}} {{current_user.Cognome}}!</h2>
-    </div>
+<div align="center" class="w3-container">
+    <h2>Bentornato, {{current_user.Nome}} {{current_user.Cognome}}!</h2>
+</div>
 
-    <div style="height: 800px">
-        <div id="calendarContainer"><img src="https://media3.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif?cid=790b7611571d973053c38bc13f748ca7461ef601b62dd84e&rid=giphy.gif&ct=g" style="display:block; margin:auto; width: 25%;">
-        </div>
+<div style="height: 800px">
+    <div id="calendarContainer"><img src="https://media3.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif?cid=790b7611571d973053c38bc13f748ca7461ef601b62dd84e&rid=giphy.gif&ct=g" style="display:block; margin:auto; width: 25%;">
     </div>
+</div>
 
-    <script>
-        $(document).ready( function() {
-            $.ajax("{{ url_for('calendar_view_today', user=current_user.CF ) }}").done(function (reply) {
-                $('#calendarContainer').html(reply);
-            });
+<script>
+    $(document).ready( function() {
+        $.ajax("{{ url_for('calendar_view_today', user=current_user.CF ) }}").done(function (reply) {
+            $('#calendarContainer').html(reply);
         });
-    </script>
+    });
+</script>
 
-    {% if current_user.can_book() %}
-    <div class="w3-row">
-        <div class="w3-container w3-quarter"><p></p></div>
-        <div class="w3-container w3-half w3-margin-bottom">
-            <div class="w3-container w3-light-gray w3-card">
-                <h2 class="w3-center">Prenota una sessione di allenamento</h2>
-                <h4 class="w3-center"> {{ msg }} </h4>
-                <form action="{{ url_for('profile_view') }}" method="post"
-                      class="w3-container w3-margin" id="nuovaPrenotazione">
-                    <input type="hidden" name="form-name" value="prenotazione">
-                    <input id="inputDate" name="Data" type="date" placeholder="Data" class="w3-input w3-margin-bottom" required>
-                    <div class="w3-row">
-                        <div class="w3-half">
-                            <label>Ora di inizio</label>
-                        </div>
-                        <div class="w3-half">
-                            <div class="w3-col w3-center l2"> <p></p> </div>
-                            <label>Ora di fine</label>
-                        </div>
+{% if current_user.can_book() %}
+<div class="w3-row">
+    <div class="w3-container w3-quarter"><p></p></div>
+    <div class="w3-container w3-half w3-margin-bottom">
+        <div class="w3-container w3-light-gray w3-card">
+            <h2 class="w3-center">Prenota una sessione di allenamento</h2>
+            <h4 class="w3-center"> {{ msg }} </h4>
+            <form action="{{ url_for('profile_view') }}" method="post"
+                  class="w3-container w3-margin" id="nuovaPrenotazione">
+                <input type="hidden" name="form-name" value="prenotazione">
+                <input id="inputDate" name="Data" type="date" placeholder="Data" class="w3-input w3-margin-bottom" required>
+                <div class="w3-row">
+                    <div class="w3-half">
+                        <label>Ora di inizio</label>
                     </div>
-
-                    <div class="w3-row">
-                        <select class="w3-select w3-col l2" id="OraOraInizio" name="oraOraInizio">
-                            <option value="" disabled selected hidden> Ora </option>
-                            {% for i in range(6, 24) %}
-                            <option value="{{i}}">{{ i }}</option>
-                            {% endfor %}
-                        </select>
-                        <h4 class="w3-center w3-col w3-margin-bottom l1"> : </h4>
-                        <select class="w3-select w3-col l2" id="MinutiOraInizio" name="minutiOraInizio">
-                            <option value="" disabled selected hidden> Minuti </option>
-                            {% for i in range(60//step) %}
-                            <option value="{{i * step}}">{{ i * step }}</option>
-                            {% endfor %}
-                        </select>
-
+                    <div class="w3-half">
                         <div class="w3-col w3-center l2"> <p></p> </div>
-
-                        <select class="w3-select w3-col l2" id="OraOraFine" name="oraOraFine">
-                            <option value="" disabled selected hidden> Ora </option>
-                            {% for i in range(6, 24) %}
-                            <option value="{{i}}">{{ i }}</option>
-                            {% endfor %}
-                        </select>
-                        <h4 class=" w3-center w3-col l1"> : </h4>
-                        <select class="w3-select w3-col l2" id="MinutiOraFine" name="minutiOraFine">
-                            <option value="" disabled selected hidden> Minuti </option>
-                            {% for i in range(60//step) %}
-                            <option value="{{i * step}}">{{ i * step }}</option>
-                            {% endfor %}
-                        </select>
+                        <label>Ora di fine</label>
                     </div>
-                    <label for="sala">Sala</label><select class="w3-select w3-margin-bottom" id="sala" name="sala">
-                    <option value="" disabled selected hidden>Seleziona sala</option>
-                    {%for i in sale%}
-                    <option value="{{i.IDSala}}">{{ i.IDSala }} - {{i.Tipo}}</option>
-                    {%endfor%}
-                </select>
-                    <input class="w3-button w3-black" type="submit" value="Prenota">
-                </form>
+                </div>
 
-            </div>
+                <div class="w3-row">
+                    <select class="w3-select w3-col l2" id="OraOraInizio" name="oraOraInizio">
+                        <option value="" disabled selected hidden> Ora </option>
+                        {% for i in range(6, 24) %}
+                        <option value="{{i}}">{{ i }}</option>
+                        {% endfor %}
+                    </select>
+                    <h4 class="w3-center w3-col w3-margin-bottom l1"> : </h4>
+                    <select class="w3-select w3-col l2" id="MinutiOraInizio" name="minutiOraInizio">
+                        <option value="" disabled selected hidden> Minuti </option>
+                        {% for i in range(60//step) %}
+                        <option value="{{i * step}}">{{ i * step }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <div class="w3-col w3-center l2"> <p></p> </div>
+
+                    <select class="w3-select w3-col l2" id="OraOraFine" name="oraOraFine">
+                        <option value="" disabled selected hidden> Ora </option>
+                        {% for i in range(6, 24) %}
+                        <option value="{{i}}">{{ i }}</option>
+                        {% endfor %}
+                    </select>
+                    <h4 class=" w3-center w3-col l1"> : </h4>
+                    <select class="w3-select w3-col l2" id="MinutiOraFine" name="minutiOraFine">
+                        <option value="" disabled selected hidden> Minuti </option>
+                        {% for i in range(60//step) %}
+                        <option value="{{i * step}}">{{ i * step }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <label for="sala">Sala</label><select class="w3-select w3-margin-bottom" id="sala" name="sala">
+                <option value="" disabled selected hidden>Seleziona sala</option>
+                {%for i in sale%}
+                <option value="{{i.IDSala}}">{{ i.IDSala }} - {{i.Tipo}}</option>
+                {%endfor%}
+            </select>
+                <input class="w3-button w3-black" type="submit" value="Prenota">
+            </form>
 
         </div>
-        <div class="w3-container w3-quarter">
 
+    </div>
+    <div class="w3-container w3-quarter">
+
+    </div>
+</div>
+{% elif not current_user.is_staff() %}
+    <h2 class="w3-center"> Il tuo account è stato temporaneamente disattivato o non hai pagato il mese </h2>
+{% endif %}
+
+<div align="center">
+
+</div>
+
+<div class="w3-row">
+    <div class="w3-container w3-quarter"><p></p></div>
+    <div class="w3-container w3-half w3-margin-bottom">
+        <div class="w3-container w3-light-gray w3-card">
+            <h3>Prossime prenotazioni</h3>
+            {% for i in prenotazioni%}
+                <div class="w3-border w3-margin w3-padding" >
+                    <h6>Giorno: {{ i.Data }}</h6>
+                    <h6>Orario: {{ i.OraInizio[0:5] }} - {{ i.OraFine[0:5] }}</h6>
+                    <h6>Sala: {{ i.IDSala }}</h6>
+                    {% if not i.Approvata %}
+                    <h6 class="w3-red"> NON approvata</h6>
+                    {% endif %}
+                    <a href="{{ url_for('prenotazione_view', id_prenotazione=i.IDPrenotazione) }}"> Maggiori informazioni </a>
+                </div>
+            {% endfor %}
         </div>
     </div>
-    {% else %}
-        <h2 class="w3-center"> Il tuo account è stato temporaneamente disattivato o non hai pagato il mese </h2>
-    {% endif %}
-
-    <div align="center">
+    <div class="w3-container w3-quarter">
 
     </div>
 
-    <script>
-        let dtToday = new Date();
-        let month = dtToday.getMonth() + 1;
-        let day = dtToday.getDate();
-        let year = dtToday.getFullYear();
-        if(month < 10)
-            month = '0' + month.toString();
-        if(day < 10)
-            day = '0' + day.toString();
-        let minDate = year + '-' + month + '-' + day;
-        document.getElementById("inputDate").setAttribute('min',minDate);
-    </script>
+
+<script>
+    let dtToday = new Date();
+    let month = dtToday.getMonth() + 1;
+    let day = dtToday.getDate();
+    let year = dtToday.getFullYear();
+    if(month < 10)
+        month = '0' + month.toString();
+    if(day < 10)
+        day = '0' + day.toString();
+    let minDate = year + '-' + month + '-' + day;
+    document.getElementById("inputDate").setAttribute('min',minDate);
+</script>
 </body>
 {% endblock %}
 </html>
