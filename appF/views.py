@@ -107,12 +107,14 @@ def profile_view():
 
 
 @app.route('/calendar')
+@login_required
 def calendar_view_today():
     user = request.args.get('user')
     return redirect(url_for('calendar_view', anno=datetime.today().year, mese=datetime.today().month, user=user))
 
 
 @app.route('/calendar/<int:anno>/<int:mese>', methods=['GET', 'POST'])
+@login_required
 def calendar_view(anno, mese):
     user = request.args.get('user')
     if current_user.is_admin():
@@ -287,9 +289,11 @@ def prenotazione_view(id_prenotazione):
 @login_required
 @auth_admin
 def view_users():
-    persone = db.session.query(Persona).filter(Persona.CF.in_(db.session.query(Cliente.IDCliente))).order_by(Persona.Cognome, Persona.Nome).all()
+    clienti = db.session.query(Persona).filter(Persona.CF.in_(db.session.query(Cliente.IDCliente))).order_by(Persona.Cognome, Persona.Nome).all()
+    staff = db.session.query(Persona).filter(Persona.CF.in_(db.session.query(Staff.IDStaff))).order_by(Persona.Cognome, Persona.Nome).all()
+
     if request.method == 'POST' and request.form['form-name'] == 'modifica':
-        for p in persone:
+        for p in clienti:
             if 'attivazione-' + p.CF in request.form:
                 attiva_persona(p.CF)
             else:
@@ -300,37 +304,33 @@ def view_users():
             else:
                 setta_non_pagante(p.CF)
 
-    clienti = []
-    for p in persone:
-        c = {
-            'Nome': p.Nome,
-            'Cognome': p.Cognome,
-            'CF': p.CF,
-            'Email': p.Email,
-            'Attivo': p.Attivo,
-            'Pagante': db.session.query(Cliente).filter(Cliente.IDCliente == p.CF).first().PagamentoMese
-        }
-        clienti.append(c)
-
-    persone = db.session.query(Persona).filter(Persona.CF.in_(db.session.query(Staff.IDStaff)))\
-        .order_by(Persona.Cognome, Persona.Nome).all()
-    if request.method == 'POST' and request.form['form-name'] == 'modifica':
-        for p in persone:
+        for p in staff:
             if 'attivazione-' + p.CF in request.form:
                 attiva_persona(p.CF)
             else:
                 disattiva_persona(p.CF)
-    staff = []
-    for p in persone:
-        s = {
-            'Nome': p.Nome,
-            'Cognome': p.Cognome,
-            'CF': p.CF,
-            'Email': p.Email,
-            'Ruolo': db.session.query(Staff).filter(Staff.IDStaff == p.CF).first().Ruolo,
-            'Attivo': p.Attivo
+
+    for i,v in enumerate(clienti):
+        c = {
+            'Nome': v.Nome,
+            'Cognome': v.Cognome,
+            'CF': v.CF,
+            'Email': v.Email,
+            'Attivo': v.Attivo,
+            'Pagante': get_cliente_by_id(v.CF).PagamentoMese
         }
-        staff.append(s)
+        clienti[i] = c
+    for i,v in enumerate(staff):
+        s = {
+            'Nome': v.Nome,
+            'Cognome': v.Cognome,
+            'CF': v.CF,
+            'Email': v.Email,
+            'Ruolo': db.session.query(Staff).filter(Staff.IDStaff == v.CF).first().Ruolo,
+            'Attivo': v.Attivo
+        }
+        staff[i] = s
+
     return render_template('users.html', clienti=clienti, staff=staff, giorni_tracciamento=get_giorni_tracciamento())
 
 

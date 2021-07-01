@@ -6,13 +6,15 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="/static/switch.css">
 </head>
+
+{% extends "home.html" %}
+
+{% block content %}
 <body>
 <form action="{{ url_for('view_users') }}" method="post" id="modifiche">
     <input type="hidden" name="form-name" value="modifica">
-    <div class="w3-row w3-light-gray w3-margin-left">
-        <a class="w3-button w3-black w3-margin-top" href="{{url_for('home')}}">Home</a>
-        <a class="w3-button w3-black w3-margin-top" href="{{url_for('dashboard_view')}}">Dashboard</a>
-        <input type="submit" class="w3-button w3-black w3-margin-top" value="Salva">
+    <div class="w3-row w3-margin-left">
+        <input type="submit" class="w3-button w3-black w3-margin-top" value="Salva modifiche">
     </div>
 
     <div class="w3-row">
@@ -26,7 +28,7 @@
                     <th>Email</th>
                     <th>Attivo</th>
                     <th>Pagante</th>
-                    <th>Contact Tracing ({{ giorni_tracciamento }} gg)</th>
+                    <th class="w3-center">Contact Tracing ({{ giorni_tracciamento }} gg)</th>
                 </tr>
                 {% for c in clienti %}
                 <tr>
@@ -103,4 +105,6 @@
     </div>
 </form>
 </body>
+{% endblock %}
+
 </html>
