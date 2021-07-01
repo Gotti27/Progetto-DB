@@ -152,6 +152,13 @@ def view_corso(id):
         elif request.form['form-name'] == "delete":
             delete_corso(corso=corso.IDCorso)
             return redirect(url_for("dashboard_view"))
+        elif request.form['form-name'] == 'inviaNotifica':
+            nuova_notifica = crea_notifica(request.form['testo'], current_user.CF)
+            destinatari = [p.IDCliente for p in get_iscritti_corso(corso.IDCorso)] +\
+                          [p.IDCliente for p in get_follower_corso(corso.IDCorso)]
+            destinatari = list(set(destinatari))
+            invia_notifica(nuova_notifica, destinatari)
+
     return render_template('corso.html', corso=corso, istruttore=istruttore,
                            iscritti=numero_iscritti_corso(corso.IDCorso),
                            is_seguito=is_seguito(current_user.get_id(), corso.Nome),

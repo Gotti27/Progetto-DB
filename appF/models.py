@@ -264,6 +264,16 @@ def numero_iscritti_corso(corso):
     return iscr
 
 
+def get_iscritti_corso(corso):
+    iscr = db.session.query(Prenotazione).filter(Prenotazione.IDCorso == corso).filter(Prenotazione.Approvata).all()
+    return iscr
+
+
+def get_follower_corso(corso):
+    flw = db.session.query(CorsoSeguito).filter(CorsoSeguito.Nome == get_corso_by_id(corso)['Nome']).all()
+    return flw
+
+
 def get_sale():
     q = db.session.query(Sala).all()
     return q
