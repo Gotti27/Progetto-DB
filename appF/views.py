@@ -101,7 +101,6 @@ def profile_view():
                        .filter(NotificaDestinatario.Destinatario == current_user.CF,
                                NotificaDestinatario.Letto == False).all())
 
-
     return render_template('user_page.html', persona=current_user.get_id(),
                            inbox_number=inbox_number, step=get_time_step(), sale=get_sale())
 
@@ -109,19 +108,19 @@ def profile_view():
 @app.route('/calendar')
 @login_required
 def calendar_view_today():
-    user = request.args.get('user')
-    return redirect(url_for('calendar_view', anno=datetime.today().year, mese=datetime.today().month, user=user))
+    return redirect(url_for('calendar_view', anno=datetime.today().year, mese=datetime.today().month))
 
 
 @app.route('/calendar/<int:anno>/<int:mese>', methods=['GET', 'POST'])
 @login_required
 def calendar_view(anno, mese):
-    user = request.args.get('user')
     if current_user.is_admin():
         corsi = get_corsi(mese, anno)
+    elif current_user.is_staff():
+        corsi = get_corsi_insegnante(current_user.get_id(), mese, anno)
     else:
-        corsi = get_prenotazioni_persona(user, mese, anno)
-        corsi += (get_corsi_seguiti(user))
+        corsi = get_prenotazioni_persona(current_user.get_id(), mese, anno)
+        corsi += (get_corsi_seguiti(current_user.get_id()))
     return render_template('calendar.html', corsi=corsi, anno=anno, mese=mese)
 
 
@@ -134,6 +133,7 @@ def lista_corsi():
 @app.route("/corso/<id>", methods=['GET', 'POST'])
 def view_corso(id):
     corso = db.session.query(Corso).filter(Corso.IDCorso == id).first()
+
     if corso is None:
         abort(404)
     istruttore = db.session.query(Persona).filter(Persona.CF == corso.IDIstruttore).first()
@@ -186,20 +186,6 @@ def dashboard_view():
                                  id_istruttore=request.form['istruttore'], data=new_date,
                                  descrizione=request.form['descrizione'])
             start += timedelta(days=7)
-
-    # TODO: gestire messaggi
-    if request.method == 'POST' and request.form['form-name'] == 'opzioniPersona':
-        if 'attivazione' in request.form and request.form['attivazione'] == 'attiva':
-            attiva_persona(persona=request.form['codiceFiscale'])
-        elif 'attivazione' in request.form and request.form['attivazione'] == 'disattiva':
-            disattiva_persona(persona=request.form['codiceFiscale'])
-
-    if request.method == 'POST' and request.form['form-name'] == 'opzioniClienti':
-        if 'pagante' in request.form and request.form['pagante'] == 'pagante':
-            setta_pagante(cliente=request.form['codiceFiscale'])
-        elif 'pagante' in request.form and request.form['pagante'] == 'non pagante':
-            setta_non_pagante(cliente=request.form['codiceFiscale'])
-
     if request.method == 'POST' and request.form['form-name'] == 'creaSala':
         insert_sala(max_persone=request.form['MaxPersone'], tipo=request.form['tipo'])
 
@@ -212,6 +198,7 @@ def report():
     zero = request.args.get('zero')
     giorni = request.args.get('giorni')
     tracciati = contact_tracing(zero=get_persona_by_cf(zero), days=giorni)
+
     if request.method == 'POST':
         form = request.form['form-name']
         if form == 'esporta':
@@ -225,22 +212,15 @@ def report():
             response.headers['Content-Disposition'] = 'attachment; filename=report.pdf'
             return response
         if form == 'notifica' or form == 'disattiva':
-            # TODO: email non funzionante, da configurare
-            # subject = "Segnalazione possibile contagio"
-            # sender = (db.session.query(Persona).filter(Persona.CF == 'ADMINADMIN').first()).Email
             for person in tracciati:
-                # msg = Message(subject=subject, sender=sender, recipients=person.Email)
                 if form == 'disattiva':
-                    # msg.body = "potresti essere stato contagiato e sei disattivato, caro" + person.Nome
                     notifica = db.session.query(Notifica).filter(
                         Notifica.IDNotifica == 0).first()  # da creare con un codice particolare
                     disattiva_persona(persona=person.CF)
                 else:
-                    # msg.body = "potresti essere stato contagiato, caro" + person.Nome
                     notifica = db.session.query(Notifica).filter(
                         Notifica.IDNotifica == 1).first()  # da creare con un codice particolare
                 invia_notifica(notifica=notifica, destinatari=[person.CF])
-                # mail.send(msg)
             messaggio = 'operazione avvenuta con successo'
 
     return render_template('report.html', msg=messaggio, zero=zero, giorni=giorni, positivi=tracciati)

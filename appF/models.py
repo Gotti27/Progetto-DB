@@ -471,6 +471,18 @@ def get_corsi_seguiti(persona):
     return ret
 
 
+def get_corsi_insegnante(cf, mese, anno):
+    q = db.session.query(Corso).filter(Corso.IDIstruttore == cf,
+                                       extract('year', Corso.Data) == anno,
+                                       extract('month', Corso.Data) == mese).order_by(Corso.OraInizio).all()
+    ret = []
+    for i in q:
+        ret.append({property: str(value) for property, value in vars(i).items()})
+        ret[-1]["type"] = "corso"
+        del ret[-1]['_sa_instance_state']
+    return ret
+
+
 def insert_corso_seguito(persona, corso):
     to_add = CorsoSeguito(IDCliente=persona, Nome=corso)
     session.add(to_add)
