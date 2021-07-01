@@ -36,8 +36,11 @@ class Persona(UserMixin, Base):
     def is_active(self):
         return self.Attivo
 
+    def is_staff(self):
+        return db.session.query(Staff).filter(Staff.IDStaff == self.CF).first() is not None
+
     def can_book(self):
-        return self.Attivo and get_cliente_by_id(self.CF).PagamentoMese
+        return not self.is_staff() and self.Attivo and get_cliente_by_id(self.CF).PagamentoMese
 
     def get_id(self):
         return self.CF

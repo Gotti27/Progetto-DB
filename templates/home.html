@@ -29,11 +29,12 @@
             {% else %}
             <button class="w3-button w3-xlarge"><i class="w3-green w3-circle w3-xlarge material-icons" style="padding: 2px">person</i></button>
             <div class="w3-dropdown-content w3-bar-block w3-card-4" style="right:0">
-                <a href="{{url_for('profile_view', username=current_user.Email)}}" class="w3-bar-item w3-button">Profilo</a>
-                <a href="{{url_for('notifications')}}" class="w3-bar-item w3-button">Notifiche</a>
                 {% if current_user.is_admin() %}
                 <a href="{{url_for('dashboard_view')}}" class="w3-bar-item w3-button">Dashboard</a>
+                {% else %}
+                <a href="{{url_for('profile_view', username=current_user.Email)}}" class="w3-bar-item w3-button">Profilo</a>
                 {% endif %}
+                <a href="{{url_for('notifications')}}" class="w3-bar-item w3-button">Notifiche</a>
                 <a href="{{url_for('logout')}}" class="w3-bar-item w3-button">Logout</a>
             </div>
             {% endif %}
