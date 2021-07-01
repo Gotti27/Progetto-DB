@@ -5,20 +5,9 @@
     <title>Palestra di Forestopoli-Home</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-
-    <style>
-        body {
-            /*background-image: url('https://wallpaperaccess.com/full/1567679.jpg');*/
-            background-image: url('https://c.wallhere.com/photos/75/e3/trees_top_view_forest-548141.jpg!d');
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-size: 100% 100%;
-        }
-    </style>
-
 </head>
-<body>
-    <div class="w3-bar w3-light-grey w3-border-bottom">
+
+<div class="w3-bar w3-light-grey w3-border-bottom">
         <a class="w3-bar-item w3-button w3-xlarge" href="{{url_for('lista_corsi')}}">Corsi</a>
         <div class="w3-dropdown-hover w3-right">
             {% if not current_user.is_authenticated %}
@@ -41,9 +30,16 @@
             {% endif %}
         </div>
     </div>
+
+{% block content %}
+<body style="background-image: url('https://wallpaperaccess.com/full/1567679.jpg');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: 100% 100%;">
     <div class="w3-container" align="center">
         <h1 class="w3-text-white">Palestra di Forestopoli</h1>
     </div>
-
 </body>
+{% endblock %}
+
 </html>

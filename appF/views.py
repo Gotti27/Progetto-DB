@@ -206,10 +206,11 @@ def dashboard_view():
     return render_template('adminDashboard.html', sale=get_sale(), istruttori=get_istruttori(), step=get_time_step())
 
 
-@app.route("/report/<zero>", methods=['GET', 'POST'])
-def report(zero):
+@app.route("/report", methods=['GET', 'POST'])
+def report():
     messaggio = ""
-    giorni = get_giorni_tracciamento()
+    zero = request.args.get('zero')
+    giorni = request.args.get('giorni')
     tracciati = contact_tracing(zero=get_persona_by_cf(zero), days=giorni)
     if request.method == 'POST':
         form = request.form['form-name']
@@ -349,7 +350,7 @@ def view_users():
             'Attivo': p.Attivo
         }
         staff.append(s)
-    return render_template('users.html', clienti=clienti, staff=staff)
+    return render_template('users.html', clienti=clienti, staff=staff, giorni_tracciamento=get_giorni_tracciamento())
 
 
 @app.errorhandler(404)

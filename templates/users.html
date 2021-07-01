@@ -26,7 +26,7 @@
                     <th>Email</th>
                     <th>Attivo</th>
                     <th>Pagante</th>
-                    <th>Contact Tracing</th>
+                    <th>Contact Tracing ({{ giorni_tracciamento }} gg)</th>
                 </tr>
                 {% for c in clienti %}
                 <tr>
@@ -54,8 +54,8 @@
                             <span class="slider round"></span>
                         </label>
                     </th>
-                    <th>
-                        <a class="w3-button w3-black" href="{{url_for('report', zero=c.CF)}}">Traccia</a>
+                    <th class="w3-center">
+                        <a class="w3-button w3-black" href="{{url_for('report', zero=c.CF, giorni=giorni_tracciamento)}}">Traccia</a>
                     </th>
                 </tr>
                 {% endfor %}

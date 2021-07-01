@@ -8,6 +8,10 @@
 </head>
 
 <body>
+
+{% extends "home.html" %}
+{% block content%}
+
 <div class="w3-container" align="center">
         <a class="w3-button w3-black w3-margin-top" href="{{url_for('home')}}">Home</a>
 </div><br>
@@ -128,5 +132,6 @@
 
 <script src="{{ url_for('static', filename='nuovoCorso.js') }}"></script>
 
+{% endblock %}
 </body>
 </html>

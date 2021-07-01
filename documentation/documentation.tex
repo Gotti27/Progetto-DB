@@ -33,7 +33,7 @@
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
 \definecolor{codepurple}{rgb}{0.58,0,0.82}
-\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\definecolor{backcolour}{rgb}{0.90,0.90,0.90}
 
 \lstdefinestyle{mystyle}{
     backgroundcolor=\color{backcolour},
@@ -68,6 +68,8 @@ Introduzione da scrivere
 -Nome rete: progetto-DB
 -Password: w^JT4fg
 \end{verbatim}
+\subsection{Nota}
+Nel codice non sono presenti apostrofi per evitare errori di rendering con \LaTeX
 \section{Database}
 Mamma mia!
 \\\includegraphics[width=\textwidth]{schema.png}\\
@@ -95,7 +97,7 @@ def contact_tracing(zero, days):
     lower_limit_date = last_zero_appearance_date - timedelta(days=days)
     # definiamo il range usando il numero di giorni in input
     
-    last_zero_appearances = tutti gli ingressi di positivo nell'intervallo
+    last_zero_appearances = tutti gli ingressi di positivo nell intervallo
 
     for appearance in last_zero_appearances:
         prenotazioni = tutte le prenotazioni che intersecano quella in esame
@@ -107,7 +109,7 @@ def contact_tracing(zero, days):
         for p in prenotazioni:
             potential_infected.append(p.IDCliente)
     return [get_persona_by_cf(cf) for cf in (list(set(potential_infected)))]
-    # Ritorniamo l'istanza delle persone il cui codice fiscale risulta tra
+    # Ritorniamo l istanza delle persone il cui codice fiscale risulta tra
     # i potenziali positivi, rimuovendo prima i duplicati
 \end{lstlisting}
 \subsubsection{Query di contact tracing}
