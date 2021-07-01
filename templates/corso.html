@@ -5,11 +5,11 @@
     <title>Corso</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
-<body>
-    <div class="w3-container" align="center">
-        <a class="w3-button w3-black w3-margin-top" href="{{url_for('home')}}">Home</a>
-    </div>
 
+{% extends "home.html" %}
+
+{% block content %}
+<body>
     <div class="w3-container w3-light-grey" style="width:75%; margin:auto; margin-top:32px" >
         <div class=" w3-section" id="intro">
             <h1>{{ corso.Nome }}</h1>
@@ -79,7 +79,9 @@
 
     </div>
 
-    {% if current_user.is_admin() %}
+    <hr>
+
+        {% if current_user.is_admin() %}
     <form class="w3-center w3-margin" action="{{ url_for('view_corso', id=corso.IDCorso) }}" method="post" style="height:32px; margin:auto; line-height:100%; margin-left: 32px; border-radius:4px">
         <input type="hidden" name="form-name" value="delete">
         <button class="w3-button w3-black">
@@ -88,7 +90,9 @@
     </form>
     {% endif %}
 
-    <hr>
+
 
 </body>
+{% endblock %}
+
 </html>

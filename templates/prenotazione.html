@@ -5,6 +5,11 @@
     <title>Prenotazione</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
+
+
+{% extends "home.html" %}
+
+{% block content %}
 <body>
 
 
@@ -17,7 +22,7 @@
         <div class="w3-third w3-margin">
             <img src="{{ qrcode(stringaQR) }}">
         </div>
-        <div class="threequarter">
+        <div class="w3-rest w3- center">
             <h1 align="center"> Prenotazione numero: {{ prenotazione.IDPrenotazione }} </h1>
             <h3> Data: {{ prenotazione.Data }}</h3>
             <h3> Orario: {{ prenotazione.OraInizio.strftime('%H:%M')}} - {{ prenotazione.OraFine.strftime('%H:%M') }}</h3>
@@ -27,17 +32,19 @@
             <h3> Allenamento libero</h3>
             {% endif %}
 
-            <form action="{{ url_for('prenotazione_view', id_prenotazione=prenotazione.IDPrenotazione) }}" method="post" class="w3-center w3-margin-bottom">
-                <input type="hidden" name="form-name" value="delete">
-                <button class="w3-button w3-black">
-                    Cancella prenotazione
-                </button>
-            </form>
         </div>
     </div>
+    <form action="{{ url_for('prenotazione_view', id_prenotazione=prenotazione.IDPrenotazione) }}" method="post" class="w3-center w3-margin-bottom">
+        <input type="hidden" name="form-name" value="delete">
+        <button class="w3-button w3-black">
+            Cancella prenotazione
+        </button>
+    </form>
 </div>
 
 
 
 </body>
+{% endblock %}
+
 </html>

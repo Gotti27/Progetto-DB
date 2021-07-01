@@ -8,6 +8,7 @@
 </head>
 
 <div class="w3-bar w3-light-grey w3-border-bottom">
+        <a class="w3-bar-item w3-button w3-xlarge" href="{{url_for('home')}}">Home</a>
         <a class="w3-bar-item w3-button w3-xlarge" href="{{url_for('lista_corsi')}}">Corsi</a>
         <div class="w3-dropdown-hover w3-right">
             {% if not current_user.is_authenticated %}
@@ -32,7 +33,7 @@
     </div>
 
 {% block content %}
-<body style="background-image: url('https://wallpaperaccess.com/full/1567679.jpg');
+<body style="background-image: url('https://c.wallhere.com/photos/75/e3/trees_top_view_forest-548141.jpg!d');
             background-repeat: no-repeat;
             background-attachment: fixed;
             background-size: 100% 100%;">

@@ -248,9 +248,6 @@ def report():
 @app.route("/notifiche", methods=['GET', 'POST'])
 @login_required
 def notifications():
-    sender = False
-    if current_user.CF in [member.IDStaff for member in db.session.query(Staff).all()]:
-        sender = True
     if request.method == 'POST' and request.form['form-name'] == 'cancellaNotifiche':
         q = delete(NotificaDestinatario).where(NotificaDestinatario.Destinatario == current_user.CF)
         db.session.execute(q)
@@ -270,7 +267,7 @@ def notifications():
                        NotificaDestinatario.Destinatario == current_user.CF).first().Letto,
                    'Testo': notify.Testo}
         inbox.append(message)
-    if sender and request.method == 'POST' and request.form['form-name'] == 'inviaNotifica':
+    if current_user.is_staff() and request.method == 'POST' and request.form['form-name'] == 'inviaNotifica':
         testo = request.form['testo']
         mittente = current_user.CF
         destinatari = request.form['destinatario'].split(' ')
@@ -279,7 +276,7 @@ def notifications():
     db.session.query(NotificaDestinatario) \
         .filter(NotificaDestinatario.Destinatario == current_user.CF).update({'Letto': True})
     db.session.commit()
-    return render_template('notifiche.html', sender=sender, inbox=inbox)
+    return render_template('notifiche.html', inbox=inbox)
 
 
 @app.route("/prenotazione/<id_prenotazione>", methods=['GET', 'POST'])

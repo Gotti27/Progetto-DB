@@ -5,11 +5,11 @@
     <title>Corsi</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
-<body>
-    <div class="w3-container" align="center">
-        <a class="w3-button w3-black w3-margin-top" href="{{url_for('home')}}">Home</a>
-    </div>
 
+{% extends "home.html" %}
+
+{% block content %}
+<body>
     <div class="w3-container" align="center">
         <h1>I nostri corsi</h1>
     </div>
@@ -31,4 +31,5 @@
     {% endfor %}
 
 </body>
+{% endblock %}
 </html>

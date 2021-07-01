@@ -14,22 +14,27 @@
         }
     </style>
 </head>
-<body>
-<div class="w3-row w3-container w3-light-gray">
-    <a class="w3-button w3-black w3-margin-top" href="{{url_for('profile_view', username=current_user.Email)}}">area riservata</a>
 
+
+{% extends "home.html" %}
+
+{% block content %}
+<body>
+<div class="w3-row w3-container">
     <form action="{{ url_for('notifications') }}" method="post" class="w3-margin-top">
         <input type="hidden" name="form-name" value="cancellaNotifiche">
         <input type="submit" class="w3-button w3-black" value="Cancella tutte le notifiche">
     </form>
 </div>
-<div class="w3-row w3-container w3-light-gray">
-    {% if sender == True %}
-    <div class="w3-container w3-half w3-light-gray">
+<div class="w3-quarter"><p></p></div>
+<div class="w3-container w3-light-gray w3-card w3-margin w3-half w3-center">
+    {% if current_user.is_staff() %}
+    <h1>Invia una notifica</h1>
+    <div class="w3-container w3-light-gray">
         <form action="{{ url_for('notifications') }}" method="post" class="w3-container w3-margin" id="nuonaNotifica">
             <input type="hidden" name="form-name" value="inviaNotifica">
-            <input id="testo" name="testo" type="text" placeholder="testo" class="w3-input w3-margin-bottom"/>
             <input id="destinatario" name="destinatario" type="text" placeholder="destinatari separati da spazio" class="w3-input w3-margin-bottom"/>
+            <textarea id="testo" name="testo" placeholder="testo" class="w3-input w3-margin-bottom" style="resize: vertical"></textarea>
             <input type="submit" class="w3-button w3-black" value="Invia"><br>
         </form>
     </div>
@@ -58,6 +63,8 @@
             <br><br>
         {% endfor %}
     </div>
+    </div>
 </div>
 </body>
+{% endblock %}
 </html>

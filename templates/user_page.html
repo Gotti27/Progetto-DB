@@ -5,12 +5,12 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 </head>
+
+
+{% extends "home.html" %}
+
+{% block content %}
 <body>
-    <div class="w3-row w3-container w3-light-gray">
-        <a class="w3-button w3-black w3-margin-top" href="{{url_for('home')}}">Home</a>
-        <a class="w3-button w3-black w3-margin-top" href="{{url_for('logout')}}">Logout</a>
-        <a class="w3-button w3-black w3-margin-top" href="{{url_for('notifications')}}">Notifiche ({{ inbox_number }})</a>
-    </div>
     <div align="center" class="w3-container">
         <h2>Bentornato, {{current_user.Nome}} {{current_user.Cognome}}!</h2>
     </div>
@@ -31,8 +31,8 @@
     {% if current_user.can_book() %}
     <div class="w3-row">
         <div class="w3-container w3-quarter"><p></p></div>
-        <div class="w3-container w3-half w3-light-gray w3-margin-bottom">
-            <div class="w3-container w3-light-gray">
+        <div class="w3-container w3-half w3-margin-bottom">
+            <div class="w3-container w3-light-gray w3-card">
                 <h2 class="w3-center">Prenota una sessione di allenamento</h2>
                 <h4 class="w3-center"> {{ msg }} </h4>
                 <form action="{{ url_for('profile_view', username=username) }}" method="post"
@@ -92,7 +92,7 @@
             </div>
 
         </div>
-        <div class="w3-container w3-quarter w3-light-gray">
+        <div class="w3-container w3-quarter">
 
         </div>
     </div>
@@ -117,4 +117,5 @@
         document.getElementById("inputDate").setAttribute('min',minDate);
     </script>
 </body>
+{% endblock %}
 </html>
