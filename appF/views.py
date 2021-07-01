@@ -198,7 +198,6 @@ def dashboard_view():
         session_gestore.query(Generali).update({'GiorniTracciamento': request.form['giorni']})
         session_gestore.commit()
 
-
     return render_template('adminDashboard.html', sale=get_sale(), istruttori=get_istruttori(), step=get_time_step())
 
 

@@ -1,6 +1,6 @@
 import datetime
 
-from run import engine_ospite, engine_utente, engine_istruttore, engine_gestore#, engine
+from run import engine_ospite, engine_utente, engine_istruttore, engine_gestore  # , engine
 from sqlalchemy import *
 from sqlalchemy.orm import *
 from datetime import *
@@ -50,7 +50,8 @@ class Persona(UserMixin, Base):
         return str(self.Email)
 
     def is_admin(self):
-        return (session_ospite.query(Staff).filter(Staff.IDStaff == self.CF).filter(Staff.Ruolo == 'Gestore')).count() > 0
+        return (session_ospite.query(Staff).filter(Staff.IDStaff == self.CF).filter(
+            Staff.Ruolo == 'Gestore')).count() > 0
 
     def __repr__(self):
         return "<Persona: CF='%s', N='%s', C='%s', S='%s', DN='%s', Email='%s', PW='%s', Tel='%s', Act='%s'>" % (
@@ -196,8 +197,8 @@ class CorsoSeguito(Base):
     clienti = relationship(Cliente, uselist=False)
 
 
-#Session = sessionmaker(bind=engine)
-#session = Session()
+# Session = sessionmaker(bind=engine)
+# session = Session()
 Session_ospite = sessionmaker(bind=engine_ospite)  # creazione delle factory
 session_ospite = Session_ospite()
 Session_utente = sessionmaker(bind=engine_utente)
@@ -268,7 +269,8 @@ def get_corso_by_id(id):
 
 
 def numero_iscritti_corso(corso):
-    iscr = session_ospite.query(Prenotazione).filter(Prenotazione.IDCorso == corso).filter(Prenotazione.Approvata).count()
+    iscr = session_ospite.query(Prenotazione).filter(Prenotazione.IDCorso == corso).filter(
+        Prenotazione.Approvata).count()
     return iscr
 
 
@@ -278,7 +280,7 @@ def get_iscritti_corso(corso):
 
 
 def get_follower_corso(corso):
-    flw = session_utente.query(CorsoSeguito).filter(CorsoSeguito.Nome == get_corso_by_id(corso)['Nome']).all()
+    flw = session_utente.query(CorsoSeguito).filter(CorsoSeguito.Nome == get_corso_by_id(corso).Nome).all()
     return flw
 
 
@@ -289,7 +291,7 @@ def get_sale():
 
 def get_istruttori():
     q = session_ospite.query(Staff.IDStaff, Persona.Nome, Persona.Cognome).filter(Staff.Ruolo == "Istruttore",
-                                                                              Persona.CF == Staff.IDStaff).all()
+                                                                                  Persona.CF == Staff.IDStaff).all()
     return q
 
 
@@ -311,9 +313,9 @@ def attiva_persona(cf):
 def disattiva_persona(persona):
     session_gestore.query(Persona).filter(Persona.CF == persona).update({'Attivo': False})
     session_gestore.query(Prenotazione).filter(Prenotazione.IDCliente == persona,
-                                          Prenotazione.Data >= datetime.today()#,
-                                          #Prenotazione.OraInizio >= datetime.now())\
-                                          ).update({'Approvata': False})
+                                               Prenotazione.Data >= datetime.today()  # ,
+                                               # Prenotazione.OraInizio >= datetime.now())\
+                                               ).update({'Approvata': False})
     session_gestore.commit()
 
 
@@ -362,9 +364,10 @@ def insert_prenotazione(persona, data, ora_inizio, ora_fine, sala, corso=None):
 
     if corso is None:
         max_number = session_utente.query(Sala).filter(Sala.IDSala == sala).first().MaxPersone
-        available = session_utente.query(Prenotazione).filter(Prenotazione.Data == data, Prenotazione.OraFine > ora_inizio,
-                                                          Prenotazione.OraInizio < ora_fine,
-                                                          Prenotazione.IDSala == sala, Prenotazione.Approvata).all()
+        available = session_utente.query(Prenotazione).filter(Prenotazione.Data == data,
+                                                              Prenotazione.OraFine > ora_inizio,
+                                                              Prenotazione.OraInizio < ora_fine,
+                                                              Prenotazione.IDSala == sala, Prenotazione.Approvata).all()
 
         inizio_allenamento = int(str(ora_inizio).split(':')[0]) * (60 // time_step) + int(
             str(ora_inizio).split(':')[1]) // time_step
@@ -410,7 +413,7 @@ def delete_prenotazione_by_id(id):
 
 def is_iscritto(persona, corso):
     if persona is not None and session_ospite.query(Prenotazione).filter(Prenotazione.IDCliente == persona,
-                                                                     Prenotazione.IDCorso == corso).count() > 0:
+                                                                         Prenotazione.IDCorso == corso).count() > 0:
         return True
     return False
 
@@ -440,7 +443,7 @@ def contact_tracing(zero, days):
     lower_limit_date = last_zero_appearance_date - timedelta(days=days)
     last_zero_appearances = session_ospite.query(Prenotazione) \
         .filter(Prenotazione.IDCliente == zero.CF, Prenotazione.Data >= lower_limit_date,
-                Prenotazione.Data <= datetime.today(), # da testare
+                Prenotazione.Data <= datetime.today(),  # da testare
                 Prenotazione.Approvata == true()).order_by(Prenotazione.Data.desc()).all()
 
     for appearance in last_zero_appearances:
@@ -483,8 +486,8 @@ def get_corsi_seguiti(persona):
 
 def get_corsi_insegnante(cf, mese, anno):
     q = session_ospite.query(Corso).filter(Corso.IDIstruttore == cf,
-                                       extract('year', Corso.Data) == anno,
-                                       extract('month', Corso.Data) == mese).order_by(Corso.OraInizio).all()
+                                           extract('year', Corso.Data) == anno,
+                                           extract('month', Corso.Data) == mese).order_by(Corso.OraInizio).all()
     ret = []
     for i in q:
         ret.append({property: str(value) for property, value in vars(i).items()})
@@ -507,7 +510,7 @@ def delete_corso_seguito(persona, corso):
 
 def is_seguito(persona, corso):
     if persona is not None and session_utente.query(CorsoSeguito).filter(CorsoSeguito.Nome == corso,
-                                                                     CorsoSeguito.IDCliente == persona).count() > 0:
+                                                                         CorsoSeguito.IDCliente == persona).count() > 0:
         return True
     return False
 
@@ -534,8 +537,8 @@ def get_notifiche_persona(cf):
     inbox = []
     for notify in notifies:
         q = session_utente.query(NotificaDestinatario).filter(
-                       NotificaDestinatario.IDNotifica == notify.IDNotifica,
-                       NotificaDestinatario.Destinatario == cf).first()
+            NotificaDestinatario.IDNotifica == notify.IDNotifica,
+            NotificaDestinatario.Destinatario == cf).first()
         message = {'IDNotifica': notify.IDNotifica,
                    'Mittente': get_persona_by_cf(notify.Mittente).Email,
                    'Timestamp': q.Timestamp,
@@ -547,4 +550,3 @@ def get_notifiche_persona(cf):
 
 def get_giorni_tracciamento():
     return session_utente.query(Generali).one().GiorniTracciamento
-
