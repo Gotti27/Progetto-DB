@@ -1,13 +1,11 @@
 import re
-import time
 import bcrypt
 import pdfkit
 from functools import wraps
 from flask import *
 from flask_login import login_user, logout_user, login_required, current_user
-from flask_mail import Message
 
-from run import app, db, mail
+from run import app, db
 from appF.models import *
 
 
@@ -33,7 +31,7 @@ def login():
         username = request.form['username']
         password = bytes(request.form['password'],
                          encoding="utf-8")
-        logging = db.session.query(Persona).filter(Persona.Email == username).first()
+        logging = get_persona_by_email(username)
         if logging is not None and bcrypt.checkpw(password, logging.Password.encode("utf-8")):
             user = get_persona_by_email(request.form['username'])
             login_user(user)
@@ -62,7 +60,7 @@ def register():
         msg = ''
         if request.method == 'POST' and request.form['form-name'] == 'register':
             email = request.form['email']
-            registration = db.session.query(Persona).filter(Persona.Email == email).first()
+            registration = get_persona_by_email(email)
             cf = get_persona_by_cf(request.form['Codice fiscale'])
             if registration is not None or cf is not None:
                 msg = 'Persona già registrata'
@@ -81,7 +79,7 @@ def register():
                 else:
                     insert_cliente(nuova_persona)
                     login_user(nuova_persona)
-                invia_notifica(db.session.query(Notifica).filter(Notifica.IDNotifica == 3).first(), [nuova_persona.CF])
+                invia_notifica(session_utente.query(Notifica).filter(Notifica.IDNotifica == 3).first(), [nuova_persona.CF])
                 return redirect(url_for('profile_view'))
         elif request.method == 'POST':
             msg = 'Riempi tutti i campi del form'
@@ -97,7 +95,7 @@ def profile_view():
                             ora_fine=(request.form['oraOraFine'] + ":" + request.form['minutiOraFine']),
                             sala=request.form['sala'])
 
-    inbox_number = len(db.session.query(NotificaDestinatario)
+    inbox_number = len(session_utente.query(NotificaDestinatario)
                        .filter(NotificaDestinatario.Destinatario == current_user.CF,
                                NotificaDestinatario.Letto == False).all())
 
@@ -132,11 +130,11 @@ def lista_corsi():
 
 @app.route("/corso/<id>", methods=['GET', 'POST'])
 def view_corso(id):
-    corso = db.session.query(Corso).filter(Corso.IDCorso == id).first()
+    corso = get_corso_by_id(id)
 
     if corso is None:
         abort(404)
-    istruttore = db.session.query(Persona).filter(Persona.CF == corso.IDIstruttore).first()
+    istruttore = get_persona_by_cf(corso.IDIstruttore)
 
     if request.method == 'POST' and current_user.is_authenticated:
         if request.form['form-name'] == "subscribe":
@@ -189,17 +187,17 @@ def dashboard_view():
     if request.method == 'POST' and request.form['form-name'] == 'creaSala':
         insert_sala(max_persone=request.form['MaxPersone'], tipo=request.form['tipo'])
     if request.method == 'POST' and request.form['form-name'] == "modificaScaglione":
-        db.session.query(Generali).update({'MinutiScaglioni': request.form['slot']})
-        db.session.commit()
+        session_gestore.query(Generali).update({'MinutiScaglioni': request.form['slot']})
+        session_gestore.commit()
     if request.method == 'POST' and request.form['form-name'] == 'limiti':
         if request.form['maxOre'] != '':
-            db.session.query(Generali).update({'MassimoOreGiorno': request.form['maxOre']})
+            session_gestore.query(Generali).update({'MassimoOreGiorno': request.form['maxOre']})
         if request.form['maxGiorni'] != '':
-            db.session.query(Generali).update({'MassimoGiorniSettimana': request.form['maxGiorni']})
-        db.session.commit()
+            session_gestore.query(Generali).update({'MassimoGiorniSettimana': request.form['maxGiorni']})
+        session_gestore.commit()
     if request.method == 'POST' and request.form['form-name'] == 'tracciamento':
-        db.session.query(Generali).update({'GiorniTracciamento': request.form['giorni']})
-        db.session.commit()
+        session_gestore.query(Generali).update({'GiorniTracciamento': request.form['giorni']})
+        session_gestore.commit()
 
 
     return render_template('adminDashboard.html', sale=get_sale(), istruttori=get_istruttori(), step=get_time_step())
@@ -227,11 +225,11 @@ def report():
         if form == 'notifica' or form == 'disattiva':
             for person in tracciati:
                 if form == 'disattiva':
-                    notifica = db.session.query(Notifica).filter(
+                    notifica = session_utente.query(Notifica).filter(
                         Notifica.IDNotifica == 0).first()  # da creare con un codice particolare
                     disattiva_persona(persona=person.CF)
                 else:
-                    notifica = db.session.query(Notifica).filter(
+                    notifica = session_utente.query(Notifica).filter(
                         Notifica.IDNotifica == 1).first()  # da creare con un codice particolare
                 invia_notifica(notifica=notifica, destinatari=[person.CF])
             messaggio = 'operazione avvenuta con successo'
@@ -244,8 +242,8 @@ def report():
 def notifications():
     if request.method == 'POST' and request.form['form-name'] == 'cancellaNotifiche':
         q = delete(NotificaDestinatario).where(NotificaDestinatario.Destinatario == current_user.CF)
-        db.session.execute(q)
-        db.session.commit()
+        session_utente.execute(q)
+        session_utente.commit()
     if current_user.is_staff() and request.method == 'POST' and request.form['form-name'] == 'inviaNotifica':
         testo = request.form['testo']
         mittente = current_user.CF
@@ -255,8 +253,8 @@ def notifications():
 
     inbox = get_notifiche_persona(current_user.get_id())
 
-    db.session.query(NotificaDestinatario).filter(NotificaDestinatario.Destinatario == current_user.CF).update({'Letto': True})
-    db.session.commit()
+    session_utente.query(NotificaDestinatario).filter(NotificaDestinatario.Destinatario == current_user.CF).update({'Letto': True})
+    session_utente.commit()
 
     return render_template('notifiche.html', inbox=inbox)
 
@@ -289,8 +287,8 @@ def prenotazione_view(id_prenotazione):
 @login_required
 @auth_admin
 def view_users():
-    clienti = db.session.query(Persona).filter(Persona.CF.in_(db.session.query(Cliente.IDCliente))).order_by(Persona.Cognome, Persona.Nome).all()
-    staff = db.session.query(Persona).filter(Persona.CF.in_(db.session.query(Staff.IDStaff))).order_by(Persona.Cognome, Persona.Nome).all()
+    clienti = session_ospite.query(Persona).filter(Persona.CF.in_(session_ospite.query(Cliente.IDCliente))).order_by(Persona.Cognome, Persona.Nome).all()
+    staff = session_ospite.query(Persona).filter(Persona.CF.in_(session_ospite.query(Staff.IDStaff))).order_by(Persona.Cognome, Persona.Nome).all()
 
     if request.method == 'POST' and request.form['form-name'] == 'modifica':
         for p in clienti:
@@ -310,7 +308,7 @@ def view_users():
             else:
                 disattiva_persona(p.CF)
 
-    for i,v in enumerate(clienti):
+    for i, v in enumerate(clienti):
         c = {
             'Nome': v.Nome,
             'Cognome': v.Cognome,
@@ -320,13 +318,13 @@ def view_users():
             'Pagante': get_cliente_by_id(v.CF).PagamentoMese
         }
         clienti[i] = c
-    for i,v in enumerate(staff):
+    for i, v in enumerate(staff):
         s = {
             'Nome': v.Nome,
             'Cognome': v.Cognome,
             'CF': v.CF,
             'Email': v.Email,
-            'Ruolo': db.session.query(Staff).filter(Staff.IDStaff == v.CF).first().Ruolo,
+            'Ruolo': session_ospite.query(Staff).filter(Staff.IDStaff == v.CF).first().Ruolo,
             'Attivo': v.Attivo
         }
         staff[i] = s
