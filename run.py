@@ -13,10 +13,10 @@ login_manager.init_app(app)
 
 db = SQLAlchemy(app)
 #engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'], echo=True)
-engine_ospite = create_engine(app.config['SQLALCHEMY_DATABASE_URI_OSPITE'], echo=True)
-engine_utente = create_engine(app.config['SQLALCHEMY_DATABASE_URI_UTENTE'], echo=True)
-engine_istruttore = create_engine(app.config['SQLALCHEMY_DATABASE_URI_ISTRUTTORE'], echo=True)
-engine_gestore = create_engine(app.config['SQLALCHEMY_DATABASE_URI_GESTORE'], echo=True)
+engine_ospite = create_engine(app.config['SQLALCHEMY_DATABASE_URI_OSPITE'], echo=False)
+engine_utente = create_engine(app.config['SQLALCHEMY_DATABASE_URI_UTENTE'], echo=False)
+engine_istruttore = create_engine(app.config['SQLALCHEMY_DATABASE_URI_ISTRUTTORE'], echo=False)
+engine_gestore = create_engine(app.config['SQLALCHEMY_DATABASE_URI_GESTORE'], echo=False)
 
 
 QRcode(app)

@@ -100,7 +100,8 @@ def profile_view():
                                NotificaDestinatario.Letto == False).all())
 
     return render_template('user_page.html', persona=current_user.get_id(),
-                           inbox_number=inbox_number, step=get_time_step(), sale=get_sale())
+                           inbox_number=inbox_number, step=get_time_step(), sale=get_sale(),
+                           prenotazioni=get_all_prenotazioni_persona(current_user.get_id()))
 
 
 @app.route('/calendar')

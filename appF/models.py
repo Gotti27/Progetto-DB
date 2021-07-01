@@ -258,7 +258,7 @@ def get_corsi(mese, anno):
 
 
 def get_corsi_futuri():
-    q = session_ospite.query(Corso).filter(Corso.Data >= date.today()).filter(Corso.OraInizio > time()).order_by(
+    q = session_ospite.query(Corso).filter(Corso.Data >= date.today(), Corso.OraInizio > time()).order_by(
         Corso.Data).all()
     return q
 
@@ -462,9 +462,21 @@ def contact_tracing(zero, days):
 
 
 def get_prenotazioni_persona(cf, mese, anno):
-    q = session_ospite.query(Prenotazione).filter(Prenotazione.IDCliente == cf).filter(
-        extract('year', Prenotazione.Data) == anno).filter(
-        extract('month', Prenotazione.Data) == mese).order_by(Prenotazione.OraInizio).all()
+    q = session_ospite.query(Prenotazione).filter(Prenotazione.IDCliente == cf,
+                                                  extract('year', Prenotazione.Data) == anno,
+                                                  extract('month', Prenotazione.Data) == mese).order_by(Prenotazione.OraInizio).all()
+    ret = []
+    for i in q:
+        ret.append({property: str(value) for property, value in vars(i).items()})
+        ret[-1]["type"] = "prenotazione"
+        del ret[-1]['_sa_instance_state']
+    return ret
+
+
+def get_all_prenotazioni_persona(cf):
+    q = session_ospite.query(Prenotazione).filter(Prenotazione.IDCliente == cf,
+                                                  Prenotazione.Data >= date.today(),
+                                                  Prenotazione.OraInizio > time()).order_by(Prenotazione.Data, Prenotazione.OraInizio).all()
     ret = []
     for i in q:
         ret.append({property: str(value) for property, value in vars(i).items()})
