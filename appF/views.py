@@ -188,6 +188,19 @@ def dashboard_view():
             start += timedelta(days=7)
     if request.method == 'POST' and request.form['form-name'] == 'creaSala':
         insert_sala(max_persone=request.form['MaxPersone'], tipo=request.form['tipo'])
+    if request.method == 'POST' and request.form['form-name'] == "modificaScaglione":
+        db.session.query(Generali).update({'MinutiScaglioni': request.form['slot']})
+        db.session.commit()
+    if request.method == 'POST' and request.form['form-name'] == 'limiti':
+        if request.form['maxOre'] != '':
+            db.session.query(Generali).update({'MassimoOreGiorno': request.form['maxOre']})
+        if request.form['maxGiorni'] != '':
+            db.session.query(Generali).update({'MassimoGiorniSettimana': request.form['maxGiorni']})
+        db.session.commit()
+    if request.method == 'POST' and request.form['form-name'] == 'tracciamento':
+        db.session.query(Generali).update({'GiorniTracciamento': request.form['giorni']})
+        db.session.commit()
+
 
     return render_template('adminDashboard.html', sale=get_sale(), istruttori=get_istruttori(), step=get_time_step())
 

@@ -107,36 +107,15 @@
         </form>
     </div>
 
-    <!-- TODO: eliminare e spostare nella pagina dell'utente vista dall'admin -->
     <div class="w3-container w3-third w3-light-gray">
         <h2 class="w3-center"><a href="{{url_for('view_users')}}">Visualizza utenti</a></h2>
         <h2 class="w3-center"><a href="{{url_for('register')}}">Registra un istruttore</a></h2>
 
-        <h2>Modifica la grandezza di ogni slot</h2>
-        <form action="{{ url_for('dashboard_view') }}" method="post" class="w3-container w3-margin">
-            <input type="hidden" name="form-name" value="modificaScaglione">
-            <div>
-                <input type="radio" name="slot" id="15" value="15" required>
-                <label for="15">15 minuti</label><br>
-                <input type="radio" name="slot" id="30" value="30" required>
-                <label for="30">30 minuti</label><br>
-                <input type="radio" name="slot" id="60" value="60" required>
-                <label for="60">60 minuti</label><br>
-            </div><input type="submit" class="w3-button w3-black" value="Modifica"><br>
-        </form>
-
-        <h2>Modifica il numero massimo di giorni in cui un cliente può allenarsi</h2>
-        <form action="{{ url_for('dashboard_view') }}" method="post" class="w3-container w3-margin">
-            <input type="hidden" name="form-name" value="massimoGiorni">
-            <input name="maxGiorni" type="number" placeholder="numero di giorni" class="w3-input" min="0" max="7"required><br>
-            <input type="submit" class="w3-button w3-black" value="Modifica"><br>
-        </form>
-
-        <h2>Modifica il numero massimo di ore in un giorno in cui un cliente può allenarsi</h2>
-        <form action="{{ url_for('dashboard_view') }}" method="post" class="w3-container w3-margin">
-            <input type="hidden" name="form-name" value="massimoOre">
-            <input name="maxOre" type="number" placeholder="numero di giorni" class="w3-input" min="0" max="24"required><br>
-            <input type="submit" class="w3-button w3-black" value="Modifica"><br>
+        <h3>Giorni da tracciare</h3>
+        <form action="{{ url_for('dashboard_view') }}" method="post" class="w3-container w3-margin w3-row">
+            <input type="hidden" name="form-name" value="tracciamento">
+            <input name="giorni" type="number" placeholder="numero di giorni" class="w3-input w3-col" min="0">
+            <input type="submit" class="w3-button w3-black w3-margin-top" value="Modifica"><br>
         </form>
     </div>
 
@@ -147,6 +126,30 @@
             <label for="tipoSala">Tipo di sala</label><input id="tipoSala" name="tipo" type="text" placeholder="tipo" class="w3-input w3-margin-bottom">
             <label for="maxPersoneNewSala">Numero massimo di persone</label><input id="maxPersoneNewSala" name="MaxPersone" type="number" placeholder="max persone" class="w3-input" min="0"><br>
             <input type="submit" class="w3-button w3-black" value="Crea sala"><br>
+        </form>
+
+        <hr>
+        <h2>Durata di ogni slot</h2>
+        <form action="{{ url_for('dashboard_view') }}" method="post" class="w3-container w3-margin">
+            <input type="hidden" name="form-name" value="modificaScaglione">
+            <div class="w3-margin-bottom">
+                <input class="w3-radio" type="radio" name="slot" id="15" value="15" required {% if step == 15 %} checked {% endif %}>
+                <label for="15">15 minuti</label><br>
+                <input class="w3-radio" type="radio" name="slot" id="30" value="30" required {% if step == 30 %} checked {% endif %}>
+                <label for="30">30 minuti</label><br>
+                <input class="w3-radio" type="radio" name="slot" id="60" value="60" required {% if step == 60 %} checked {% endif %}>
+                <label for="60">60 minuti</label><br>
+            </div><input type="submit" class="w3-button w3-black" value="Modifica"><br>
+        </form>
+
+        <hr>
+        <h2>Limite allenamenti</h2>
+        <form action="{{ url_for('dashboard_view') }}" method="post" class="w3-container w3-margin w3-row">
+            <input type="hidden" name="form-name" value="limiti">
+            <input name="maxGiorni" type="number" placeholder="numero di giorni" class="w3-input w3-col l5" min="0" max="7">
+            <div class="w3-col l2"><p></p></div>
+            <input name="maxOre" type="number" placeholder="numero di ore" class="w3-input w3-col l5" min="0" max="24"><br>
+            <input type="submit" class="w3-button w3-black w3-margin-top" value="Modifica"><br>
         </form>
 
     </div>
