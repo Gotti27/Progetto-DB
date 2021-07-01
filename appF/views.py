@@ -5,7 +5,7 @@ from functools import wraps
 from flask import *
 from flask_login import login_user, logout_user, login_required, current_user
 
-from run import app, db
+from run import app
 from appF.models import *
 
 
