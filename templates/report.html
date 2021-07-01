@@ -12,6 +12,9 @@
             {{ msg }}
         </div>
         <div class="w3-container w3-quarter w3-light-gray">
+            <a class="w3-button w3-black w3-margin-top" href="{{url_for('view_users')}}">Users</a>
+        </div>
+        <div class="w3-container w3-quarter w3-light-gray">
             <form action="{{ url_for('report', zero=zero, giorni=giorni) }}" method="post" class="w3-container w3-margin">
                 <input type="hidden" name="form-name" value="notifica">
                 <input type="submit" class="w3-button w3-black" value="Notifica"/>

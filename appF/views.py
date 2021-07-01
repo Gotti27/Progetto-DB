@@ -306,6 +306,7 @@ def prenotazione_view(id_prenotazione):
 def view_users():
     persone = db.session.query(Persona).filter(Persona.CF.in_(db.session.query(Cliente.IDCliente))).all()
     if request.method == 'POST' and request.form['form-name'] == 'tracciamento':
+        # print(request.form['da tracciare'])
         return redirect(url_for('report', zero=request.form['da tracciare'], giorni=get_giorni_tracciamento()))
 
     if request.method == 'POST' and request.form['form-name'] == 'modifica':
