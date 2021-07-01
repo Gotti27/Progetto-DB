@@ -356,12 +356,13 @@ def insert_prenotazione(persona, data, ora_inizio, ora_fine, sala, corso=None):
     if orari_giorno is None:
         orari_giorno = session_utente.query(OrarioPalestra).filter(OrarioPalestra.GiornoSettimana == day).first()
 
-    if orari_giorno is None or datetime.strptime(str(ora_inizio)[0:5], '%H:%M').time() < orari_giorno.Apertura or datetime.strptime(str(ora_fine)[0:5], '%H:%M').time() > orari_giorno.Chiusura:
+    if orari_giorno is None or datetime.strptime(str(ora_inizio)[0:5], '%H:%M').time() < orari_giorno.Apertura or \
+            datetime.strptime(str(ora_fine)[0:5], '%H:%M').time() > orari_giorno.Chiusura:
         return None
 
     if corso is None:
         max_number = session_utente.query(Sala).filter(Sala.IDSala == sala).first().MaxPersone
-        available = session_ospite.query(Prenotazione).filter(Prenotazione.Data == data, Prenotazione.OraFine > ora_inizio,
+        available = session_utente.query(Prenotazione).filter(Prenotazione.Data == data, Prenotazione.OraFine > ora_inizio,
                                                           Prenotazione.OraInizio < ora_fine,
                                                           Prenotazione.IDSala == sala, Prenotazione.Approvata).all()
 
@@ -386,7 +387,7 @@ def insert_prenotazione(persona, data, ora_inizio, ora_fine, sala, corso=None):
                                 IDCorso=None, IDSala=sala, Approvata=approved)
 
     else:
-        disponibilita_corso = session_ospite.query(Corso).filter(Corso.IDCorso == corso).first().MaxPersone
+        disponibilita_corso = session_utente.query(Corso).filter(Corso.IDCorso == corso).first().MaxPersone
         if disponibilita_corso - numero_iscritti_corso(corso) < 1:
             approved = False
         new_book = Prenotazione(Data=data, OraInizio=ora_inizio, OraFine=ora_fine, IDCliente=persona.CF,
