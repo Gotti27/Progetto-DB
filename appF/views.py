@@ -206,9 +206,10 @@ def dashboard_view():
     return render_template('adminDashboard.html', sale=get_sale(), istruttori=get_istruttori(), step=get_time_step())
 
 
-@app.route("/report/<zero>/<giorni>", methods=['GET', 'POST'])
-def report(zero, giorni):
+@app.route("/report/<zero>", methods=['GET', 'POST'])
+def report(zero):
     messaggio = ""
+    giorni = get_giorni_tracciamento()
     tracciati = contact_tracing(zero=get_persona_by_cf(zero), days=giorni)
     if request.method == 'POST':
         form = request.form['form-name']
@@ -304,11 +305,8 @@ def prenotazione_view(id_prenotazione):
 @login_required
 @auth_admin
 def view_users():
-    persone = db.session.query(Persona).filter(Persona.CF.in_(db.session.query(Cliente.IDCliente))).all()
-    if request.method == 'POST' and request.form['form-name'] == 'tracciamento':
-        # print(request.form['da tracciare'])
-        return redirect(url_for('report', zero=request.form['da tracciare'], giorni=get_giorni_tracciamento()))
-
+    persone = db.session.query(Persona).filter(Persona.CF.in_(db.session.query(Cliente.IDCliente)))\
+        .order_by(Persona.Cognome, Persona.Nome).all()
     if request.method == 'POST' and request.form['form-name'] == 'modifica':
         for p in persone:
             if 'attivazione-' + p.CF in request.form:
@@ -332,7 +330,8 @@ def view_users():
             'Pagante': db.session.query(Cliente).filter(Cliente.IDCliente == p.CF).first().PagamentoMese
         }
         clienti.append(c)
-    persone = db.session.query(Persona).filter(Persona.CF.in_(db.session.query(Staff.IDStaff))).all()
+    persone = db.session.query(Persona).filter(Persona.CF.in_(db.session.query(Staff.IDStaff)))\
+        .order_by(Persona.Cognome, Persona.Nome).all()
     if request.method == 'POST' and request.form['form-name'] == 'modifica':
         for p in persone:
             if 'attivazione-' + p.CF in request.form:

@@ -20,8 +20,8 @@
             <h1>Lista clienti</h1>
             <table class="w3-table">
                 <tr class="w3-gray">
-                    <th>Nome</th>
                     <th>Cognome</th>
+                    <th>Nome</th>
                     <th>Codice fiscale</th>
                     <th>Email</th>
                     <th>Attivo</th>
@@ -30,8 +30,8 @@
                 </tr>
                 {% for c in clienti %}
                 <tr>
-                    <th>{{c.Nome}}</th>
                     <th>{{c.Cognome}}</th>
+                    <th>{{c.Nome}}</th>
                     <th>{{c.CF}}</th>
                     <th>{{c.Email}}</th>
                     <th>
@@ -55,11 +55,7 @@
                         </label>
                     </th>
                     <th>
-                        <form action="{{ url_for('view_users') }}" method="post" class="w3-container">
-                            <input type="hidden" name="form-name" value="tracciamento">
-                            <input type="hidden" name="da tracciare" value="{{c.CF}}">
-                            <input type="submit" class="w3-button w3-black" value="Traccia">
-                        </form>
+                        <a class="w3-button w3-black" href="{{url_for('report', zero=c.CF)}}">Traccia</a>
                     </th>
                 </tr>
                 {% endfor %}
@@ -73,18 +69,17 @@
             <h1>Lista staff</h1>
             <table class="w3-table">
                 <tr class="w3-gray">
-                    <th>Nome</th>
                     <th>Cognome</th>
+                    <th>Nome</th>
                     <th>Codice fiscale</th>
                     <th>Email</th>
                     <th>Ruolo</th>
                     <th>Attivo</th>
-                    <th>Tracciamento</th>
                 </tr>
                 {% for s in staff %}
                 <tr>
-                    <th>{{s.Nome}}</th>
                     <th>{{s.Cognome}}</th>
+                    <th>{{s.Nome}}</th>
                     <th>{{s.CF}}</th>
                     <th>{{s.Email}}</th>
                     <th>{{s.Ruolo}}</th>
@@ -100,13 +95,6 @@
                             <span class="slider round"></span>
                         </label>
                         {% endif %}
-                    </th>
-                    <th>
-                        <form action="{{ url_for('view_users') }}" method="post" class="w3-container">
-                            <input type="hidden" name="form-name" value="tracciamento">
-                            <input type="hidden" name="da tracciare" value="{{s.CF}}">
-                            <input type="submit" class="w3-button w3-black" value="Traccia">
-                        </form>
                     </th>
                 </tr>
                 {% endfor %}
