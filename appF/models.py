@@ -264,7 +264,7 @@ def get_corsi_futuri():
 
 def get_corso_by_id(id):
     q = session_ospite.query(Corso).filter(Corso.IDCorso == id).first()
-    return q.__dict__
+    return q
 
 
 def numero_iscritti_corso(corso):

@@ -134,12 +134,11 @@ def view_corso(id):
 
     if corso is None:
         abort(404)
-    istruttore = get_persona_by_cf(corso['IDIstruttore'])
+    istruttore = get_persona_by_cf(corso.IDIstruttore)
 
     if request.method == 'POST' and current_user.is_authenticated:
         if request.form['form-name'] == "subscribe":
             insert_prenotazione(current_user, corso.Data, corso.OraInizio, corso.OraFine, corso.IDSala, corso.IDCorso)
-            # TODO: gestire eventuali messaggi per mancata disponibilità ecc..
         elif request.form['form-name'] == "follow":
             insert_corso_seguito(persona=current_user.get_id(), corso=corso.Nome)
             print(str(current_user.get_id()) + "vuole iscriversi")
@@ -158,9 +157,9 @@ def view_corso(id):
             invia_notifica(nuova_notifica, destinatari)
 
     return render_template('corso.html', corso=corso, istruttore=istruttore,
-                           iscritti=numero_iscritti_corso(corso['IDCorso']),
-                           is_seguito=is_seguito(current_user.get_id(), corso['Nome']),
-                           is_iscritto=is_iscritto(current_user.get_id(), corso['IDCorso']))
+                           iscritti=numero_iscritti_corso(corso.IDCorso),
+                           is_seguito=is_seguito(current_user.get_id(), corso.Nome),
+                           is_iscritto=is_iscritto(current_user.get_id(), corso.IDCorso))
 
 
 @app.route("/dashboard", methods=['GET', 'POST'])
