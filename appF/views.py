@@ -315,7 +315,7 @@ def view_users():
             'Cognome': v.Cognome,
             'CF': v.CF,
             'Email': v.Email,
-            'Attivo': v.Attivo,
+            'Attivo': get_persona_by_cf(v.CF).Attivo,
             'Pagante': get_cliente_by_id(v.CF).PagamentoMese
         }
         clienti[i] = c
@@ -326,7 +326,7 @@ def view_users():
             'CF': v.CF,
             'Email': v.Email,
             'Ruolo': session_ospite.query(Staff).filter(Staff.IDStaff == v.CF).first().Ruolo,
-            'Attivo': v.Attivo
+            'Attivo': get_persona_by_cf(v.CF).Attivo
         }
         staff[i] = s
 
