@@ -349,7 +349,7 @@ def get_prenotazione_by_id(id):
 
 def insert_prenotazione(persona, data, ora_inizio, ora_fine, sala, corso=None):
     approved = True
-    day = int(datetime.date(datetime.strptime(str(data), '%Y-%m-%d')).weekday())
+    day = (int(datetime.date(datetime.strptime(str(data), '%Y-%m-%d')).weekday()) + 1 ) % 7 +1
     time_step = get_time_step()
     if int(str(ora_inizio).split(':')[1]) % time_step != 0 or int(str(ora_fine).split(':')[1]) % time_step != 0:
         return None

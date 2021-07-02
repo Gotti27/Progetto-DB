@@ -90,10 +90,11 @@ def register():
 @login_required
 def profile_view():
     if request.method == 'POST' and request.form['form-name'] == 'prenotazione':
-        insert_prenotazione(persona=get_persona_by_email(current_user.get_email), data=request.form['Data'],
-                            ora_inizio=(request.form['oraOraInizio'] + ":" + request.form['minutiOraInizio']),
-                            ora_fine=(request.form['oraOraFine'] + ":" + request.form['minutiOraFine']),
-                            sala=request.form['sala'])
+        if datetime.strptime(request.form['Data'], "%Y-%m-%d") <= datetime.today() + timedelta(days=14):
+            insert_prenotazione(persona=get_persona_by_email(current_user.get_email), data=request.form['Data'],
+                                ora_inizio=(request.form['oraOraInizio'] + ":" + request.form['minutiOraInizio']),
+                                ora_fine=(request.form['oraOraFine'] + ":" + request.form['minutiOraFine']),
+                                sala=request.form['sala'])
 
     inbox_number = len(session_utente.query(NotificaDestinatario)
                        .filter(NotificaDestinatario.Destinatario == current_user.CF,
