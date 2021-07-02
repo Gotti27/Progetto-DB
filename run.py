@@ -5,14 +5,14 @@ from sqlalchemy import create_engine
 from flask_qrcode import QRcode
 
 app = Flask(__name__, instance_relative_config=True)
-app.config.from_object("config")
+app.config.from_object('config')
+app.config.from_pyfile('config.py')
 
 login_manager = LoginManager()
 login_manager.init_app(app)
 
 
 db = SQLAlchemy(app)
-#engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'], echo=True)
 engine_ospite = create_engine(app.config['SQLALCHEMY_DATABASE_URI_OSPITE'], echo=False)
 engine_utente = create_engine(app.config['SQLALCHEMY_DATABASE_URI_UTENTE'], echo=False)
 engine_istruttore = create_engine(app.config['SQLALCHEMY_DATABASE_URI_ISTRUTTORE'], echo=False)

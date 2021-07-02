@@ -199,8 +199,6 @@ class CorsoSeguito(Base):
     clienti = relationship(Cliente, uselist=False)
 
 
-# Session = sessionmaker(bind=engine)
-# session = Session()
 Session_ospite = sessionmaker(bind=engine_ospite)  # creazione delle factory
 session_ospite = Session_ospite()
 Session_utente = sessionmaker(bind=engine_utente)
@@ -355,7 +353,7 @@ def insert_prenotazione(persona, data, ora_inizio, ora_fine, sala, corso=None):
     secure_session = Secure_session()
     secure_session.begin()
     approved = True
-    day = (int(datetime.date(datetime.strptime(str(data), '%Y-%m-%d')).weekday()) + 1 ) % 7 +1
+    day = (int(datetime.date(datetime.strptime(str(data), '%Y-%m-%d')).weekday()) + 1) % 7 + 1
     time_step = get_time_step()
     if int(str(ora_inizio).split(':')[1]) % time_step != 0 or int(str(ora_fine).split(':')[1]) % time_step != 0:
         return None
@@ -476,7 +474,8 @@ def contact_tracing(zero, days):
 def get_prenotazioni_persona(cf, mese, anno):
     q = session_ospite.query(Prenotazione).filter(Prenotazione.IDCliente == cf,
                                                   extract('year', Prenotazione.Data) == anno,
-                                                  extract('month', Prenotazione.Data) == mese).order_by(Prenotazione.OraInizio).all()
+                                                  extract('month', Prenotazione.Data) == mese).order_by(
+        Prenotazione.OraInizio).all()
     ret = []
     for i in q:
         ret.append({property: str(value) for property, value in vars(i).items()})
@@ -488,7 +487,8 @@ def get_prenotazioni_persona(cf, mese, anno):
 def get_all_prenotazioni_persona(cf):
     q = session_ospite.query(Prenotazione).filter(Prenotazione.IDCliente == cf,
                                                   Prenotazione.Data >= date.today(),
-                                                  Prenotazione.OraInizio > time()).order_by(Prenotazione.Data, Prenotazione.OraInizio).all()
+                                                  Prenotazione.OraInizio > time()).order_by(Prenotazione.Data,
+                                                                                            Prenotazione.OraInizio).all()
     ret = []
     for i in q:
         ret.append({property: str(value) for property, value in vars(i).items()})
