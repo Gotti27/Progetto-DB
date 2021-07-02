@@ -49,7 +49,7 @@ function openModal(date) {
                 $('#eventText').append(jQuery('<div/>',{
                     "class": (() =>{
                         console.log(c.Approvata)
-                        if (c.Approvata) return 'prenotazioneInfo'
+                        if (c.Approvata !== "False") return 'prenotazioneInfo'
                         else return 'prenotazioneNonApprovataInfo'
                     })
                 }).html( () => {

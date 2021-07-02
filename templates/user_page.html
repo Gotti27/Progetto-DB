@@ -119,7 +119,7 @@
                     <h6>Giorno: {{ i.Data }}</h6>
                     <h6>Orario: {{ i.OraInizio[0:5] }} - {{ i.OraFine[0:5] }}</h6>
                     <h6>Sala: {{ i.IDSala }}</h6>
-                    {% if not i.Approvata %}
+                    {% if i.Approvata == "False" %}
                     <h6 class="w3-red"> NON approvata</h6>
                     {% endif %}
                     <a href="{{ url_for('prenotazione_view', id_prenotazione=i.IDPrenotazione) }}"> Maggiori informazioni </a>
