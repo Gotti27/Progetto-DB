@@ -439,7 +439,7 @@ def contact_tracing(zero, days):
     if last_zero_appearance_date is not None:
         last_zero_appearance_date = last_zero_appearance_date.Data
     else:
-        return []
+        return [get_persona_by_cf(cf) for cf in potential_infected]
     lower_limit_date = last_zero_appearance_date - timedelta(days=days)
     last_zero_appearances = session_ospite.query(Prenotazione) \
         .filter(Prenotazione.IDCliente == zero.CF, Prenotazione.Data >= lower_limit_date,
