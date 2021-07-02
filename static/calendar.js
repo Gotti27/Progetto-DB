@@ -22,7 +22,6 @@ function isPrenotato(corso){
     let out = true;
     corsi.forEach(p => {
         if (p.type === "prenotazione" && p.IDCorso === corso.IDCorso && p.Data === corso.Data){
-            console.log("True")
             out =  false
         }
     })
@@ -48,7 +47,6 @@ function openModal(date) {
             else {
                 $('#eventText').append(jQuery('<div/>',{
                     "class": (() =>{
-                        console.log(c.Approvata)
                         if (c.Approvata !== "False") return 'prenotazioneInfo'
                         else return 'prenotazioneNonApprovataInfo'
                     })

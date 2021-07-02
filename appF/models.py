@@ -10,6 +10,7 @@ from sqlalchemy import create_engine
 
 Base = declarative_base()  # tabella = classe che eredita da Base
 
+# definizione schema
 
 class Sala(Base):
     __tablename__ = 'sale'
@@ -198,8 +199,8 @@ class CorsoSeguito(Base):
 
     clienti = relationship(Cliente, uselist=False)
 
-
-Session_ospite = sessionmaker(bind=engine_ospite)  # creazione delle factory
+# session factory
+Session_ospite = sessionmaker(bind=engine_ospite)
 session_ospite = Session_ospite()
 Session_utente = sessionmaker(bind=engine_utente)
 session_utente = Session_utente()
@@ -210,6 +211,20 @@ session_gestore = Session_gestore()
 
 
 def insert_persona(cf, nome, cognome, sesso, data_nascita, email, password, attivo, telefono=None):
+    """
+    inserisce una nuova persona nel DB e ne ritorna l'istanza
+
+    :param cf: codice fiscale della persona da inserire
+    :param nome: nome della persona da inserire
+    :param cognome: cognome della persona da inserire
+    :param sesso: sesso della persona da inserire
+    :param data_nascita: data di nascita della persona da inserire
+    :param email: email della persona da inserire
+    :param password: pw della persona da inserire
+    :param attivo: status della persona da inserire
+    :param telefono: telefono della persona da inserire
+    :return: istanza della persona appena creata ed inserita nel DB
+    """
     to_add = Persona(CF=cf, Nome=nome, Cognome=cognome, Sesso=sesso, DataNascita=data_nascita, Email=email,
                      Password=password, Attivo=attivo, Telefono=telefono)
     session_ospite.add(to_add)
@@ -218,22 +233,41 @@ def insert_persona(cf, nome, cognome, sesso, data_nascita, email, password, atti
 
 
 def insert_cliente(persona):
+    """
+    Inserisce un cliente
+
+    :param persona: persona da rendere cliente
+    """
     to_add = Cliente(IDCliente=persona.CF, DataIscrizione=date.today(), PagamentoMese=False)
     session_ospite.add(to_add)
     session_ospite.commit()
 
 
 def get_cliente_by_id(cliente):
+    """
+    Dato un codice fiscale ritorna l'istanza del cliente
+
+    :param cliente: codice fiscale del cliente
+    :return: istanza di Cliente
+    """
     return session_ospite.query(Cliente).filter(Cliente.IDCliente == cliente).first()
 
 
 def insert_istruttore(persona):
+    """
+    Inserisce un istruttore
+
+    :param persona: persona da rendere istruttore
+    """
     to_add = Staff(IDStaff=persona.CF, Ruolo='Istruttore')
     session_gestore.add(to_add)
     session_gestore.commit()
 
 
 def insert_corso(max_persone, min_persone, id_sala, ora_inizio, ora_fine, data, id_istruttore, nome, descrizione=None):
+    """
+    Inserisce un corso nel DB
+    """
     c = Corso(MaxPersone=max_persone, MinPersone=min_persone, IDSala=id_sala, OraInizio=ora_inizio, OraFine=ora_fine,
               Data=data, IDIstruttore=id_istruttore, Descrizione=descrizione, Nome=nome)
     session_istruttore.add(c)
@@ -241,6 +275,11 @@ def insert_corso(max_persone, min_persone, id_sala, ora_inizio, ora_fine, data, 
 
 
 def delete_corso(corso):
+    """
+    Elimina un corso dal DB
+
+    :param corso: ID del corso da eliminare
+    """
     q = delete(Corso).where(Corso.IDCorso == corso)
     session_istruttore.execute(q)
     session_istruttore.commit()
@@ -348,6 +387,16 @@ def get_prenotazione_by_id(id):
 
 
 def insert_prenotazione(persona, data, ora_inizio, ora_fine, sala, corso=None):
+    """
+    Crea una nuova prenotazione e la inserisce nel DB
+
+    :param persona: cliente a cui è riferita la prenotazione
+    :param data: data della prenotazione
+    :param ora_inizio: orario di inizio della prenotazione
+    :param ora_fine: orario di fine della prenotazione
+    :param sala: sala nella quale il cliente vuole prenotarsi
+    :param corso: eventuale corso riferito alla prenotazione
+    """
     secure_engine = create_engine(SQLALCHEMY_DATABASE_URI_UTENTE, isolation_level='SERIALIZABLE')
     Secure_session = sessionmaker(bind=secure_engine)
     secure_session = Secure_session()
@@ -424,9 +473,8 @@ def is_iscritto(persona, corso):
 
 def contact_tracing(zero, days):
     """
-    rudimentale algoritmo di contact tracing che prende in input un positivo e un numero di giorni da analizzare
+    Algoritmo di contact tracing che prende in input un positivo e un numero di giorni da analizzare
     e ritorna una lista di potenziali positivi
-    TODO: testare su corsi e istruttori
 
     :param zero: positivo iniziale
     :param days: numero di giorni che si vuole prendere in considerazione (max=7)
@@ -447,7 +495,7 @@ def contact_tracing(zero, days):
     lower_limit_date = last_zero_appearance_date - timedelta(days=days)
     last_zero_appearances = session_ospite.query(Prenotazione) \
         .filter(Prenotazione.IDCliente == zero.CF, Prenotazione.Data >= lower_limit_date,
-                Prenotazione.Data <= datetime.today(),  # da testare
+                Prenotazione.Data <= datetime.today(),
                 Prenotazione.Approvata == true()).order_by(Prenotazione.Data.desc()).all()
 
     for appearance in last_zero_appearances:
@@ -474,8 +522,8 @@ def contact_tracing(zero, days):
 def get_prenotazioni_persona(cf, mese, anno):
     q = session_ospite.query(Prenotazione).filter(Prenotazione.IDCliente == cf,
                                                   extract('year', Prenotazione.Data) == anno,
-                                                  extract('month', Prenotazione.Data) == mese).order_by(
-        Prenotazione.OraInizio).all()
+                                                  extract('month', Prenotazione.Data) == mese)\
+        .order_by(Prenotazione.OraInizio).all()
     ret = []
     for i in q:
         ret.append({property: str(value) for property, value in vars(i).items()})
@@ -540,6 +588,11 @@ def is_seguito(persona, corso):
 
 
 def crea_notifica(testo, mittente):
+    """
+    :param testo: testo della notifica
+    :param mittente: mittente della notifica
+    :return: la nuova notifica creata
+    """
     notifica = Notifica(Testo=testo, Mittente=mittente)
     session_istruttore.add(notifica)
     session_istruttore.commit()
@@ -547,6 +600,10 @@ def crea_notifica(testo, mittente):
 
 
 def invia_notifica(notifica, destinatari):
+    """
+    :param notifica: notifica da inviare
+    :param destinatari: lista di destinatari
+    """
     for person in destinatari:
         if session_istruttore.query(Persona).filter(Persona.CF == person).first():
             to_add = NotificaDestinatario(IDNotifica=notifica.IDNotifica, Destinatario=person,
@@ -556,6 +613,12 @@ def invia_notifica(notifica, destinatari):
 
 
 def get_notifiche_persona(cf):
+    """
+    Ritorna la inbox di una persona
+
+    :param cf: codice fiscale della persoa di cui si vuole la inbox
+    :return: lista di messaggi
+    """
     notify_ids = [i.IDNotifica for i in session_utente.query(NotificaDestinatario).filter(
         NotificaDestinatario.Destinatario == cf).all()]
     notifies = session_utente.query(Notifica).filter(Notifica.IDNotifica.in_(notify_ids)).all()

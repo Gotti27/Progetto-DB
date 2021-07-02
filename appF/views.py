@@ -9,7 +9,7 @@ from run import app
 from appF.models import *
 
 
-def auth_admin(f):
+def auth_admin(f):  # decoratore per le view che richiedono autorizzazione di amministratore
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not current_user.is_admin():
@@ -70,16 +70,20 @@ def register():
                 msg = 'Codice fiscale non valido'
             else:
                 nuova_persona = insert_persona(nome=request.form['name'], cognome=request.form['surname'],
-                                               data_nascita=request.form['DataNascita'], cf=request.form['Codice fiscale'],
-                                               email=request.form['email'], telefono=request.form['telefono'], sesso=request.form['sex'],
-                                               password=bcrypt.hashpw(request.form['password'].encode("utf-8"), bcrypt.gensalt()).decode("utf-8"), attivo=False)
+                                               data_nascita=request.form['DataNascita'],
+                                               cf=request.form['Codice fiscale'],
+                                               email=request.form['email'], telefono=request.form['telefono'],
+                                               sesso=request.form['sex'],
+                                               password=bcrypt.hashpw(request.form['password'].encode("utf-8"),
+                                                                      bcrypt.gensalt()).decode("utf-8"), attivo=False)
                 if current_user.is_authenticated and current_user.is_admin():
                     insert_istruttore(nuova_persona)
                     return redirect(url_for('dashboard_view'))
                 else:
                     insert_cliente(nuova_persona)
                     login_user(nuova_persona)
-                invia_notifica(session_utente.query(Notifica).filter(Notifica.IDNotifica == 3).first(), [nuova_persona.CF])
+                invia_notifica(session_utente.query(Notifica).filter(Notifica.IDNotifica == 3).first(),
+                               [nuova_persona.CF])
                 return redirect(url_for('profile_view'))
         elif request.method == 'POST':
             msg = 'Riempi tutti i campi del form'
@@ -146,7 +150,6 @@ def view_corso(id):
             insert_prenotazione(current_user, corso.Data, corso.OraInizio, corso.OraFine, corso.IDSala, corso.IDCorso)
         elif request.form['form-name'] == "follow":
             insert_corso_seguito(persona=current_user.get_id(), corso=corso.Nome)
-            print(str(current_user.get_id()) + "vuole iscriversi")
         elif request.form['form-name'] == "unfollow":
             delete_corso_seguito(persona=current_user.get_id(), corso=corso.Nome)
         elif request.form['form-name'] == "unsubscribe":
@@ -156,7 +159,7 @@ def view_corso(id):
             return redirect(url_for("dashboard_view"))
         elif request.form['form-name'] == 'inviaNotifica':
             nuova_notifica = crea_notifica(request.form['testo'], current_user.CF)
-            destinatari = [p.IDCliente for p in get_iscritti_corso(corso.IDCorso)] +\
+            destinatari = [p.IDCliente for p in get_iscritti_corso(corso.IDCorso)] + \
                           [p.IDCliente for p in get_follower_corso(corso.IDCorso)]
             destinatari = list(set(destinatari))
             invia_notifica(nuova_notifica, destinatari)
@@ -216,11 +219,9 @@ def report():
     if request.method == 'POST':
         form = request.form['form-name']
         if form == 'esporta':
-            # path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe' # path di mario, da modificare
-            # pdf_config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
             rendered = render_template('printable_report.html', zero=get_persona_by_cf(zero), positivi=tracciati,
                                        giorni=giorni)
-            pdf = pdfkit.from_string(rendered, False)  # , configuration=pdf_config)
+            pdf = pdfkit.from_string(rendered, False)
             response = make_response(pdf)
             response.headers['Content-Type'] = 'report'
             response.headers['Content-Disposition'] = 'attachment; filename=report.pdf'
@@ -229,11 +230,11 @@ def report():
             for person in tracciati:
                 if form == 'disattiva':
                     notifica = session_utente.query(Notifica).filter(
-                        Notifica.IDNotifica == 0).first()  # da creare con un codice particolare
+                        Notifica.IDNotifica == 0).first()
                     disattiva_persona(persona=person.CF)
                 else:
                     notifica = session_utente.query(Notifica).filter(
-                        Notifica.IDNotifica == 1).first()  # da creare con un codice particolare
+                        Notifica.IDNotifica == 1).first()
                 invia_notifica(notifica=notifica, destinatari=[person.CF])
             messaggio = 'operazione avvenuta con successo'
 
@@ -256,7 +257,7 @@ def notifications():
 
     inbox = get_notifiche_persona(current_user.get_id())
 
-    session_utente.query(NotificaDestinatario).filter(NotificaDestinatario.Destinatario == current_user.CF)\
+    session_utente.query(NotificaDestinatario).filter(NotificaDestinatario.Destinatario == current_user.CF) \
         .update({'Letto': True})
     session_utente.commit()
 
@@ -291,8 +292,10 @@ def prenotazione_view(id_prenotazione):
 @login_required
 @auth_admin
 def view_users():
-    clienti = session_ospite.query(Persona).filter(Persona.CF.in_(session_ospite.query(Cliente.IDCliente))).order_by(Persona.Cognome, Persona.Nome).all()
-    staff = session_ospite.query(Persona).filter(Persona.CF.in_(session_ospite.query(Staff.IDStaff))).order_by(Persona.Cognome, Persona.Nome).all()
+    clienti = session_ospite.query(Persona).filter(Persona.CF.in_(session_ospite.query(Cliente.IDCliente))).order_by(
+        Persona.Cognome, Persona.Nome).all()
+    staff = session_ospite.query(Persona).filter(Persona.CF.in_(session_ospite.query(Staff.IDStaff))).order_by(
+        Persona.Cognome, Persona.Nome).all()
 
     for i, v in enumerate(clienti):
         c = {

@@ -7,7 +7,6 @@ let maxPersone = 0;
 salaSelect.change(()=>{
     let oldMax = maxPersone;
     maxPersone = parseInt(salaSelect.val().split(',')[1]);
-    console.log(oldMax, maxPersone)
     if (oldMax > maxPersone && maxPInput.val() && maxPInput.val() > maxPersone){
         maxPInput.val(maxPersone)
     }
