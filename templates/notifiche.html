@@ -26,9 +26,9 @@
         <input type="submit" class="w3-button w3-black" value="Cancella tutte le notifiche">
     </form>
 </div>
+{% if current_user.is_staff() %}
 <div class="w3-quarter"><p></p></div>
 <div class="w3-container w3-light-gray w3-card w3-margin w3-half w3-center">
-    {% if current_user.is_staff() %}
     <h1>Invia una notifica</h1>
     <div class="w3-container w3-light-gray">
         <form action="{{ url_for('notifications') }}" method="post" class="w3-container w3-margin" id="nuonaNotifica">
@@ -38,32 +38,30 @@
             <input type="submit" class="w3-button w3-black" value="Invia"><br>
         </form>
     </div>
-    <div class="w3-container w3-half w3-light-gray" align="center">
-    {% else %}
-    <div class="w3-container w3-light-gray" align="center">
-    {% endif %}
-        {% for message in inbox %}
-            <div>
-                <table class="w3-border">
-                    <tr>
-                        <th>Da: {{ message.Mittente }}
-                        {% if message.Letto == False %}
-                            <span class="dot"></span>
-                        {% endif %}
-                        </th>
-                    </tr>
-                    <tr>
-                        <th>Ora: {{ message.Timestamp }}</th>
-                    </tr>
-                    <tr>
-                        <th>{{ message.Testo }}</th>
-                    </tr>
-                </table>
-            </div>
-            <br><br>
-        {% endfor %}
-    </div>
-    </div>
+</div>
+{% endif %}
+<div class="w3-quarter"><p></p></div>
+<div class="w3-container w3-light-gray w3-card w3-margin w3-half w3-center">
+    {% for message in inbox %}
+        <div align="center">
+            <table class="w3-border">
+                <tr>
+                    <th>Da: {{ message.Mittente }}
+                    {% if message.Letto == False %}
+                        <span class="dot"></span>
+                    {% endif %}
+                    </th>
+                </tr>
+                <tr>
+                    <th>Ora: {{ message.Timestamp }}</th>
+                </tr>
+                <tr>
+                    <th><p style="width: 800px; word-wrap: break-word;">{{ message.Testo }}</p></th>
+                </tr>
+            </table>
+        </div>
+        <br><br>
+    {% endfor %}
 </div>
 </body>
 {% endblock %}

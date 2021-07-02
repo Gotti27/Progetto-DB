@@ -542,6 +542,8 @@ def crea_notifica(testo, mittente):
 
 def invia_notifica(notifica, destinatari):
     for person in destinatari:
+        if not session_istruttore.query(Persona).filter(Persona.CF == person).first():
+            return
         to_add = NotificaDestinatario(IDNotifica=notifica.IDNotifica, Destinatario=person,
                                       Timestamp=datetime.now(), Letto=False)
         session_istruttore.add(to_add)

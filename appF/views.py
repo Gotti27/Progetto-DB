@@ -252,7 +252,8 @@ def notifications():
 
     inbox = get_notifiche_persona(current_user.get_id())
 
-    session_utente.query(NotificaDestinatario).filter(NotificaDestinatario.Destinatario == current_user.CF).update({'Letto': True})
+    session_utente.query(NotificaDestinatario).filter(NotificaDestinatario.Destinatario == current_user.CF)\
+        .update({'Letto': True})
     session_utente.commit()
 
     return render_template('notifiche.html', inbox=inbox)
