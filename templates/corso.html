@@ -73,7 +73,7 @@
                 </form>
                 {% endif %}
 
-            {% elif current_user.is_staff() and current_user.CF == istruttore.CF %}
+            {% elif current_user.is_authenticated and current_user.is_staff() and current_user.CF == istruttore.CF %}
                 <div class="w3-margin-left">
                     <p>Invia una notifica a tutti i clienti iscritti o che seguono il corso</p>
                 </div>
@@ -84,7 +84,7 @@
                         <input type="submit" class="w3-button w3-black" value="Invia"><br>
                     </form>
                 </div>
-            {% elif current_user.is_staff() %}
+            {% elif current_user.is_authenticated and current_user.is_staff() %}
             {% else %}
             <p> Accedi per poter continuare </p>
             {% endif %}
@@ -94,7 +94,7 @@
 
     <hr>
 
-        {% if current_user.is_admin() %}
+        {% if current_user.is_authenticated and current_user.is_admin() %}
     <form class="w3-center w3-margin" action="{{ url_for('view_corso', id=corso.IDCorso) }}" method="post" style="height:32px; margin:auto; line-height:100%; margin-left: 32px; border-radius:4px">
         <input type="hidden" name="form-name" value="delete">
         <button class="w3-button w3-black">
