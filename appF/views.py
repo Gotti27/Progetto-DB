@@ -96,6 +96,9 @@ def profile_view():
                                 ora_fine=(request.form['oraOraFine'] + ":" + request.form['minutiOraFine']),
                                 sala=request.form['sala'])
 
+    if current_user.is_admin():
+        return redirect(url_for("dashboard_view"))
+
     inbox_number = len(session_utente.query(NotificaDestinatario)
                        .filter(NotificaDestinatario.Destinatario == current_user.CF,
                                NotificaDestinatario.Letto == False).all())
