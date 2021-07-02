@@ -23,7 +23,7 @@
                 {% if current_user.is_admin() %}
                 <a href="{{url_for('dashboard_view')}}" class="w3-bar-item w3-button">Dashboard</a>
                 {% else %}
-                <a href="{{url_for('profile_view', username=current_user.Email)}}" class="w3-bar-item w3-button">Profilo</a>
+                <a href="{{url_for('profile_view')}}" class="w3-bar-item w3-button">Profilo</a>
                 {% endif %}
                 <a href="{{url_for('notifications')}}" class="w3-bar-item w3-button">Notifiche</a>
                 <a href="{{url_for('logout')}}" class="w3-bar-item w3-button">Logout</a>
