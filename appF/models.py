@@ -345,7 +345,11 @@ def setta_non_pagante(cliente):
 
 
 def insert_sala(max_persone, tipo):
-    to_add = Sala(MaxPersone=max_persone, Tipo=tipo)
+    max_id = 0
+    for i in get_sale():
+        max_id = max(i.IDSala, max_id)
+
+    to_add = Sala(IDSala=max_id+1, MaxPersone=max_persone, Tipo=tipo)
     session_gestore.add(to_add)
     session_gestore.commit()
 
