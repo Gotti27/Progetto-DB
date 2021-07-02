@@ -52,11 +52,13 @@ function openModal(date) {
                     })
                 }).html( () => {
                     let out = "Allenamento libero"
-                    if (c.IDCorso != "None")
+                    if (c.IDCorso != "None"){
+                        out = "Corso non seguito"
                         corsi.forEach(corso => {
                             if(corso.type === "corso" &&  corso.IDCorso === c.IDCorso)
                                 out = corso.Nome;
                         })
+                    }
                     return out
                 } ).on('click', () => openPrenotazionePage(c.IDPrenotazione)));
             }
