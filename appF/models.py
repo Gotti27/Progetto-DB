@@ -233,41 +233,22 @@ def insert_persona(cf, nome, cognome, sesso, data_nascita, email, password, atti
 
 
 def insert_cliente(persona):
-    """
-    Inserisce un cliente
-
-    :param persona: persona da rendere cliente
-    """
     to_add = Cliente(IDCliente=persona.CF, DataIscrizione=date.today(), PagamentoMese=False)
     session_ospite.add(to_add)
     session_ospite.commit()
 
 
 def get_cliente_by_id(cliente):
-    """
-    Dato un codice fiscale ritorna l'istanza del cliente
-
-    :param cliente: codice fiscale del cliente
-    :return: istanza di Cliente
-    """
     return session_ospite.query(Cliente).filter(Cliente.IDCliente == cliente).first()
 
 
 def insert_istruttore(persona):
-    """
-    Inserisce un istruttore
-
-    :param persona: persona da rendere istruttore
-    """
     to_add = Staff(IDStaff=persona.CF, Ruolo='Istruttore')
     session_gestore.add(to_add)
     session_gestore.commit()
 
 
 def insert_corso(max_persone, min_persone, id_sala, ora_inizio, ora_fine, data, id_istruttore, nome, descrizione=None):
-    """
-    Inserisce un corso nel DB
-    """
     c = Corso(MaxPersone=max_persone, MinPersone=min_persone, IDSala=id_sala, OraInizio=ora_inizio, OraFine=ora_fine,
               Data=data, IDIstruttore=id_istruttore, Descrizione=descrizione, Nome=nome)
     session_istruttore.add(c)
@@ -275,11 +256,6 @@ def insert_corso(max_persone, min_persone, id_sala, ora_inizio, ora_fine, data, 
 
 
 def delete_corso(corso):
-    """
-    Elimina un corso dal DB
-
-    :param corso: ID del corso da eliminare
-    """
     q = delete(Corso).where(Corso.IDCorso == corso)
     session_istruttore.execute(q)
     session_istruttore.commit()
