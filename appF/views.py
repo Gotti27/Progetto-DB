@@ -73,9 +73,9 @@ def register():
                                                data_nascita=request.form['DataNascita'], cf=request.form['Codice fiscale'],
                                                email=request.form['email'], telefono=request.form['telefono'], sesso=request.form['sex'],
                                                password=bcrypt.hashpw(request.form['password'].encode("utf-8"), bcrypt.gensalt()).decode("utf-8"), attivo=False)
-                if current_user.is_admin():
+                if current_user.is_authenticated and current_user.is_admin():
                     insert_istruttore(nuova_persona)
-                    return redirect(url_for('dashboard_view', username=nuova_persona.Email))
+                    return redirect(url_for('dashboard_view'))
                 else:
                     insert_cliente(nuova_persona)
                     login_user(nuova_persona)
