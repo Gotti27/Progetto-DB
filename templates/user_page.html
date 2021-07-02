@@ -13,6 +13,11 @@
 <body>
 <div align="center" class="w3-container">
     <h2>Bentornato, {{current_user.Nome}} {{current_user.Cognome}}!</h2>
+    {% if inbox_number == 1 %}
+    <h3>Hai {{ inbox_number }} nuova notifica</h3>
+    {% else %}
+    <h3>Hai {{ inbox_number }} nuove notifiche</h3>
+    {% endif %}
 </div>
 
 <div style="height: 800px">
@@ -125,6 +130,7 @@
     <div class="w3-container w3-quarter">
 
     </div>
+</div>
 
 
 <script>
