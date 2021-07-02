@@ -299,7 +299,7 @@ def get_istruttori():
 
 def get_persona_by_email(email):
     q = session_ospite.query(Persona).filter(Persona.Email == email)
-    return q.one()
+    return q.first()
 
 
 def get_persona_by_cf(cf):
