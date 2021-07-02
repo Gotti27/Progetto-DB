@@ -1,10 +1,12 @@
 import datetime
 
+from config import SQLALCHEMY_DATABASE_URI_UTENTE
 from run import engine_ospite, engine_utente, engine_istruttore, engine_gestore  # , engine
 from sqlalchemy import *
 from sqlalchemy.orm import *
 from datetime import *
 from flask_login import UserMixin
+from sqlalchemy import create_engine
 
 Base = declarative_base()  # tabella = classe che eredita da Base
 
@@ -348,23 +350,27 @@ def get_prenotazione_by_id(id):
 
 
 def insert_prenotazione(persona, data, ora_inizio, ora_fine, sala, corso=None):
+    secure_engine = create_engine(SQLALCHEMY_DATABASE_URI_UTENTE, isolation_level='SERIALIZABLE')
+    Secure_session = sessionmaker(bind=secure_engine)
+    secure_session = Secure_session()
+    secure_session.begin()
     approved = True
     day = (int(datetime.date(datetime.strptime(str(data), '%Y-%m-%d')).weekday()) + 1 ) % 7 +1
     time_step = get_time_step()
     if int(str(ora_inizio).split(':')[1]) % time_step != 0 or int(str(ora_fine).split(':')[1]) % time_step != 0:
         return None
 
-    orari_giorno = session_utente.query(GiornoFestivo).filter(GiornoFestivo.Giorno == data).first()
+    orari_giorno = secure_session.query(GiornoFestivo).filter(GiornoFestivo.Giorno == data).first()
     if orari_giorno is None:
-        orari_giorno = session_utente.query(OrarioPalestra).filter(OrarioPalestra.GiornoSettimana == day).first()
+        orari_giorno = secure_session.query(OrarioPalestra).filter(OrarioPalestra.GiornoSettimana == day).first()
 
     if orari_giorno is None or datetime.strptime(str(ora_inizio)[0:5], '%H:%M').time() < orari_giorno.Apertura or \
             datetime.strptime(str(ora_fine)[0:5], '%H:%M').time() > orari_giorno.Chiusura:
         return None
 
     if corso is None:
-        max_number = session_utente.query(Sala).filter(Sala.IDSala == sala).first().MaxPersone
-        available = session_utente.query(Prenotazione).filter(Prenotazione.Data == data,
+        max_number = secure_session.query(Sala).filter(Sala.IDSala == sala).first().MaxPersone
+        available = secure_session.query(Prenotazione).filter(Prenotazione.Data == data,
                                                               Prenotazione.OraFine > ora_inizio,
                                                               Prenotazione.OraInizio < ora_fine,
                                                               Prenotazione.IDSala == sala, Prenotazione.Approvata).all()
@@ -390,13 +396,13 @@ def insert_prenotazione(persona, data, ora_inizio, ora_fine, sala, corso=None):
                                 IDCorso=None, IDSala=sala, Approvata=approved)
 
     else:
-        disponibilita_corso = session_utente.query(Corso).filter(Corso.IDCorso == corso).first().MaxPersone
+        disponibilita_corso = secure_session.query(Corso).filter(Corso.IDCorso == corso).first().MaxPersone
         if disponibilita_corso - numero_iscritti_corso(corso) < 1:
             approved = False
         new_book = Prenotazione(Data=data, OraInizio=ora_inizio, OraFine=ora_fine, IDCliente=persona.CF,
                                 IDCorso=corso, IDSala=sala, Approvata=approved)
-    session_utente.add(new_book)
-    session_utente.commit()
+    secure_session.add(new_book)
+    secure_session.commit()
 
 
 def delete_prenotazione_corso(persona, corso):
