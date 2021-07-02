@@ -291,31 +291,13 @@ def view_users():
     clienti = session_ospite.query(Persona).filter(Persona.CF.in_(session_ospite.query(Cliente.IDCliente))).order_by(Persona.Cognome, Persona.Nome).all()
     staff = session_ospite.query(Persona).filter(Persona.CF.in_(session_ospite.query(Staff.IDStaff))).order_by(Persona.Cognome, Persona.Nome).all()
 
-    if request.method == 'POST' and request.form['form-name'] == 'modifica':
-        for p in clienti:
-            if 'attivazione-' + p.CF in request.form:
-                attiva_persona(p.CF)
-            else:
-                disattiva_persona(p.CF)
-
-            if 'pagamento-' + p.CF in request.form:
-                setta_pagante(p.CF)
-            else:
-                setta_non_pagante(p.CF)
-
-        for p in staff:
-            if 'attivazione-' + p.CF in request.form:
-                attiva_persona(p.CF)
-            else:
-                disattiva_persona(p.CF)
-
     for i, v in enumerate(clienti):
         c = {
             'Nome': v.Nome,
             'Cognome': v.Cognome,
             'CF': v.CF,
             'Email': v.Email,
-            'Attivo': get_persona_by_cf(v.CF).Attivo,
+            'Attivo': v.Attivo,
             'Pagante': get_cliente_by_id(v.CF).PagamentoMese
         }
         clienti[i] = c
@@ -326,9 +308,33 @@ def view_users():
             'CF': v.CF,
             'Email': v.Email,
             'Ruolo': session_ospite.query(Staff).filter(Staff.IDStaff == v.CF).first().Ruolo,
-            'Attivo': get_persona_by_cf(v.CF).Attivo
+            'Attivo': v.Attivo
         }
         staff[i] = s
+
+    if request.method == 'POST' and request.form['form-name'] == 'modifica':
+        for p in clienti:
+            if 'attivazione-' + p['CF'] in request.form:
+                attiva_persona(p['CF'])
+                p['Attivo'] = True
+            else:
+                disattiva_persona(p['CF'])
+                p['Attivo'] = False
+
+            if 'pagamento-' + p['CF'] in request.form:
+                setta_pagante(p['CF'])
+                p['Pagante'] = True
+            else:
+                setta_non_pagante(p['CF'])
+                p['Pagante'] = False
+
+        for p in staff:
+            if 'attivazione-' + p['CF'] in request.form:
+                attiva_persona(p['CF'])
+                p['Attivo'] = True
+            else:
+                disattiva_persona(p['CF'])
+                p['Attivo'] = False
 
     return render_template('users.html', clienti=clienti, staff=staff, giorni_tracciamento=get_giorni_tracciamento())
 
