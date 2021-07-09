@@ -596,7 +596,7 @@ def get_notifiche_persona(cf):
     """
     Ritorna la inbox di una persona
 
-    :param cf: codice fiscale della persoa di cui si vuole la inbox
+    :param cf: codice fiscale della persona di cui si vuole la inbox
     :return: lista di messaggi
     """
     notify_ids = [i.IDNotifica for i in session_utente.query(NotificaDestinatario).filter(
