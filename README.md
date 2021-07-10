@@ -1,5 +1,5 @@
 # Progetto-DB
-Per far partire l'applicazione Flask:
+Web application to manage a gym during covid-19, so there are for instance tools for online booking and to perform contact tracing. The project is developed with flask-sqlalchemy backend and runs on postgresql db. We reccomend to read documentation.pdf, in particular the db-diagram.
 
 `FLASK_APP=run.py`\
 `flask run`
